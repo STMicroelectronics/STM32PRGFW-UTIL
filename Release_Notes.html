@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STM32PRGFW-UTIL</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<center>
+<h1 id="release-notes-for-open-stm32prgfw-util">Release Notes for STM32PRGFW-UTIL</h1>
+<p>Copyright © 2022 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h1 id="purpose">Purpose</h1>
+<p>The <strong>STM32PRGFW-UTIL</strong> package provides a firmware utility application used to manage the One-Time Programmable (OTP).</p>
+<p>The project contains two sub-applications:</p>
+<p>-A STM32CubeProgrammer based application</p>
+<p>-A Console based application as an alternative for the first application</p>
+<p>Both sub-applications do the same operations to manage the OTP.</p>
+</div>
+<section id="update-history" class="col-sm-12 col-lg-8">
+<h1>Update history</h1>
+<div class="collapse">
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true"> <label for="collapse-section5" aria-hidden="true"><strong>V1.0.0 / 17.June.2022</strong></label>
+<div>
+<h2 id="main-changes">Main changes</h2>
+<h3 id="first-release">First release</h3>
+<p>This release contains STM32PRGFW-UTIL_v1.0.0, the first offcial of STM32PRGFW-UTIL project</p>
+<h2 id="contents">Contents</h2>
+<h3 id="applications">Applications</h3>
+<p>Provides ready-to-run applicative examples for STM32PRGFW-UTIL on the supported boards.
+<h3 id="drivers">Drivers</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-A CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP13xx CMSIS</td>
+<td style="text-align: center;"><strong>v0.4.0 (updated)</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP1xx CMSIS</td>
+<td style="text-align: center;"><strong>v1.6.0 (updated)</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP13xx HAL</td>
+<td style="text-align: center;"><strong>v0.4.0 (updated)</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP1xx HAL</td>
+<td style="text-align: center;"><strong>v1.6.0 (updated)</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="middlewares">Middlewares</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenBootloader</td>
+<td style="text-align: left;"><strong>mpu</strong></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32_USB_Device_Library</td>
+<td style="text-align: left;"><strong>mpu</strong></td>
+<td style="text-align: left;"></td>
+</tr>
+</table>
+<h2 id="supported-devices-and-boards-by-applications">Supported devices and boards by applications</h2>
+<ul>
+<li>STM32MP13xx Boards</li>
+<li>STM32MP13xx Boards</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li><a href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE V2.11.0</a></li>
+<li><a href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer V1.10.0</a></li>
+</ul>
+</div>
+</div>
+<h2 id="known-limitations">Known limitations</h2>
+<ul>
+<li>MP15 boards fail sometimes to connect to STM32CubeProgrammer via UART (reset the board and try again)
+<li>There is a USB reconnection problem on Serial boot on MP15 which force User to flash the binary 2 times without reset to make it work.
+</ul>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>None.</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>None.</li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+<footer class="sticky">
+<div class="columns">
+<div class="column" style="width:95%;">
+<p>For complete documentation on <strong>STM32 Microcontrollers</strong> , visit: <a href="http://www.st.com/STM32">www.st.com/STM32</a></p>
+</div><div class="column" style="width:5%;">
+<p><abbr title="Based on template cx566953 version 3.0">Info</abbr></p>
+</div>
+</div>
+</footer>
+</body>
+</html>
