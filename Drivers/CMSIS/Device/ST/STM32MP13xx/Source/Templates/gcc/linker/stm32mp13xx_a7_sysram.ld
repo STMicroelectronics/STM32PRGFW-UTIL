@@ -18,7 +18,7 @@
 *****************************************************************************
 ** @attention
 **
-  * Copyright (c) 2020(-2021) STMicroelectronics.
+  * Copyright (c) 2020-2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,7 +46,7 @@ MEMORY {
       DDR_BASE (rwx)      : ORIGIN = 0xC0000000, LENGTH = 512M
 }
 
-/* Select Memory in which code has to be placed and offset of code from start of this memory */ 
+/* Select Memory in which code has to be placed and offset of code from start of this memory */
 REGION_ALIAS("RAM", SYSRAM_BASE);
 START_OFFSET = 0x00;
 
@@ -76,20 +76,20 @@ SECTIONS
         *(.text.Reset_Handler)
         * (RESET)
         *(.text*)
-        
+
         /* .init is used by libc_nano */
         KEEP (*(.init))
         KEEP (*(.fini))
 
         __TEXT_END_UNALIGNED__ = .;
-        
+
         /*
          * Memory page(s) mapped to this section will be marked as
          * read-only, executable.  No non-executable data from the next section must
          * creep in.  Ensure the rest of the current memory page is unused.
          */
         __TEXT_END__ = .;
-        
+
         . = NEXT(4096);
 
         __RO_START__ = .;

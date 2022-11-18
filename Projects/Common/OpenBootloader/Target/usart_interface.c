@@ -21,7 +21,6 @@
 #include "openbl_core.h"
 #include "openbl_usart_cmd.h"
 #include "usart_interface.h"
-#include "iwdg_interface.h"
 #include "interfaces_conf.h"
 #include "app_openbootloader.h"
 #include "external_memory_interface.h"
@@ -33,7 +32,7 @@
 /* Exported variables --------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 static void OPENBL_USART_Init(void);
-static uint8_t fix_syncro = 1;
+static void OPENBL_USART_DeInit(void);
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -84,7 +83,11 @@ static void OPENBL_USART_Init(void)
 void OPENBL_USART_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-
+#if defined(__CP_SERIAL_BOOT__)
+  uint32_t Tickstart;
+  uint32_t Timeout = 200U;
+  uint8_t  SendNack = 0;
+#endif
   /* Enable all resources clocks --------------------------------------------*/
   /* Enable used GPIOx clocks */
   USARTx_TX_GPIO_CLK_ENABLE();
@@ -106,14 +109,35 @@ void OPENBL_USART_Configuration(void)
   HAL_GPIO_Init(USARTx_RX_GPIO_PORT, &GPIO_InitStruct);
 
   /* Init the usart */
+  OPENBL_USART_DeInit();
   OPENBL_USART_Init();
+
+#if defined(__CP_SERIAL_BOOT__)
+  /*Serial Boot: To avoid sync issue during ROM Code -> STM32PRGFW-UTIL transition : empty fifo and sends NACK*/
+  /* Init tickstart for timeout management */
+  Tickstart = HAL_GetTick();
+  while ((HAL_GetTick() - Tickstart) < Timeout)
+  {
+     if (LL_USART_IsActiveFlag_RXNE_RXFNE(USARTx))
+     {
+       LL_USART_ReceiveData8(USARTx);
+       SendNack =1;
+     }
+  }
+
+  if (SendNack)
+  {
+    OPENBL_USART_SendByte(NACK_BYTE);
+  }
+#endif
+
 }
 
 /**
  * @brief  This function is used to De-initialize the USART pins and instance.
  * @retval None.
  */
-void OPENBL_USART_DeInit(void)
+static void OPENBL_USART_DeInit(void)
 {
   /* De-init the usart */
   LL_USART_DeInit(USARTx);
@@ -156,23 +180,6 @@ uint8_t OPENBL_USART_GetCommandOpcode(void)
 {
   uint8_t command_opc = 0x0;
 
-  /* Due to de-synchronization 3 command bytes are received instead of 2 with MP13 Cut1.1
-   * boards after jumping in the code. Then empty the fifo and send NACK in the command
-   * process to force CubeProgrammer to send again the command bytes.
-   * Cut1.0 and MP15 boards are not concerned as 2 bytes are received.
-   * So clear the third byte bypassing the LL_USART_IsActiveFlag_RXNE_RXFNE flag to not
-   * poll even if the fifo is already empty */
-  if (fix_syncro)
-  {
-    OPENBL_USART_ReadByte();
-    OPENBL_USART_ReadByte();
-    HAL_Delay(10);
-    LL_USART_ReceiveData8(USARTx);
-    command_opc = ERROR_COMMAND;
-    fix_syncro = 0;
-    return command_opc;
-  }
-
   /* Get the command opcode */
   command_opc = OPENBL_USART_ReadByte();
 
@@ -193,7 +200,6 @@ uint8_t OPENBL_USART_ReadByte(void)
 {
   while (!LL_USART_IsActiveFlag_RXNE_RXFNE(USARTx))
   {
-    OPENBL_IWDG_Refresh();
   }
 
   return LL_USART_ReceiveData8(USARTx);

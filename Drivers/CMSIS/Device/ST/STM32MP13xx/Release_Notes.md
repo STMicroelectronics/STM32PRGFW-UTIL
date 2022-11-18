@@ -38,8 +38,38 @@ They can be adapted to fit applications requirements:
 
 ::: {.collapse}
 <input type="checkbox" id="collapse-section0" checked aria-hidden="true">
-<label for="collapse-section0" checked aria-hidden="true">__V0.4.0 / 04-March-2022__</label>
+<label for="collapse-section0" checked aria-hidden="true">__V0.5.0 / 29-June-2022__</label>
 <div>
+
+## Main Changes
+
+This release is the **3rd ALPHA DV of Bit and registers definition** for STM32MP13xx
+
+## Contents
+
+- Update bit definition in header files:
+  - for PWR, ETH, LPTIM
+  - add internal TAMPER 12 and 13 definitions
+  - update USART structure with uint32_t only
+  - Fix typo for SYSCFG_HSLVEN4R_HSLVEN_SDMMC1
+- Implement startup and system files for AzureRTOS MW
+- Fix some MISRAC2012 rules
+
+## Known Limitations
+
+- IAR Templates not yet available
+
+## Dependencies
+
+None
+
+</div>
+:::
+
+::: {.collapse}
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">__V0.4.0 / 04-March-2022__</label>
+<div>			
 
 ## Main Changes
 

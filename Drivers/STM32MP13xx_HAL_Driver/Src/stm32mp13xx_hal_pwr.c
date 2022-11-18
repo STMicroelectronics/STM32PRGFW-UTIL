@@ -437,6 +437,9 @@ void HAL_PWR_EnableWakeUpPinIT(uint32_t WakeUpPinx)
     case PWR_WAKEUP_PIN6:
       __HAL_WKUP_EXTI_ENABLE_IT(EXTI_IMR2_IM60);
       break;
+
+    default:
+	  break;
   }
 }
 
@@ -481,6 +484,9 @@ void HAL_PWR_DisableWakeUpPinIT(uint32_t WakeUpPinx)
     case PWR_WAKEUP_PIN6:
       __HAL_WKUP_EXTI_DISABLE_IT(EXTI_IMR2_IM60);
       break;
+
+    default:
+	  break;
   }
 }
 

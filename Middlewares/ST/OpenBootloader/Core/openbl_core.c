@@ -96,9 +96,13 @@ ErrorStatus OPENBL_RegisterInterface(OPENBL_HandleTypeDef *Interface)
   */
 uint32_t OPENBL_InterfaceDetection(void)
 {
-  uint32_t counter;
   uint8_t detected = 0U;
-
+#if defined(__CP_SERIAL_BOOT__)
+  /*only 1 interface in serial boot, the one used by ROM Code.*/
+  p_Interface = &(a_InterfacesTable[0]);
+  detected = 1;
+#else
+  uint32_t counter;
   for (counter = 0U; counter < NumberOfInterfaces; counter++)
   {
     if (a_InterfacesTable[counter].p_Ops->Detection != NULL)
@@ -112,7 +116,7 @@ uint32_t OPENBL_InterfaceDetection(void)
       }
     }
   }
-
+#endif
   return detected;
 }
 
@@ -123,11 +127,6 @@ uint32_t OPENBL_InterfaceDetection(void)
 void OPENBL_CommandProcess(void)
 {
   uint8_t command_opcode;
-
-#if defined (__CP_SERIAL_BOOT__)
-  int itx = parse_boot_interface_selected(BOOT_SEL_ITF_ADDRESS);
-  p_Interface = &(a_InterfacesTable[itx]);
-#endif
 
   /* Get the user command opcode */
   if (p_Interface->p_Ops->GetCommandOpcode != NULL)
@@ -197,7 +196,7 @@ void OPENBL_CommandProcess(void)
       default:
         if (p_Interface->p_Ops->SendByte != NULL)
         {
-          p_Interface->p_Ops->SendByte(NACK_BYTE);
+            p_Interface->p_Ops->SendByte(NACK_BYTE);
         }
         break;
     }

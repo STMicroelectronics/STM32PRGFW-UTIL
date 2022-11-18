@@ -16,7 +16,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020(-2021) STMicroelectronics.
+  * Copyright (c) 2020-2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -69,7 +69,7 @@
   * @brief CMSIS Device version number
   */
 #define __STM32MP13xx_CMSIS_VERSION_MAIN   (0x00U) /*!< [31:24] main version */
-#define __STM32MP13xx_CMSIS_VERSION_SUB1   (0x04U) /*!< [23:16] sub1 version */
+#define __STM32MP13xx_CMSIS_VERSION_SUB1   (0x05U) /*!< [23:16] sub1 version */
 #define __STM32MP13xx_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
 #define __STM32MP13xx_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32MP13xx_CMSIS_VERSION        ((__CMSIS_DEVICE_VERSION_MAIN     << 24)\

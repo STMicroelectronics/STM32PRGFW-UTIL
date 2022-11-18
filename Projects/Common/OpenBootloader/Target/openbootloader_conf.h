@@ -35,32 +35,35 @@
 #endif
 
 /* -------------------------- Definitions for Memories ---------------------- */
-#if   defined (STM32MP135Fxx)
-#define RAM_SIZE                          (160U * 1024U)                       /* Size of RAM 160 MB  */
-#define RAM_START_ADDRESS                 0x2FFE0000                           /* Start of SRAM  */
-#else
-#define RAM_SIZE                          (704U * 1024U)                       /* Size of RAM 704 MB  */
+#if defined (STM32MP157Cxx)
+#define RAM_SIZE                          (704U * 1024U)                       /* Size of RAM 704 KB for OpenBL application use  */
 #define RAM_START_ADDRESS                 0x2FFC0000                           /* Start of SRAM  */
-#endif
-#define RAM_END_ADDRESS                   (RAM_START_ADDRESS + RAM_SIZE)       /* End of SRAM  */
+#define BOOT_SEL_ITF_ADDRESS              0x2FFC0078                           /* Boot selected interface Address */
 #define OPENBL_RAM_SIZE                   (89U * 1024U)                        /* Start downloading after this project memory space used */
+#elif defined (STM32MP135Fxx)
+#define RAM_SIZE                          (160U * 1024U)                       /* Size of RAM 160 KB for OpenBL application use  */
+#define RAM_START_ADDRESS                 0x2FFE0000                           /* Start of SRAM  */
+#define BOOT_SEL_ITF_ADDRESS              0x30004078                           /* Boot selected interface Address */
+#define OPENBL_RAM_SIZE                   (89U * 1024U)                        /* Start downloading after this project memory space used */
+#endif
+
+#define RAM_END_ADDRESS                   (RAM_START_ADDRESS + RAM_SIZE)       /* End of SRAM  */
 #define BASE_WRITE_ADDRESS                RAM_START_ADDRESS + OPENBL_RAM_SIZE  /* Start downloading here */
 #define FLASHLAYOUT_RAM_ADDRESS           BASE_WRITE_ADDRESS                   /* Space reserved for flashlayout */
 #define RAM_WRITE_ADDRESS                 BASE_WRITE_ADDRESS + 1024            /* Free space for application downloading */
 #define SD_WRITE_ADDRESS                  BASE_WRITE_ADDRESS + 1024            /* Fake address, SD not supported */
 #define UNDEF_ADDRESS                     0xFFFFFFFF                           /* Undefined Address */
-#if defined (STM32MP157Cxx)
-#define BOOT_SEL_ITF_ADDRESS              0x2FFC0078                           /* Boot selected interface Address on MP15 */
-#else
-#define BOOT_SEL_ITF_ADDRESS              0x30004078                           /* Boot selected interface Address on MP13 */
-#endif
 
 #define AREA_ERROR                        0x0U  /* Error Address Area */
 #define RAM_AREA                          0x1U  /* RAM Address area */
 #define EXTERNAL_MEMORY_AREA              0x2U  /* External memory Address area */
 
+#if defined(__CP_SERIAL_BOOT__)
+/* only 1 interface registered/detected at runtime, the one used by ROM CODE*/
+#define INTERFACES_SUPPORTED              1U
+#else
 #define INTERFACES_SUPPORTED              2U
-
+#endif
 /* -------------------------- Definitions for External Memories ---------------------- */
 #define EXT_MEMORY_START_ADDRESS          0x70000000 /* (uint32_t)pStorageInfo->DeviceStartAddress */
 #define EXT_MEMORY_END_ADDRESS            0x74000000 /* (uint32_t)(pStorageInfo->DeviceStartAddress + pStorageInfo->DeviceSize) */

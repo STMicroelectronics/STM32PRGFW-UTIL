@@ -42,7 +42,7 @@
   Internal References
  *----------------------------------------------------------------------------*/
 void Vectors       (void) __attribute__ ((naked, section("RESET")));
-void Reset_Handler (void) __attribute__ ((naked));
+void Reset_Handler (void) __attribute__ ((naked, target("arm")));
 
 /*----------------------------------------------------------------------------
   Exception / Interrupt Handler
@@ -499,6 +499,13 @@ void Vectors(void) {
 }
 
 /*----------------------------------------------------------------------------
+  Default Handler for Exceptions / Interrupts
+ *----------------------------------------------------------------------------*/
+void Default_Handler(void) {
+  while(1);
+}
+
+/*----------------------------------------------------------------------------
   Reset Handler called on controller reset
  *----------------------------------------------------------------------------*/
 void Reset_Handler(void) {
@@ -634,9 +641,3 @@ void Reset_Handler_cpu1(void) {
     [sys_mode] "M" (SYS_MODE));
 }
 #endif
-/*----------------------------------------------------------------------------
-  Default Handler for Exceptions / Interrupts
- *----------------------------------------------------------------------------*/
-void Default_Handler(void) {
-  while(1);
-}

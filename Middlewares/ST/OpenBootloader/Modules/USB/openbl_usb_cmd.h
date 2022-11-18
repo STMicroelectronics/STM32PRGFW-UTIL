@@ -28,8 +28,8 @@ extern "C" {
 #include "usbd_dfu.h"
 
 uint16_t OPENBL_USB_EraseMemory(uint32_t Add);
-void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length);
-uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length);
+void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length, uint32_t BlockNumber);
+uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length, uint32_t BlockNumber);
 
 /* Exported variables --------------------------------------------------------*/
 extern USBD_HandleTypeDef hUsbDeviceFS;

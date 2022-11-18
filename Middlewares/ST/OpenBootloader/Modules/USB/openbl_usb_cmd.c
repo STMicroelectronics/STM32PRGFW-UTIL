@@ -54,7 +54,7 @@ uint8_t OPENBL_USB_GetPhase(uint32_t Alt);
   * @param  Length: Number of data to be written (in bytes).
   * @retval None.
   */
-void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length)
+void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length, uint32_t BlockNumber)
 {
   switch (phase)
   {
@@ -65,14 +65,27 @@ void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length)
     /* Set otp global state */
     Otp.GlobalState = (((uint32_t)pSrc[7] << 24) | ((uint32_t)pSrc[6] << 16) | ((uint32_t)pSrc[5] << 8) | (uint32_t)pSrc[4]);
 
-    /* Set otp values and status */
-    for (i = 8, otp_idx = 0; (i < Length && (otp_idx < OTP_PART_SIZE)); i+=4, otp_idx++)
-    {
-      Otp.OtpPart[otp_idx] = (((uint32_t)pSrc[i+3] << 24) | ((uint32_t)pSrc[i+2] << 16) | ((uint32_t)pSrc[i+1] << 8) | (uint32_t)pSrc[i]);
-    }
+	if (BlockNumber == 0)
+	{
+		/* Set otp values and status */
+		for (i = 8, otp_idx = 0; (i < Length && (otp_idx < OTP_PART_SIZE)); i+=4, otp_idx++)
+		{
+		  Otp.OtpPart[otp_idx] = (((uint32_t)pSrc[i+3] << 24) | ((uint32_t)pSrc[i+2] << 16) | ((uint32_t)pSrc[i+1] << 8) | (uint32_t)pSrc[i]);
+		}
+	}
+	else
+	{
+		for (i = 0, otp_idx = (254 + ((BlockNumber-1)*256)); (i < Length && (otp_idx < OTP_PART_SIZE)); i+=4, otp_idx++)
+		{
+		  Otp.OtpPart[otp_idx] = (((uint32_t)pSrc[i+3] << 24) | ((uint32_t)pSrc[i+2] << 16) | ((uint32_t)pSrc[i+1] << 8) | (uint32_t)pSrc[i]);
+		}
+	}
 
     /* Write otp */
-    OPENBL_OTP_Write(Otp);
+    if (otp_idx == OTP_PART_SIZE)
+    {
+       OPENBL_OTP_Write(Otp);
+    }
     break;
 
   case PHASE_0x3:
@@ -128,7 +141,7 @@ void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length)
   * @param  Length: Number of data to be read (in bytes).
   * @retval Pointer to the physical address where data should be read.
   */
-uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length)
+uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length, uint32_t BlockNumber)
 {
   phase = OPENBL_USB_GetPhase(Alt);
   switch (phase)
@@ -180,7 +193,10 @@ uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length)
 
   case PHASE_OTP:
     /* Read otp */
-    Otp = OPENBL_OTP_Read();
+	if (BlockNumber == 0)
+	{
+		Otp = OPENBL_OTP_Read();
+
 
     /* Get otp version */
     pDest[0] = (uint8_t)Otp.Version;
@@ -197,11 +213,32 @@ uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length)
     /* Get otp values and status */
     for (i = 8, otp_idx = 0; (i < Length && (otp_idx < OTP_PART_SIZE)); i+=4, otp_idx++)
     {
+      /* 127 OTP sent for the first 1024 bytes block - */
+      /* BlockNumber == 0 : otp_idx=0..251 - 127 OTP x 8 bytes */
       pDest[i] = (uint8_t)(Otp.OtpPart[otp_idx]);
       pDest[i+1] = (uint8_t)(Otp.OtpPart[otp_idx] >> 8);
       pDest[i+2] = (uint8_t)(Otp.OtpPart[otp_idx] >> 16);
       pDest[i+3] = (uint8_t)(Otp.OtpPart[otp_idx] >> 24);
     }
+
+	}
+	else
+	{
+	    for (i = 0, otp_idx = (254 + ((BlockNumber-1)*256)); (i < Length && (otp_idx < OTP_PART_SIZE)); i+=4, otp_idx++)
+	    {
+
+	      /*
+	       * BlockNumber == 1 : otp_idx=254..505 - 128 OTP x 8 bytes = 1024 bytes - 8 bytes = 4 byes for OTP value & 4 bytes for status
+	       * BlockNumber == 2 : otp_idx=506..761 - 1024 bytes
+	       * BlockNumber == 3 : otp_idx=762..767 - 1024 bytes
+	       */
+
+	      pDest[i] = (uint8_t)(Otp.OtpPart[otp_idx]);
+	      pDest[i+1] = (uint8_t)(Otp.OtpPart[otp_idx] >> 8);
+	      pDest[i+2] = (uint8_t)(Otp.OtpPart[otp_idx] >> 16);
+	      pDest[i+3] = (uint8_t)(Otp.OtpPart[otp_idx] >> 24);
+	    }
+	}
     break;
   default:
 

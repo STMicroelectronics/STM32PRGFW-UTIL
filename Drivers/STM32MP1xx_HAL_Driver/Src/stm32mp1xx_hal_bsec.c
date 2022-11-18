@@ -171,11 +171,11 @@
 *      Note : This function is a sub utility function that does not check the SAFMEM readiness,
 *      this is the caller function that should take care of that.
 *
-* @param   [in]   hBsec   : BSEC handle
-* @param   [in]   regType : BSEC register type : should take value from valid range @ref
-* @param   [in]   regIdx  : register index of the same type 'regType' concerned by bit read.
-* @param   [in]   regBit : register bit to read
-* @param   [in/out] pBitValue : Pointer to get register bit read value
+* @param   hBsec [in]   : BSEC handle
+* @param   regType [in] : BSEC register type : should take value from valid range @ref BSEC_RegTypeTypeDef
+* @param   regIdx [in]  : register index of the same type 'regType' concerned by bit read.
+* @param   regBit [in]  : register bit to read
+* @param   pBitValue [in/out] : Pointer to get register bit read value
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -251,7 +251,7 @@ static HAL_StatusTypeDef BSEC_UtilReadRegisterBit(BSEC_HandleTypeDef * hBsec,
 /**
 * @brief   This function initialize BSEC driver handle.
 *
-* @param   [in]   hBsec      : BSEC handle
+* @param   hBsec [in] : BSEC handle
 * @retval  None.
 ******************************************************************************
 */
@@ -273,7 +273,7 @@ void HAL_BSEC_Init(BSEC_HandleTypeDef * hBsec)
 /**
 * @brief   This function De-initialize the BSEC driver by powering down SAFMEM.
 *         
-* @param   [in]   hBsec      : BSEC handle
+* @param   hBsec [in] : BSEC handle
 * @retval  None.
 ******************************************************************************
 */
@@ -295,8 +295,8 @@ void HAL_BSEC_DeInit(BSEC_HandleTypeDef * hBsec)
 /**
 * @brief   This function powers up SAFMEM and setting correct frequency in
 *      SAFMEM (FRC).
-* @param   [in]   hBsec      : BSEC handle
-* @param   [in/out] safMemClkFreqRange : Range of SAFMEM clock (FRC) should take values
+* @param   hBsec  [in] : BSEC handle
+* @param   safMemClkFreqRange [in/out] : Range of SAFMEM clock (FRC) should take values
 *           of type @ref BSEC_SafMemClkRangeTypeDef.
 *
 * @retval  HAL_StatusTypeDef : Returned value.
@@ -371,7 +371,7 @@ HAL_StatusTypeDef HAL_BSEC_SafMemPwrUp(BSEC_HandleTypeDef     * hBsec,
 *      and change BSEC state to BSEC_STATE_READY.
 *      No action and no error reported when SAFMEM was not powered up yet.
 *
-* @param   [in]   hBsec      : BSEC handle
+* @param   hBsec [in] : BSEC handle
 *
 * @retval  None.
 ******************************************************************************
@@ -400,10 +400,10 @@ void HAL_BSEC_SafMemPwrDown(BSEC_HandleTypeDef  * hBsec)
 * @brief  This function reads for a given register type in @ref BSEC_RegTypeTypeDef
 *      bit 'regBit' value of otp fuse index 'otpWordIdx' within the same type 'regType'.
 *
-* @param   [in]   hBsec   : BSEC handle
-* @param   [in]   regType : BSEC register type : should take value from valid range @ref
-* @param   [in]   otpWordIdx : otp fuse index
-* @param   [in/out] pBitValue : Pointer to get register bit read value
+* @param   hBsec [in] : BSEC handle
+* @param   regType [in] : BSEC register type : should take value from valid range @ref BSEC_RegTypeTypeDef
+* @param   otpWordIdx [in] : otp fuse index
+* @param   pBitValue [in/out] : Pointer to get register bit read value
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************/
 
@@ -427,9 +427,9 @@ HAL_StatusTypeDef HAL_BSEC_ReadRegisterBit(BSEC_HandleTypeDef * hBsec,
 *      parameter 'otpWordIdx'.
 *      The read analyze possible error status such as tampering attempt or
 *      sticky/permanent read locking.
-* @param   [in]   hBsec     : BSEC handle
-* @param   [in]   otpWordIdx  : OTP word from which we want to read the shadow register.
-* @param   [in/out] pOtpShadowVal : pointer to get the OTP word shadow value.
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word from which we want to read the shadow register.
+* @param   pOtpShadowVal [in/out] : pointer to get the OTP word shadow value.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -491,12 +491,12 @@ HAL_StatusTypeDef HAL_BSEC_OtpShadowRead(BSEC_HandleTypeDef * hBsec,
 *      In other words the only way to read the OTP word value (via BSEC shadow) is not available. The OTP word
 *      cannot be read by any mean, despite the OTP Read operation is possible.
 *
-* @param   [in]   hBsec      : BSEC handle
+* @param   hBsec [in] : BSEC handle
 *
-* @param   [in]   otpWordIdx     : OTP word we want to read from SAFMEM
+* @param   otpWordIdx [in] : OTP word we want to read from SAFMEM
 *                   (and update accordingly the corresponding OTP shadow register).
 *
-* @param   [in/out] pOtpShadowVal : pointer to get the OTP word value.
+* @param   pOtpShadowVal [in/out] : pointer to get the OTP word value.
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -649,8 +649,8 @@ HAL_StatusTypeDef HAL_BSEC_OtpRead(BSEC_HandleTypeDef * hBsec,
 /**
 * @brief   This function gets the security status of the SoC sample
 *      as given by OTP_DATA0[5:0], which is readable from BSEC_OTP_STATUS register.
-* @param   [in]   hBsec    : BSEC handle
-* @param   [in/out] pSecStatus : pointer to get the SoC sample security status
+* @param   hBsec [in] : BSEC handle
+* @param   pSecStatus [in/out] : pointer to get the SoC sample security status
 *      The returned security status can take values from @ref BSEC_ChipSecurityTypeDef.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -706,9 +706,9 @@ HAL_StatusTypeDef HAL_BSEC_GetSecurityStatus(BSEC_HandleTypeDef * hBsec, BSEC_Ch
 *      The write affects one of the shadow registers in the range
 *      BSEC_OTP_DATA[0]..BSEC_OTP_DATA95.
 *      Error status such as OTP word shadow sticky locked write is checked.
-* @param   [in] hBsec    : BSEC handle
-* @param   [in] otpWordIdx : OTP word shadow index to be written
-* @param   [in] otpVal  : Value to be written in OTP Word shadow register.
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word shadow index to be written
+* @param   otpVal [in] : Value to be written in OTP Word shadow register.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -789,9 +789,9 @@ HAL_StatusTypeDef HAL_BSEC_OtpShadowWrite(BSEC_HandleTypeDef * hBsec, uint32_t o
 *        In that case there is an exit with error BSEC_ERROR_TIMEOUT.
 *        If no timeout occurred, check after programming for an eventual ProgFail error.
 *
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] otpWordIdx   : OTP word to program in SAFMEM.
-* @param   [in] otpWordValReq  : 32 bits value requested to be programmed in SAFMEM.
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word to program in SAFMEM.
+* @param   otpWordValReq [in] : 32 bits value requested to be programmed in SAFMEM.
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1035,8 +1035,8 @@ HAL_StatusTypeDef HAL_BSEC_OtpProgram(BSEC_HandleTypeDef   * hBsec,
 
 /**
 * @brief   This function reads the BSEC scratch register word (32 bits).
-* @param   [in] hBsec         : BSEC handle
-* @param   [in/out] pScratchReadVal : pointer to read the scratch word.
+* @param   hBsec [in] : BSEC handle
+* @param   pScratchReadVal [in/out] : pointer to read the scratch word.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1073,8 +1073,8 @@ HAL_StatusTypeDef HAL_BSEC_ReadScratch(BSEC_HandleTypeDef * hBsec, uint32_t * pS
 * @brief   This function writes the BSEC scratch register with word (32 bits) given in
 *      parameter. Using register BSEC_SCRATCH register, always accessible (always On power domain),
 *      but reset to its reset value (0x0) by a Power Up Reset.
-* @param   [in] hBsec       : BSEC handle
-* @param   [in] scratchWriteVal : word value to write in BSEC_SCRATCH register.
+* @param   hBsec [in] : BSEC handle
+* @param   scratchWriteVal [in] : word value to write in BSEC_SCRATCH register.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1110,8 +1110,8 @@ HAL_StatusTypeDef HAL_BSEC_WriteScratch(BSEC_HandleTypeDef * hBsec, uint32_t scr
 /**
 * @brief   This function reads a CLTAP word (32 bits) written by JTAG/PC or tester side
 *      MPU-AP SoC Receive direction, using BSEC_JTAGIN register.
-* @param   [in] hBsec      : BSEC handle
-* @param   [in/out] pJtagReadVal : pointer to half word (16 bits) read from Jtag.
+* @param   hBsec [in] : BSEC handle
+* @param   pJtagReadVal [in/out] : pointer to half word (16 bits) read from Jtag.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1147,8 +1147,8 @@ HAL_StatusTypeDef HAL_BSEC_JtagInRead(BSEC_HandleTypeDef * hBsec, uint16_t * pJt
 /**
 * @brief   This function writes a JTAG word (32 bits) toward PC/JTAG :
 *      MPU-AP SoC Transmit direction, using BSEC_JTAGOUT register.
-* @param   [in] hBsec     : BSEC handle
-* @param   [in] jtagWriteVal  : half word value (16 bits) to write to BSEC_JTAGOUT.
+* @param   hBsec [in] : BSEC handle
+* @param   jtagWriteVal [in] : half word value (16 bits) to write to BSEC_JTAGOUT.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1192,8 +1192,8 @@ HAL_StatusTypeDef HAL_BSEC_JtagOutWrite(BSEC_HandleTypeDef * hBsec, uint16_t jta
 *      by Sw only when the sample is SEC_OPEN. In all others states of the life cycle (OPEN1/OPEN2/SEC_FINAL/OTP_INVALID),
 *      the unmap of upper 8 kBytes of ROM is handled by Hw and cannot be overriden by Sw.
 *      - PROG_GLOBAL_OTP : Sticky lock programming of all OTPs until next system reset
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] setFunctionLockMask : Mask set of functions to lock should be a value
+* @param   hBsec [in] : BSEC handle
+* @param   setFunctionLockMask [in] : Mask set of functions to lock should be a value
 *         created by ORring one or more of values from @ref BSEC_FuncStickyLockTypeDef.
 *         The @ref BSEC_FuncStickyLockTypeDef are directly mapping the Hw register BSEC_OTP_LOCK.
 *         Note : each bit for which the feature should be locked should have value 1b1', values to 1b0'
@@ -1247,8 +1247,8 @@ HAL_StatusTypeDef HAL_BSEC_FunctionSetLock(BSEC_HandleTypeDef * hBsec, uint32_t 
 *      by Sw only when the sample is SEC_OPEN. In all others states of the life cycle (OPEN1/OPEN2/SEC_FINAL/OTP_INVALID),
 *      the unmap of upper 8 kBytes of ROM is handled by Hw and cannot be overriden by Sw.
 *      - PROG_GLOBAL_OTP : Sticky lock programming of all OTPs until next system reset
-* @param   [in] hBsec         : BSEC handle
-* @param   [in] pFunctionLockMaskRead : Pointer to get the Mask of functions locked
+* @param   hBsec [in] : BSEC handle
+* @param   pFunctionLockMaskRead [in] : Pointer to get the Mask of functions locked
 *         can be compared with values of @ref BSEC_FuncStickyLockTypeDef to know each function that is locked
 *         currently.
 *         Note : each bit for which the feature is currently locked have value 1b1', values to 1b0'
@@ -1293,8 +1293,8 @@ HAL_StatusTypeDef HAL_BSEC_FunctionGetLock(BSEC_HandleTypeDef * hBsec, uint32_t 
 * @brief   This function locks permanently the programming of OTP word in SAFMEM
 *      for 'otpWordIdx' given in parameter thanks to operation 'LOCK' (write SAFMEM : ie program )
 *      of register BSEC_OTP_CONTROL. This is a per OTP word operation.
-* @param   [in] hBsec     : BSEC handle
-* @param   [in] otpWordIdx  : OTP word for which we should forbid programming in SAFMEM permanently.
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word for which we should forbid programming in SAFMEM permanently.
 *      Such an OTP word in SAFMEM will never be allowed to be reprogrammed in the life of the SoC sample.
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1430,9 +1430,9 @@ HAL_StatusTypeDef HAL_BSEC_SetOtpPermanentProgLock(BSEC_HandleTypeDef * hBsec, u
 * @brief   This function returns in second parameter 'pLockStatus', the information
 *      for a given OTP word index given in first parameter 'otpWordIdx',
 *      whether or not this OTP word is permanently programming locked.
-* @param   [in]   hBsec    : BSEC handle
-* @param   [in]   otpWordIdx   : OTP word for which information on permanent programming lock is requested
-* @param   [in/out] pLockStatus  : pointer to get permanent programming lock status : value of type @ref BSEC_LockTypeDef
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word for which information on permanent programming lock is requested
+* @param   pLockStatus [in/out] : pointer to get permanent programming lock status : value of type @ref BSEC_LockTypeDef
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1505,9 +1505,9 @@ HAL_StatusTypeDef HAL_BSEC_GetOtpPermanentProgLockStatus(BSEC_HandleTypeDef * hB
 *      Note1 : this parameter should take values or combination (ORred) of values from @ref BSEC_OtpStickyLockTypeDef.
 *      Note2 : Sticky locking is applied even if already sticky locked for the same function and same bit
 *          No error is returned in that case and sticky lock is re-applied.
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] otpWordIdx   : OTP word index for which the sticky lock command is processed.
-* @param   [in] stickyLockCmd  : Sticky lock command to apply : value of type @ref BSEC_OtpStickyLockTypeDef
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word index for which the sticky lock command is processed.
+* @param   stickyLockCmd [in] : Sticky lock command to apply : value of type @ref BSEC_OtpStickyLockTypeDef
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1589,9 +1589,9 @@ HAL_StatusTypeDef HAL_BSEC_SetOtpStickyLock(BSEC_HandleTypeDef * hBsec, uint32_t
 *      - OTP shadow register write lock command
 *      - OTP shadow register read lock command
 *      Note : this parameter should take values from @ref BSEC_OtpStickyLockTypeDef.
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] otpWordIdx   : OTP word index for which the sticky lock command is processed.
-* @param   [in] pStickyLockStatus  : Composite Sticky lock status : a combination of values from
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word index for which the sticky lock command is processed.
+* @param   pStickyLockStatus [in] : Composite Sticky lock status : a combination of values from
 *         type @ref BSEC_OtpStickyLockTypeDef
 *
 * @retval  HAL_StatusTypeDef : Returned value.
@@ -1679,9 +1679,9 @@ HAL_StatusTypeDef HAL_BSEC_GetOtpStickyLockStatus(BSEC_HandleTypeDef * hBsec,
 
 /**
 * @brief   This function gets OTP error status for the OTP word of index 'otpWordIdx'.
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] otpWordIdx  : OTP word index
-* @param   [in] pErrorStatus : error status. 0 means no error, 1 means error
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word index
+* @param   pErrorStatus [in] : error status. 0 means no error, 1 means error
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1725,9 +1725,9 @@ HAL_StatusTypeDef HAL_BSEC_GetOtpErrorStatus(BSEC_HandleTypeDef * hBsec,
 
 /**
 * @brief   This function gets OTP disturb status for the OTP word of index 'otpWordIdx'.
-* @param   [in] hBsec      : BSEC handle
-* @param   [in] otpWordIdx  : OTP word index
-* @param   [in] pDisturbStatus : disturb status
+* @param   hBsec [in] : BSEC handle
+* @param   otpWordIdx [in] : OTP word index
+* @param   pDisturbStatus [in] : disturb status
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
 */
@@ -1771,8 +1771,8 @@ HAL_StatusTypeDef HAL_BSEC_GetOtpDisturbStatus(BSEC_HandleTypeDef * hBsec,
 
 /**
 * @brief   This function returns a mask of feature currently disabled in EWS stage by SAFMEM OTP_DATA1 word programming.
-* @param   [in] hBsec          : BSEC handle
-* @param   [in/out] pMaskFeatDisabled  : pointer to get the mask of feature currently disabled by OTP_DATA1.
+* @param   hBsec [in] : BSEC handle
+* @param   pMaskFeatDisabled [in/out] : pointer to get the mask of feature currently disabled by OTP_DATA1.
 *
 *      Careful here a value 1b1' in the bitmask[i] means that the corresponding feature :
 *      (1 << BSEC_OtpFeatureStickyLockTypeDef[i]) is disabled by OTP programming and not accessible to hardware.
@@ -1811,8 +1811,8 @@ HAL_StatusTypeDef HAL_BSEC_GetFeatureDisabled(BSEC_HandleTypeDef * hBsec, uint32
 /**
 * @brief   This function returns the value of bit OTP_DATA1.fdis_tk that gives information of ST Key Provisioning
 *      have already been handled (when value 1b1') or not yet handled (when value is 1b0').
-* @param   [in] hBsec       : BSEC handle
-* @param   [in/out] pFdisTkValue  : pointer to get value of bit OTP_DATA1.fdis_tk
+* @param   hBsec [in] : BSEC handle
+* @param   pFdisTkValue [in/out] : pointer to get value of bit OTP_DATA1.fdis_tk
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1841,8 +1841,8 @@ HAL_StatusTypeDef HAL_BSEC_GetFdisTkValue(BSEC_HandleTypeDef * hBsec, uint32_t *
 *      in BSEC_SCRATCH register. This is only possible if OTP Mode = OTP_SECURE and
 *      fdis_tk = 0.
 *      The table to get the TK should be allocated externally to a size of 4 uint32_t
-* @param   [in] hBsec    : BSEC handle
-* @param   [in/out] tkValue  : pointer to get value TK
+* @param   hBsec [in] : BSEC handle
+* @param   tkValue [in/out] : pointer to get value TK
 *
 * @retval  HAL_StatusTypeDef : Returned value.
 ******************************************************************************
@@ -1881,8 +1881,8 @@ HAL_StatusTypeDef HAL_BSEC_GetTk(BSEC_HandleTypeDef * hBsec, uint32_t * tkValue)
 
 /**
 * @brief   This function gets debug signals enabled/disabled status by reading BSEC register 'BSEC_DENABLE'.
-* @param   [in] hBsec          : BSEC handle
-* @param   [in/out] pDebugMaskEnabled  : pointer to get the mask of debug signals enabled/disabled.
+* @param   hBsec [in] : BSEC handle
+* @param   pDebugMaskEnabled [in/out] : pointer to get the mask of debug signals enabled/disabled.
 *                    Any bit value in mask set to 1b1' means a debug signal that is enabled,
 *                    while 1b0' bit in mask means a debug signal disabled
 *
@@ -1918,8 +1918,8 @@ HAL_StatusTypeDef HAL_BSEC_GetDebugEnabled(BSEC_HandleTypeDef * hBsec, uint32_t 
 * @brief   This function set debug signals enabled/disabled mask by writing to write register 'BSEC_DENABLE'
 *      to an enable/disable mask value in second parameter.
 *      This is possible if the BSEC_DENABLE register is not currently sticky write locked.
-* @param   [in] hBsec         : BSEC handle
-* @param   [in/out] debugMaskEnabled  : Mask of disable/enable of debug signals.
+* @param   hBsec [in] : BSEC handle
+* @param   debugMaskEnabled [in/out] : Mask of disable/enable of debug signals.
 *                     Any value set to 1b1' means debug signal is enabled,
 *                     1b0' is a debug signal disabled
 *
@@ -1975,10 +1975,10 @@ HAL_StatusTypeDef HAL_BSEC_SetDebugEnabled(BSEC_HandleTypeDef * hBsec, uint32_t 
 /**
 * @brief   This function reads in *pPKH the public key HASH (SHA-256) from OTP_DATA[31:24]
 *      This is the hash by SHA-256 of the public key used for authentication of the First Stage Boot Loader (FSBL).
-* @param   [in] hBsec         : BSEC handle
-* @param   [in] readMode      : read mode should take value from @ref BSEC_ReadModeTypeDef.
-* @param   [in] pkhOtpFirstWordIdx  : first OTP word index of PKH
-* @param   [in/out] pPKH      : Pointer to read the public key (the memory should have been allocated externally).
+* @param   hBsec [in] : BSEC handle
+* @param   readMode [in] : read mode should take value from @ref BSEC_ReadModeTypeDef.
+* @param   pkhOtpFirstWordIdx [in] : first OTP word index of PKH
+* @param   pPKH [in/out] : Pointer to read the public key (the memory should have been allocated externally).
 *
 * Note : prior the get an array of 32 bytes should have been allocated externally from this BSEC function, there
 *    is no static or dynamic memory allocation in the current function.
@@ -2073,10 +2073,10 @@ HAL_StatusTypeDef HAL_BSEC_GetPKH(BSEC_HandleTypeDef * hBsec,
 * @brief   This static function implements simple integer division
 *      (A div B) and (A mod B) to obtain quotient in *pQ and remainder (modulo) in *pR.
 *
-* @param   [in] A    : dividend
-* @param   [in] B    : divider
-* @param   [in/out] pQ : integer quotient
-* @param   [in/out] pR : modulo
+* @param   A [in] : dividend
+* @param   B [in] : divider
+* @param   pQ [in/out] : integer quotient
+* @param   pR [in/out] : modulo
 * @retval  Void.
 ******************************************************************************
 */
@@ -2100,7 +2100,7 @@ void HAL_BSEC_Div(uint32_t A, uint32_t B, uint32_t * pQ, uint32_t * pR)
 /**
 * @brief   This function wait until bit BSEC_OTP_CONTROL.BUSY is 1b0'
 *      before a timeout.
-* @param   [in]   hBsec       : BSEC handle
+* @param   hBsec [in] : BSEC handle
 *
 * @retval  timeoutDetected : value 0x1 if timeout was detected while
 *      waiting for bit BUSY to be cleared.

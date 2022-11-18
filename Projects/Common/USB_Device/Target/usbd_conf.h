@@ -82,7 +82,7 @@
 /*---------- -----------*/
 #define USBD_DFU_XFER_SIZE                1024U
 /*---------- -----------*/
-#define USBD_DFU_APP_DEFAULT_ADD          0x2FFF6800
+#define USBD_DFU_APP_DEFAULT_ADD          RAM_WRITE_ADDRESS
 
 /****************************************/
 /* #define for FS and HS identification */

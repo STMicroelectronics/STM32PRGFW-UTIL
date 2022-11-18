@@ -100,7 +100,7 @@ typedef struct
 /** @defgroup PWR_Regulator_state_in_STOP_mode PWR Regulator state in STOP_mode
   * @{
   */
-#define PWR_MAINREGULATOR_ON                        ((uint32_t)0x00000000)
+#define PWR_MAINREGULATOR_ON                        ((uint32_t)0x00000000U)
 #define PWR_LOWPOWERREGULATOR_ON                    PWR_CR1_LPDS
 
 #define IS_PWR_REGULATOR(__REGULATOR__)     (((__REGULATOR__) == PWR_MAINREGULATOR_ON) || \

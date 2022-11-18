@@ -13,9 +13,24 @@
   *      - Call SystemInit to initialize IRQs, caches, MMU, ...
   *
   ******************************************************************************
+  * Copyright (c) 2009-2018 ARM Limited. All rights reserved.
+  *
+  * SPDX-License-Identifier: Apache-2.0
+  *
+  * Licensed under the Apache License, Version 2.0 (the License); you may
+  * not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  * www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2020(-2021) STMicroelectronics.
+  * Copyright (c) 2020-2021 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -84,7 +99,6 @@ void __attribute__ ((weak)) SecurePhysicalTimer_IRQHandler(void) {}
 void __attribute__ ((weak)) NonSecurePhysicalTimer_IRQHandler(void) {}
 void __attribute__ ((weak)) Legacy_nIRQ_IRQHandler(void) {}
 
-void __attribute__ ((weak)) TSC_IRQHandler(void) {}
 void __attribute__ ((weak)) PVD_AVD_IRQHandler(void) {}
 void __attribute__ ((weak)) TAMP_IRQHandler(void) {}
 void __attribute__ ((weak)) RTC_WKUP_ALARM_IRQHandler(void) {}
@@ -271,7 +285,7 @@ IRQHandler_t IRQ_Vector_Table[MAX_IRQ_n] = {
     NonSecurePhysicalTimer_IRQHandler,  /* 30 */
     Legacy_nIRQ_IRQHandler,
     /******  STM32 specific Interrupt Numbers **********************************************************************/
-    TSC_IRQHandler,
+    RESERVED_IRQHandler,
     PVD_AVD_IRQHandler,
     TAMP_IRQHandler,
     RTC_WKUP_ALARM_IRQHandler,

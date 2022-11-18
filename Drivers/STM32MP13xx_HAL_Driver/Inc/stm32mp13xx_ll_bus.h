@@ -457,7 +457,7 @@ __STATIC_INLINE void LL_AHB2_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB2_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_AHB2ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_AHB2ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -725,7 +725,7 @@ __STATIC_INLINE void LL_AHB4_S_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB4_S_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_S_AHB4ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_S_AHB4ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -881,7 +881,7 @@ __STATIC_INLINE void LL_AHB4_NS_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB4_NS_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_NS_AHB4ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_NS_AHB4ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1028,7 +1028,7 @@ __STATIC_INLINE void LL_AHB5_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB5_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_AHB5ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_AHB5ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1237,7 +1237,7 @@ __STATIC_INLINE void LL_AHB6_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB6_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_AHB6ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_AHB6ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1491,7 +1491,7 @@ __STATIC_INLINE void LL_AHB6_S_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB6_S_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_S_AHB6ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_S_AHB6ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1566,7 +1566,7 @@ __STATIC_INLINE void LL_AHB6_NS_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AHB6_NS_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_NS_AHB6ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_NS_AHB6ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1641,7 +1641,7 @@ __STATIC_INLINE void LL_AXI_S_GRP1_EnableClockSleep(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AXI_S_GRP1_IsEnabledClockSleep(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_S_AXIMLPENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_S_AXIMLPENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1681,7 +1681,7 @@ __STATIC_INLINE void LL_AXI_NS_GRP1_EnableClockSleep(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_AXI_NS_GRP1_IsEnabledClockSleep(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_NS_AXIMLPENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_NS_AXIMLPENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1736,7 +1736,7 @@ __STATIC_INLINE void LL_MLAHB_GRP1_EnableClockSleep(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_MLAHB_GRP1_IsEnabledClockSleep(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_MLAHBLPENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_MLAHBLPENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -1852,7 +1852,7 @@ __STATIC_INLINE void LL_APB1_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB1_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB1ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB1ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2146,7 +2146,7 @@ __STATIC_INLINE void LL_APB2_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB2_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB2ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB2ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2348,7 +2348,7 @@ __STATIC_INLINE void LL_APB3_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB3_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB3ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB3ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2505,7 +2505,7 @@ __STATIC_INLINE void LL_APB3_S_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB3_S_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_S_APB3ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_S_APB3ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2580,7 +2580,7 @@ __STATIC_INLINE void LL_APB3_NS_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB3_NS_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_NS_APB3ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_NS_APB3ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2671,7 +2671,7 @@ __STATIC_INLINE void LL_APB4_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB4_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB4ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB4ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2835,7 +2835,7 @@ __STATIC_INLINE void LL_APB4_S_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB4_S_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_S_APB4ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_S_APB4ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -2909,7 +2909,7 @@ __STATIC_INLINE void LL_APB4_NS_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB4_NS_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_NS_APB4ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_NS_APB4ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -3004,7 +3004,7 @@ __STATIC_INLINE void LL_APB5_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB5_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB5ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB5ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**
@@ -3212,7 +3212,7 @@ __STATIC_INLINE void LL_APB6_GRP1_EnableClock(uint32_t Periphs)
   */
 __STATIC_INLINE uint32_t LL_APB6_GRP1_IsEnabledClock(uint32_t Periphs)
 {
-  return (READ_BIT(RCC->MP_APB6ENSETR, Periphs) == Periphs);
+  return ((READ_BIT(RCC->MP_APB6ENSETR, Periphs) == Periphs) ? 1U : 0U);
 }
 
 /**

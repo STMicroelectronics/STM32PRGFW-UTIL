@@ -42,10 +42,10 @@ extern void initialise_monitor_handles(void);
   * @retval int
   */
 int main(void){
+
 #if !defined (__CP_SERIAL_BOOT__)
   /* Reset of all peripherals, Initialize the Systick. */
   HAL_Init();
-
   /* Configure the system clock */
   SystemClock_Config();
 
@@ -73,8 +73,6 @@ int main(void){
   /* Initialize openbootloader */
   OpenBootloader_Init();
 
-  /* Initialize USB device */
-  MX_USB_Device_Init();
 
   /* Infinite loop */
   while (1)

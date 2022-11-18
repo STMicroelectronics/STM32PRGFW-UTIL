@@ -46,10 +46,10 @@ void OPENBL_IWDG_Configuration(void)
 
 void OPENBL_IWDG_Refresh(void)
 {
-  /* Refresh IWDG: reload counter */
-  if (HAL_IWDG_Refresh(&IWDGHandle) != HAL_OK)
-  {
-    /* Refresh Error */
-    Error_Handler();
-  }
+//  /* Refresh IWDG: reload counter */
+//  if (HAL_IWDG_Refresh(&IWDGHandle) != HAL_OK)
+//  {
+//    /* Refresh Error */
+//    Error_Handler();
+//  }
 }

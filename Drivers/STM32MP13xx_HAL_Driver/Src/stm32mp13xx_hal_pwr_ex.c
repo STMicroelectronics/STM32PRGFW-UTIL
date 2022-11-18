@@ -178,7 +178,7 @@ HAL_StatusTypeDef HAL_PWREx_EnableBkUpReg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till Backup regulator ready flag is set */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) == RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) == 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -207,7 +207,7 @@ HAL_StatusTypeDef HAL_PWREx_DisableBkUpReg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till Backup regulator ready flag is reset */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) != RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_BRR) != 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -233,7 +233,7 @@ HAL_StatusTypeDef HAL_PWREx_Enable1V1Reg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till 1V1 regulator ready flag is set */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_11R) == RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_11R) == 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -260,7 +260,7 @@ HAL_StatusTypeDef HAL_PWREx_Disable1V1Reg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till 1V1 regulator ready flag is reset */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_11R) != RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_11R) != 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -286,7 +286,7 @@ HAL_StatusTypeDef HAL_PWREx_Enable1V8Reg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till 1V8 regulator ready flag is set */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_18R) == RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_18R) == 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -312,7 +312,7 @@ HAL_StatusTypeDef HAL_PWREx_Disable1V8Reg(void)
   tickstart = HAL_GetTick();
 
   /* Wait till 1V8 regulator ready flag is reset */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_18R) != RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_18R) != 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -338,7 +338,7 @@ HAL_StatusTypeDef HAL_PWREx_EnableUSBVoltageDetector(void)
   tickstart = HAL_GetTick();
 
   /* Wait until USB33 regulator ready flag is set */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_USB) == RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_USB) == 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -363,7 +363,7 @@ HAL_StatusTypeDef HAL_PWREx_DisableUSBVoltageDetector(void)
   tickstart = HAL_GetTick();
 
   /* Wait until USB33 regulator ready flag is reset */
-  while (__HAL_PWR_GET_FLAG(PWR_FLAG_USB) != RESET)
+  while (__HAL_PWR_GET_FLAG(PWR_FLAG_USB) != 0U)
   {
     if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY_US)
     {
@@ -562,14 +562,14 @@ void HAL_PWREx_DisableAVD(void)
 void HAL_PWREx_PVD_AVD_IRQHandler(void)
 {
   /* PVD EXTI line interrupt detected */
-  if (READ_BIT(PWR->CR1, PWR_CR1_PVDEN) != RESET)
+  if (READ_BIT(PWR->CR1, PWR_CR1_PVDEN) != 0U)
   {
     /* PWR PVD interrupt user callback */
     HAL_PWR_PVDCallback();
   }
 
   /* AVD EXTI line interrupt detected */
-  if (READ_BIT(PWR->CR1, PWR_CR1_AVDEN) != RESET)
+  if (READ_BIT(PWR->CR1, PWR_CR1_AVDEN) != 0U)
   {
     /* PWR AVD interrupt user callback */
     HAL_PWREx_AVDCallback();
@@ -595,7 +595,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
 {
 
   /* Wakeup pin EXTI line interrupt detected */
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF1) != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF1) != 0U)
   {
     /* Clear PWR WKUPF1 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC1);
@@ -604,7 +604,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
     HAL_PWREx_WKUP1_Callback();
   }
 
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF2)  != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF2)  != 0U)
   {
     /* Clear PWR WKUPF2 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC2);
@@ -613,7 +613,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
     HAL_PWREx_WKUP2_Callback();
   }
 
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF3)  != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF3)  != 0U)
   {
     /* Clear PWR WKUPF3 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC3);
@@ -622,7 +622,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
     HAL_PWREx_WKUP3_Callback();
   }
 
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF4)  != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF4)  != 0U)
   {
     /* Clear PWR WKUPF4 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC4);
@@ -631,7 +631,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
     HAL_PWREx_WKUP4_Callback();
   }
 
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF5)  != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF5)  != 0U)
   {
     /* Clear PWR WKUPF5 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC5);
@@ -640,7 +640,7 @@ void HAL_PWREx_WAKEUP_PIN_IRQHandler(void)
     HAL_PWREx_WKUP5_Callback();
   }
 
-  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF6)  != RESET)
+  if (READ_BIT(PWR->WKUPFR, PWR_WKUPFR_WKUPF6)  != 0U)
   {
     /* Clear PWR WKUPF6 flag */
     SET_BIT(PWR->WKUPCR, PWR_WKUPCR_WKUPC6);

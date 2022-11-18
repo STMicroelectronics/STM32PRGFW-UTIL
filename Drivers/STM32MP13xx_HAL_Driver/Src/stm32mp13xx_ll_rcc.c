@@ -710,6 +710,10 @@ void LL_RCC_GetPLL4ClockFreq(LL_PLL_ClocksTypeDef *PLL_Clocks)
     case LL_RCC_PLL4SOURCE_I2SCKIN:
       pllinputfreq = EXTERNAL_CLOCK_VALUE;
       break;
+
+    default:
+      /* Nothing to do */
+      break;
   }
 
   PLL_Clocks->PLL_P_Frequency = 0U;

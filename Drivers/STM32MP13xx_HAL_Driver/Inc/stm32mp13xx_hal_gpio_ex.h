@@ -276,7 +276,7 @@
   * @{
   */
 
-#define GPIO_GET_INDEX(__GPIOx__)   (uint8_t)(((__GPIOx__) == (GPIOA))? 0UL :\
+#define GPIO_GET_INDEX(__GPIOx__)            (((__GPIOx__) == (GPIOA))? 0UL :\
                                               ((__GPIOx__) == (GPIOB))? 1UL :\
                                               ((__GPIOx__) == (GPIOC))? 2UL :\
                                               ((__GPIOx__) == (GPIOD))? 3UL :\

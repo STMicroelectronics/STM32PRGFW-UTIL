@@ -2465,8 +2465,8 @@ typedef struct
   __IO uint32_t CMP;      /*!< LPTIM Compare register,                             Address offset: 0x14 */
   __IO uint32_t ARR;      /*!< LPTIM Autoreload register,                          Address offset: 0x18 */
   __IO uint32_t CNT;      /*!< LPTIM Counter register,                             Address offset: 0x1C */
-  uint16_t  RESERVED1;    /*!< Reserved, 0x20                                                 */
-  __IO uint32_t CFGR2;    /*!< LPTIM Option register,                              Address offset: 0x24 */
+  uint32_t  RESERVED1;    /*!< Reserved, 0x20                                                 */
+  __IO uint32_t CFGR2;    /*!< LPTIM Configuration register 2,                     Address offset: 0x24 */
   uint32_t  RESERVED2[242];    /*!< Reserved, 0x28-0x3EC                                                */
   __IO uint32_t HWCFGR;   /*!< LPTIM HW configuration register,                    Address offset: 0x3F0 */
   __IO uint32_t VERR;     /*!< LPTIM version register,                             Address offset: 0x3F4 */
@@ -2503,17 +2503,13 @@ typedef struct
   __IO uint32_t CR2;    /*!< USART Control register 2,                 Address offset: 0x04 */
   __IO uint32_t CR3;    /*!< USART Control register 3,                 Address offset: 0x08 */
   __IO uint32_t BRR;    /*!< USART Baud rate register,                 Address offset: 0x0C */
-  __IO uint16_t GTPR;   /*!< USART Guard time and prescaler register,  Address offset: 0x10 */
-  uint16_t  RESERVED2;  /*!< Reserved, 0x12                                                 */
+  __IO uint32_t GTPR;   /*!< USART Guard time and prescaler register,  Address offset: 0x10 */
   __IO uint32_t RTOR;   /*!< USART Receiver Time Out register,         Address offset: 0x14 */
-  __IO uint16_t RQR;    /*!< USART Request register,                   Address offset: 0x18 */
-  uint16_t  RESERVED3;  /*!< Reserved, 0x1A                                                 */
+  __IO uint32_t RQR;    /*!< USART Request register,                   Address offset: 0x18 */
   __IO uint32_t ISR;    /*!< USART Interrupt and status register,      Address offset: 0x1C */
   __IO uint32_t ICR;    /*!< USART Interrupt flag Clear register,      Address offset: 0x20 */
-  __IO uint16_t RDR;    /*!< USART Receive Data register,              Address offset: 0x24 */
-  uint16_t  RESERVED4;  /*!< Reserved, 0x26                                                 */
-  __IO uint16_t TDR;    /*!< USART Transmit Data register,             Address offset: 0x28 */
-  uint16_t  RESERVED5;  /*!< Reserved, 0x2A                                                 */
+  __IO uint32_t RDR;    /*!< USART Receive Data register,              Address offset: 0x24 */
+  __IO uint32_t TDR;    /*!< USART Transmit Data register,             Address offset: 0x28 */
   __IO uint32_t PRESC;  /*!< USART clock Prescaler register,           Address offset: 0x2C */
   uint32_t  RESERVED6[239];  /*!< Reserved,                                    0x30 - 0x3E8 */
   __IO uint32_t HWCFGR2;  /*!< USART Configuration2 register,          Address offset: 0x3EC */
@@ -12722,8 +12718,10 @@ typedef struct
 #define ETH_MACPFR_PCF_Pos                  (6U)
 #define ETH_MACPFR_PCF_Msk                  (0x3UL << ETH_MACPFR_PCF_Pos)                        /*!< 0x000000C0 */
 #define ETH_MACPFR_PCF                      ETH_MACPFR_PCF_Msk                                  /*!< Pass Control Packets */
-#define ETH_MACPFR_PCF_0                    (0x1UL << ETH_MACPFR_PCF_Pos)                       /*!< 0x00000040 */
-#define ETH_MACPFR_PCF_1                    (0x2UL << ETH_MACPFR_PCF_Pos)                       /*!< 0x00000080 */
+#define ETH_MACPFR_PCF_BLOCKALL                 (0x0UL << ETH_MACPFR_PCF_Pos)                     /*!< 0x00000000 */
+#define ETH_MACPFR_PCF_FORWARDALLEXCEPTPA       (0x1UL << ETH_MACPFR_PCF_Pos)                     /*!< 0x00000010 */
+#define ETH_MACPFR_PCF_FORWARDALL               (0x2UL << ETH_MACPFR_PCF_Pos)                     /*!< 0x00000020 */
+#define ETH_MACPFR_PCF_FORWARDPASSEDADDRFILTER  (0x3UL << ETH_MACPFR_PCF_Pos)                     /*!< 0x00000030 */
 #define ETH_MACPFR_SAIF_Pos                 (8U)
 #define ETH_MACPFR_SAIF_Msk                 (0x1UL << ETH_MACPFR_SAIF_Pos)                       /*!< 0x00000100 */
 #define ETH_MACPFR_SAIF                     ETH_MACPFR_SAIF_Msk                                 /*!< SA Inverse Filtering */
@@ -15894,9 +15892,14 @@ typedef struct
 #define ETH_MTLTXQ0OMR_TTC_Pos              (4U)
 #define ETH_MTLTXQ0OMR_TTC_Msk              (0x7UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000070 */
 #define ETH_MTLTXQ0OMR_TTC                  ETH_MTLTXQ0OMR_TTC_Msk                              /*!< Transmit Threshold Control */
-#define ETH_MTLTXQ0OMR_TTC_0                (0x1UL << ETH_MTLTXQ0OMR_TTC_Pos)                   /*!< 0x00000010 */
-#define ETH_MTLTXQ0OMR_TTC_1                (0x2UL << ETH_MTLTXQ0OMR_TTC_Pos)                   /*!< 0x00000020 */
-#define ETH_MTLTXQ0OMR_TTC_2                (0x4UL << ETH_MTLTXQ0OMR_TTC_Pos)                   /*!< 0x00000040 */
+#define ETH_MTLTXQ0OMR_TTC_32BITS           (0x0UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000000 */
+#define ETH_MTLTXQ0OMR_TTC_64BITS           (0x1UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000010 */
+#define ETH_MTLTXQ0OMR_TTC_96BITS           (0x2UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000020 */
+#define ETH_MTLTXQ0OMR_TTC_128BITS          (0x3UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000030 */
+#define ETH_MTLTXQ0OMR_TTC_192BITS          (0x4UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000040 */
+#define ETH_MTLTXQ0OMR_TTC_256BITS          (0x5UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000050 */
+#define ETH_MTLTXQ0OMR_TTC_384BITS          (0x6UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000060 */
+#define ETH_MTLTXQ0OMR_TTC_512BITS          (0x7UL << ETH_MTLTXQ0OMR_TTC_Pos)                    /*!< 0x00000070 */
 #define ETH_MTLTXQ0OMR_TQS_Pos              (16U)
 #define ETH_MTLTXQ0OMR_TQS_Msk              (0x1FFUL << ETH_MTLTXQ0OMR_TQS_Pos)                  /*!< 0x01FF0000 */
 #define ETH_MTLTXQ0OMR_TQS                  ETH_MTLTXQ0OMR_TQS_Msk                              /*!< Transmit Queue Size */
@@ -16013,8 +16016,10 @@ typedef struct
 #define ETH_MTLRXQ0OMR_RTC_Pos              (0U)
 #define ETH_MTLRXQ0OMR_RTC_Msk              (0x3UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000003 */
 #define ETH_MTLRXQ0OMR_RTC                  ETH_MTLRXQ0OMR_RTC_Msk                              /*!< Receive Queue Threshold Control */
-#define ETH_MTLRXQ0OMR_RTC_0                (0x1UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000001 */
-#define ETH_MTLRXQ0OMR_RTC_1                (0x2UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000002 */
+#define ETH_MTLRXQ0OMR_RTC_64BITS           (0x0UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000000 */
+#define ETH_MTLRXQ0OMR_RTC_32BITS           (0x1UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000001 */
+#define ETH_MTLRXQ0OMR_RTC_96BITS           (0x2UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000002 */
+#define ETH_MTLRXQ0OMR_RTC_128BITS          (0x3UL << ETH_MTLRXQ0OMR_RTC_Pos)                    /*!< 0x00000003 */
 #define ETH_MTLRXQ0OMR_FUP_Pos              (3U)
 #define ETH_MTLRXQ0OMR_FUP_Msk              (0x1UL << ETH_MTLRXQ0OMR_FUP_Pos)                    /*!< 0x00000008 */
 #define ETH_MTLRXQ0OMR_FUP                  ETH_MTLRXQ0OMR_FUP_Msk                              /*!< Forward Undersized Good Packets */
@@ -16522,9 +16527,14 @@ typedef struct
 #define ETH_DMAMR_PR_Pos                    (12U)
 #define ETH_DMAMR_PR_Msk                    (0x7UL << ETH_DMAMR_PR_Pos)                          /*!< 0x00007000 */
 #define ETH_DMAMR_PR                        ETH_DMAMR_PR_Msk                                    /*!< Priority ratio */
-#define ETH_DMAMR_PR_0                      (0x1UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00001000 */
-#define ETH_DMAMR_PR_1                      (0x2UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00002000 */
-#define ETH_DMAMR_PR_2                      (0x4UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00004000 */
+#define ETH_DMAMR_PR_1_1                    (0x0UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00000000 */
+#define ETH_DMAMR_PR_2_1                    (0x1UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00001000 */
+#define ETH_DMAMR_PR_3_1                    (0x2UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00002000 */
+#define ETH_DMAMR_PR_4_1                    (0x3UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00003000 */
+#define ETH_DMAMR_PR_5_1                    (0x4UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00004000 */
+#define ETH_DMAMR_PR_6_1                    (0x5UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00005000 */
+#define ETH_DMAMR_PR_7_1                    (0x6UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00006000 */
+#define ETH_DMAMR_PR_8_1                    (0x7UL << ETH_DMAMR_PR_Pos)                       /*!< 0x00007000 */
 #define ETH_DMAMR_INTM_Pos                  (16U)
 #define ETH_DMAMR_INTM_Msk                  (0x3UL << ETH_DMAMR_INTM_Pos)                        /*!< 0x00030000 */
 #define ETH_DMAMR_INTM                      ETH_DMAMR_INTM_Msk                                  /*!< Interrupt Mode */

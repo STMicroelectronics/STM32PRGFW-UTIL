@@ -53,10 +53,10 @@
 /**
  * @brief STM32MP13xx HAL Driver version number
    */
-#define __STM32MP13xx_HAL_VERSION_MAIN   (0x00U) /*!< [31:24] main version */
-#define __STM32MP13xx_HAL_VERSION_SUB1   (0x04U) /*!< [23:16] sub1 version */
-#define __STM32MP13xx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32MP13xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32MP13xx_HAL_VERSION_MAIN   (0x00UL) /*!< [31:24] main version */
+#define __STM32MP13xx_HAL_VERSION_SUB1   (0x05UL) /*!< [23:16] sub1 version */
+#define __STM32MP13xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
+#define __STM32MP13xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32MP13xx_HAL_VERSION         ((__STM32MP13xx_HAL_VERSION_MAIN << 24)\
                                         |(__STM32MP13xx_HAL_VERSION_SUB1 << 16)\
                                         |(__STM32MP13xx_HAL_VERSION_SUB2 << 8 )\
@@ -227,15 +227,15 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 #if defined (CORE_CA7)
 
 #if defined(USE_ST_CASIS)
-  HAL_SYSTICK_Config(SystemCoreClock / 1000);
+  HAL_SYSTICK_Config(SystemCoreClock / 1000UL);
 #elif defined (USE_PL1_SecurePhysicalTimer_IRQ)
   /* Stop Timer */
-  PL1_SetControl(0x0);
+  PL1_SetControl(0x0U);
 
   PL1_SetCounterFrequency(HSI_VALUE);
 
   /* Initialize Counter */
-  PL1_SetLoadValue(HSI_VALUE / 1000);
+  PL1_SetLoadValue(HSI_VALUE / 1000UL);
 
   /* Disable corresponding IRQ */
   IRQ_Disable(SecurePhysicalTimer_IRQn);
@@ -260,14 +260,14 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   IRQ_Enable(SecurePhysicalTimer_IRQn);
 
   /* Kick start Timer */
-  PL1_SetControl(0x1);
+  PL1_SetControl(0x1U);
 #else
   /*Set Counter Frequency */
   PL1_SetCounterFrequency(HSI_VALUE);
 // __set_CNTFRQ(HSI_VALUE);
   /* Initialize Counter */
-  PL1_SetLoadValue(0x1);
-// __set_CNTP_TVAL(0x1);
+  PL1_SetLoadValue(0x1U);
+// __set_CNTP_TVAL(0x1U);
 #endif
 
 #endif /* CORE_CA7 */
@@ -329,13 +329,13 @@ __weak uint32_t HAL_GetTick(void)
 #if defined (CORE_CA7)
 
 #if defined (USE_ST_CASIS)
-  return (Gen_Timer_Get_PhysicalCount() / (HSI_VALUE / 1000));
+  return (Gen_Timer_Get_PhysicalCount() / (HSI_VALUE / 1000UL));
 #elif defined (USE_PL1_SecurePhysicalTimer_IRQ)
   /* tick is incremented in SecurePhysicalTimer_IRQ handler */
   return uwTick;
 #else
   /* tick value directly got from 64bits CA7 register*/
-  return (PL1_GetCurrentPhysicalValue() / (HSI_VALUE / 1000));
+  return ((uint32_t)PL1_GetCurrentPhysicalValue() / (HSI_VALUE / 1000UL));
 #endif
 
 #endif /* CORE_CA7 */
@@ -423,6 +423,33 @@ uint32_t HAL_GetREVID(void)
 uint32_t HAL_GetDEVID(void)
 {
   return ((DBGMCU->IDCODE) & IDCODE_DEVID_MASK);
+}
+
+/**
+  * @brief  Return the first word of the unique device identifier (UID based on 96 bits)
+  * @retval Device identifier
+  */
+uint32_t HAL_GetUIDw0(void)
+{
+  return(READ_REG(*((uint32_t *)UID_BASE)));
+}
+
+/**
+  * @brief  Return the second word of the unique device identifier (UID based on 96 bits)
+  * @retval Device identifier
+  */
+uint32_t HAL_GetUIDw1(void)
+{
+  return(READ_REG(*((uint32_t *)(UID_BASE + 4U))));
+}
+
+/**
+  * @brief  Return the third word of the unique device identifier (UID based on 96 bits)
+  * @retval Device identifier
+  */
+uint32_t HAL_GetUIDw2(void)
+{
+  return(READ_REG(*((uint32_t *)(UID_BASE + 8U))));
 }
 
 /**
@@ -583,7 +610,7 @@ void HAL_SYSCFG_VREFBUF_TrimmingConfig(uint32_t TrimmingValue)
   */
 HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void)
 {
-  uint32_t  tickstart = 0;
+  uint32_t  tickstart = 0U;
 
   SET_BIT(VREFBUF->CSR, VREFBUF_CSR_ENVR);
 
@@ -591,7 +618,7 @@ HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void)
   tickstart = HAL_GetTick();
 
   /* Wait for VRR bit  */
-  while (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == RESET)
+  while (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0UL)
   {
     if ((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
     {
@@ -673,62 +700,62 @@ void HAL_SYSCFG_EnableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal)
 {
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_TRACE_SIGNAL) == SYSCFG_HIGHSPEED_TRACE_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN0R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN0R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_QUADSPI_SIGNAL) == SYSCFG_HIGHSPEED_QUADSPI_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN1R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN1R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_ETH1_SIGNAL) == SYSCFG_HIGHSPEED_ETH1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN2R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN2R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_ETH2_SIGNAL) == SYSCFG_HIGHSPEED_ETH2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN3R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN3R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SDMMC1_SIGNAL) == SYSCFG_HIGHSPEED_SDMMC1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN4R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN4R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SDMMC2_SIGNAL) == SYSCFG_HIGHSPEED_SDMMC2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN5R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN5R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI1_SIGNAL) == SYSCFG_HIGHSPEED_SPI1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN6R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN6R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI2_SIGNAL) == SYSCFG_HIGHSPEED_SPI2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN7R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN7R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI3_SIGNAL) == SYSCFG_HIGHSPEED_SPI3_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN8R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN8R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI4_SIGNAL) == SYSCFG_HIGHSPEED_SPI4_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN9R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN9R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI5_SIGNAL) == SYSCFG_HIGHSPEED_SPI5_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN10R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN10R, 0x1018U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_LTDC_SIGNAL) == SYSCFG_HIGHSPEED_LTDC_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN11R, 0x1018);
+    WRITE_REG(SYSCFG->HSLVEN11R, 0x1018U);
   }
 }
 
@@ -750,62 +777,62 @@ void HAL_SYSCFG_DisableIOSpeedOptimize(uint32_t SYSCFG_HighSpeedSignal)
 {
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_TRACE_SIGNAL) == SYSCFG_HIGHSPEED_TRACE_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN0R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN0R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_QUADSPI_SIGNAL) == SYSCFG_HIGHSPEED_QUADSPI_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN1R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN1R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_ETH1_SIGNAL) == SYSCFG_HIGHSPEED_ETH1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN2R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN2R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_ETH2_SIGNAL) == SYSCFG_HIGHSPEED_ETH2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN3R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN3R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SDMMC1_SIGNAL) == SYSCFG_HIGHSPEED_SDMMC1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN4R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN4R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SDMMC2_SIGNAL) == SYSCFG_HIGHSPEED_SDMMC2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN5R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN5R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI1_SIGNAL) == SYSCFG_HIGHSPEED_SPI1_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN6R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN6R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI2_SIGNAL) == SYSCFG_HIGHSPEED_SPI2_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN7R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN7R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI3_SIGNAL) == SYSCFG_HIGHSPEED_SPI3_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN8R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN8R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI4_SIGNAL) == SYSCFG_HIGHSPEED_SPI4_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN9R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN9R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_SPI5_SIGNAL) == SYSCFG_HIGHSPEED_SPI5_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN10R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN10R, 0x0U);
   }
 
   if ((SYSCFG_HighSpeedSignal & SYSCFG_HIGHSPEED_LTDC_SIGNAL) == SYSCFG_HIGHSPEED_LTDC_SIGNAL)
   {
-    WRITE_REG(SYSCFG->HSLVEN11R, 0x0);
+    WRITE_REG(SYSCFG->HSLVEN11R, 0x0U);
   }
 }
 
@@ -936,6 +963,11 @@ void HAL_SYSCFG_CompensationCodeConfig(uint32_t CompCell, uint32_t SYSCFG_PMOSCo
   {
     MODIFY_REG(SYSCFG->CMPSD2CR, SYSCFG_CMPSD2CR_RANSRC | SYSCFG_CMPSD2CR_RAPSRC, (((uint32_t)(SYSCFG_PMOSCode) << 20) | ((uint32_t)(SYSCFG_NMOSCode) << 16)));
   }
+
+  else
+  {
+	  /* Nothing to do */
+  }
 }
 
 
@@ -951,8 +983,8 @@ void HAL_SYSCFG_CompensationCodeConfig(uint32_t CompCell, uint32_t SYSCFG_PMOSCo
   */
 void HAL_SYSCFG_DisableIOCompensation(uint32_t CompCells)
 {
-  uint32_t pmos_val = 0;
-  uint32_t nmos_val = 0;
+  uint32_t pmos_val = 0U;
+  uint32_t nmos_val = 0U;
 
   if ((CompCells & SYSCFG_MAIN_COMP_CELL) == SYSCFG_MAIN_COMP_CELL)
   {

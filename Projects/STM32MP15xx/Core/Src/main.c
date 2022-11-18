@@ -77,9 +77,6 @@ int main(void)
   /* Initialize openbootloader */
   OpenBootloader_Init();
 
-  /* Initialize USB device */
-  MX_USB_Device_Init();
-
   /* Infinite loop */
   while (1)
   {

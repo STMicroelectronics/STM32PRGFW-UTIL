@@ -36,8 +36,6 @@
 /* Exported variables --------------------------------------------------------*/
 uint8_t USB_Detection = 0;
 
-PCD_HandleTypeDef hpcd_USB_OTG_HS;
-
 /* External variables --------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
@@ -48,30 +46,8 @@ PCD_HandleTypeDef hpcd_USB_OTG_HS;
  */
 void OPENBL_USB_Configuration(void)
 {
-  /* Enable the USB GPIO clock */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  hpcd_USB_OTG_HS.Instance                     = USB_OTG_HS;
-  hpcd_USB_OTG_HS.Init.dev_endpoints           = 8;
-  hpcd_USB_OTG_HS.Init.phy_itface              = USB_OTG_HS_EMBEDDED_PHY;
-  hpcd_USB_OTG_HS.Init.Sof_enable              = DISABLE;
-  hpcd_USB_OTG_HS.Init.low_power_enable        = DISABLE;
-  hpcd_USB_OTG_HS.Init.lpm_enable              = DISABLE;
-  hpcd_USB_OTG_HS.Init.battery_charging_enable = DISABLE;
-  hpcd_USB_OTG_HS.Init.use_dedicated_ep1       = DISABLE;
-  hpcd_USB_OTG_HS.Init.vbus_sensing_enable     = DISABLE;
-
-  hpcd_USB_OTG_HS.Init.dma_enable              = DISABLE;
-  hpcd_USB_OTG_HS.Init.ep0_mps                 = 0x40;
-  hpcd_USB_OTG_HS.Init.speed                   = USBD_HS_SPEED;
-
-  if (HAL_PCD_Init(&hpcd_USB_OTG_HS) != HAL_OK)
-  {
-    while(1);
-  }
-
-  /* Start device USB */
-  HAL_PCD_Start(&hpcd_USB_OTG_HS);
+  /* Initialize USB device */
+  MX_USB_Device_Init();
 }
 
 /**
@@ -105,8 +81,6 @@ uint8_t OPENBL_USB_ProtocolDetection(void)
 #ifndef PD_PORTING
 void OPENBL_USB_DeInit(void)
 {
-  __HAL_RCC_USBO_CLK_DISABLE();
-
 #if defined(CORE_CA7)
   IRQ_Disable(OTG_IRQn);
 #endif

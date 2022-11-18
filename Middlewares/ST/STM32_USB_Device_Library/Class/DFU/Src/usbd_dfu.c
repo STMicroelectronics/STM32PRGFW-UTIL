@@ -531,7 +531,7 @@ static uint8_t  USBD_DFU_EP0_TxReady(USBD_HandleTypeDef *pdev)
   if (hdfu->dev_state == DFU_STATE_DNLOAD_BUSY)
   {
     /* Perform the write operation */
-    if (DfuInterface->Write(hdfu->buffer.d8, hdfu->alt_setting, hdfu->wlength) != USBD_OK)
+    if (DfuInterface->Write(hdfu->buffer.d8, hdfu->alt_setting, hdfu->wlength, hdfu->wblock_num) != USBD_OK)
     {
       return (uint8_t)USBD_FAIL;
     }
@@ -801,7 +801,7 @@ static void DFU_Upload(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req)
       hdfu->dev_status[4] = hdfu->dev_state;
 
       /* Return the physical address where data are stored */
-      phaddr = DfuInterface->Read(hdfu->alt_setting, hdfu->buffer.d8, hdfu->wlength);
+      phaddr = DfuInterface->Read(hdfu->alt_setting, hdfu->buffer.d8, hdfu->wlength, hdfu->wblock_num);
 
       /* Send the status data over EP0 */
       (void)USBD_CtlSendData(pdev, phaddr, hdfu->wlength);

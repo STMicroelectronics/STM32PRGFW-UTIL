@@ -38,8 +38,8 @@ extern USBD_HandleTypeDef hUsbDeviceHS;
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 static uint16_t USB_DFU_If_Init(void);
-static uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len);
-static uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len);
+static uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len, uint32_t BlockNumber);
+static uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len, uint32_t BlockNumber);
 static uint16_t USB_DFU_If_DeInit(void);
 
 USBD_DFU_MediaTypeDef USBD_DFU_MEDIA_fops =
@@ -61,9 +61,9 @@ USBD_DFU_MediaTypeDef USBD_DFU_MEDIA_fops =
   * @param  Len: Number of data to be written (in bytes).
   * @retval USBD_OK if operation is successful, MAL_FAIL else.
   */
-uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len)
+uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len, uint32_t BlockNumber)
 {
-  OPENBL_USB_Download(pSrc, alt, Len);
+  OPENBL_USB_Download(pSrc, alt, Len, BlockNumber);
 
   return 0;
 }
@@ -75,9 +75,9 @@ uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len)
   * @param  Len: Number of data to be read (in bytes).
   * @retval Pointer to the physical address where data should be read.
   */
-uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len)
+uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len, uint32_t BlockNumber)
 {
-  return OPENBL_USB_ReadMemory(alt, pDest, Len);
+  return OPENBL_USB_ReadMemory(alt, pDest, Len, BlockNumber);
 }
 
 /**

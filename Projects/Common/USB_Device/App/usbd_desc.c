@@ -62,17 +62,17 @@
   * @{
   */
 
-#define USBD_VID     0x483
-#define USBD_LANGID_STRING     1033
+#define USBD_VID                      0x0483
+#define USBD_PID                      0xDF11
+#define USBD_LANGID_STRING            0x409
 #define USBD_MANUFACTURER_STRING     "STMicroelectronics"
-#define USBD_PID     0xdf11
 #if defined (STM32MP157Cxx)
-#define USBD_PRODUCT_STRING     "USB download gadget@Device ID /0x500, @Revision ID /0x2000"
-#else
-#define USBD_PRODUCT_STRING     "USB download gadget@Device ID /0x501, @Revision ID /0x1000"
+#define USBD_PRODUCT_STRING          "USB download gadget@Device ID /0x500, @Revision ID /0x2000"
+#elif defined (STM32MP135Fxx)
+#define USBD_PRODUCT_STRING          "USB download gadget@Device ID /0x501, @Revision ID /0x1000"
 #endif
-#define USBD_CONFIGURATION_STRING     "DFU Config"
-#define USBD_INTERFACE_STRING     "DFU Interface"
+#define USBD_CONFIGURATION_STRING    "DFU Config"
+#define USBD_INTERFACE_STRING        "DFU Interface"
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
 
