@@ -176,7 +176,7 @@ static void print_displ(int argc, char *argv[])
       if (!strcmp(cmd, "word"))
       {
         /* Convert the right '=' string to a number */
-        val = strtol(val_str, &end_ptr, 0);
+        val = strtoul(val_str, &end_ptr, 0);
 
         /* if string to number conversion is OK */
         if (end_ptr != val_str)
@@ -420,7 +420,7 @@ static void print_write(int argc, char *argv[])
     if (!strcmp(cmd, "word"))
     {
       /* Convert string to number */
-      val = strtol(val_str, &end_ptr, 0);
+      val = strtoul(val_str, &end_ptr, 0);
 
       /* if string to number conversion is OK */
       if (end_ptr != val_str)
@@ -444,7 +444,7 @@ static void print_write(int argc, char *argv[])
           if (!strcmp(cmd, "value"))
           {
             /* Convert string to number */
-            val = strtol(val_str, &end_ptr, 0);
+            val = strtoul(val_str, &end_ptr, 0);
 
             /* if string to number conversion is OK */
             if (end_ptr != val_str)
@@ -569,7 +569,7 @@ static void print_lock(int argc, char *argv[])
   if (!strcmp(cmd, "word"))
   {
     /* Convert string to number */
-    val = strtol(val_str, &end_ptr, 0);
+    val = strtoul(val_str, &end_ptr, 0);
 
     /* if string to number conversion is OK */
     if (end_ptr != val_str)

@@ -150,7 +150,7 @@ int parse_id(char *s, uint32_t idx)
   errno = 0;
   char *end_ptr = 0;
 
-  id = strtol(s, &end_ptr, 0);
+  id = strtoul(s, &end_ptr, 0);
   /* if string to number conversion is OK */
   if (end_ptr != s)
   {
@@ -181,7 +181,7 @@ int parse_offset(char *s, uint32_t idx)
   errno = 0;
   char *end_ptr = 0;
 
-  offset = strtol(s, &end_ptr, 0);
+  offset = strtoul(s, &end_ptr, 0);
   /* if string to number conversion is OK */
   if (end_ptr != s)
   {
