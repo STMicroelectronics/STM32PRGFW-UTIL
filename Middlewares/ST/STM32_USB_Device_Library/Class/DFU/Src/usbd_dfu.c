@@ -621,9 +621,13 @@ static uint8_t *USBD_DFU_GetUsrStringDesc(USBD_HandleTypeDef *pdev, uint8_t inde
     {
       USBD_GetString((uint8_t *)DfuInterface->pStrDesc, USBD_StrDesc, length);
     }
-    else
+    else if  ((index == (USBD_IDX_INTERFACE_STR + 5)))
     {
       USBD_GetString((uint8_t *)OTP_DESC_STR, USBD_StrDesc, length);
+    }
+    else
+    {
+      USBD_GetString((uint8_t *)PMIC_NVM_STR, USBD_StrDesc, length);
     }
     return USBD_StrDesc;
   }

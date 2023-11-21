@@ -27,16 +27,236 @@
 <a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
 </center>
 <h1 id="purpose">Purpose</h1>
-<p>The <strong>STM32PRGFW-UTIL</strong> package provides a firmware utility application used to manage the One-Time Programmable (OTP).</p>
+<p>The <strong>STM32PRGFW-UTIL</strong> package provides a firmware utility application used to manage the One-Time Programmable (OTP) and PMIC NVM (serial mode).</p>
 <p>The project contains two sub-applications:</p>
 <p>-A STM32CubeProgrammer based application</p>
 <p>-A Console based application as an alternative for the first application</p>
-<p>Both sub-applications do the same operations to manage the OTP.</p>
+<p>Both sub-applications do the same operations to manage the OTP, STM32CubeProgrammer based application supports PMIC NVM programming as well.</p>
 </div>
 <div class="col-sm-12 col-lg-8">
 <h2 id="update-history"><strong>Update History</strong></h2>
+
 <div class="collapse">
-<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.1 / 18-November-2022</strong></label>
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.0.3 / 20-November-2023</strong></label>
+<div>
+<h2 id="main-changes">Main changes</h2>
+<p>Support for PMIC NVM programming in serial boot. </p>
+<h2 id="contents">Contents</h2>
+<p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<h3 id="applications">Projects</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="even">
+<td style="text-align: left;">STM32MP13xx</td>
+<td style="text-align: center;"><span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+  <td style="text-align: left;">STM32MP15xx</td>
+  <td style="text-align: center;"><span class="icon-st-update"></span></td>
+  <td style="text-align: center;"></td>
+  </tr>
+</tbody>
+</table>
+<p>Provides ready-to-run applicative examples for STM32PRGFW-UTIL on the supported boards.
+<h3 id="drivers">Drivers</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-A CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP13xx CMSIS</td>
+<td style="text-align: center;">v0.5.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP1xx CMSIS</td>
+<td style="text-align: center;">v1.6.1.alpha1</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP13xx HAL</td>
+<td style="text-align: center;">v0.6.0.alpha1 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP1xx HAL</td>
+<td style="text-align: center;">v1.6.1.alpha1 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="middlewares">Middlewares</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenBootloader</td>
+<td style="text-align: center;">v5.0.0_mpu_220722 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32_USB_Device_Library</td>
+<td style="text-align: center;">v2.11.0_mpu_220722 </td>
+<td style="text-align: left;"></td>
+</tr>
+</table>
+<h2 id="supported-devices-and-boards-by-applications">Supported devices and boards by applications</h2>
+<ul>
+<li>STM32MP15xx Boards</li>
+<li>STM32MP13xx Boards</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li>STM32CubeIDE 1.13.0</li>
+<li>STM32CubeProgrammer_ v2.15.0</li>
+</ul>
+<h2 id="known-limitations">Known limitations</h2>
+<ul>
+<li>STPMIC1 NVM programming is supported in serial boot mode only. In future releases will be implemented on semihosting also.  
+</ul>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>Yes</li>
+</ul>
+</div>
+</div>
+
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" checked aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.2 / 22-November-2022</strong></label>
+<div>
+<h2 id="main-changes">Main changes</h2>
+<p>important fix done to avoid bricking device</p>
+<h2 id="contents">Contents</h2>
+<p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release. “<span class="icon-st-add"></span>” are new.</small></p>
+<h3 id="applications">Projects</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="even">
+<td style="text-align: left;">STM32MP13xx</td>
+<td style="text-align: center;"><span class="icon-st-update"></span></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+  <td style="text-align: left;">STM32MP15xx</td>
+  <td style="text-align: center;"><span class="icon-st-update"></span></td>
+  <td style="text-align: center;"></td>
+  </tr>
+</tbody>
+</table>
+<p>Provides ready-to-run applicative examples for STM32PRGFW-UTIL on the supported boards.
+<h3 id="drivers">Drivers</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cortex-A CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP13xx CMSIS</td>
+<td style="text-align: center;">v0.5.0</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP1xx CMSIS</td>
+<td style="text-align: center;">v1.6.1.alpha1</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP13xx HAL</td>
+<td style="text-align: center;">v0.6.0.alpha1 </td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP1xx HAL</td>
+<td style="text-align: center;">v1.6.1.alpha1 </td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="middlewares">Middlewares</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenBootloader</td>
+<td style="text-align: center;">v5.0.0_mpu_220722 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32_USB_Device_Library</td>
+<td style="text-align: center;">v2.11.0_mpu_220722 </td>
+<td style="text-align: left;"></td>
+</tr>
+</table>
+<h2 id="supported-devices-and-boards-by-applications">Supported devices and boards by applications</h2>
+<ul>
+<li>STM32MP15xx Boards</li>
+<li>STM32MP13xx Boards</li>
+</ul>
+<h2 id="dependencies">Dependencies</h2>
+<p>This software release is compatible with:</p>
+<ul>
+<li>STM32CubeIDE 1.11.0</li>
+<li>STM32CubeProgrammer_ v2.12.0</li>
+</ul>
+<h2 id="known-limitations">Known limitations</h2>
+<ul>
+<li> STM32CubeIDE Semihosting feature partially working. It will be fully functionnal in future STM32CubeIDE version. See README.md for further details.
+</ul>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>Yes</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" checked aria-hidden="true"><strong>V1.0.1 / 18-November-2022</strong></label>
 <div>
 <h2 id="main-changes">Main changes</h2>
 <p>Update documentation - Add Image Header utility to add STM32 header - various improvements</p>
@@ -142,6 +362,7 @@
 <ul>
 <li>Yes</li>
 </ul>
+
 </div>
 </div>
 <div class="collapse">

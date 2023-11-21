@@ -78,7 +78,7 @@
 /*---------- -----------*/
 #define USBD_SELF_POWERED                 1U
 /*---------- -----------*/
-#define USBD_DFU_MAX_ITF_NUM              5U
+#define USBD_DFU_MAX_ITF_NUM              6U
 /*---------- -----------*/
 #define USBD_DFU_XFER_SIZE                1024U
 /*---------- -----------*/

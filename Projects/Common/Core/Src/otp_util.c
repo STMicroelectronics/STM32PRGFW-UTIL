@@ -24,7 +24,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 BSEC_HandleTypeDef handleBsec;
-BSEC_HandleTypeDef * hbsec = &handleBsec;
+BSEC_HandleTypeDef *hbsec = &handleBsec;
 static uint32_t otp_val_idx;
 static uint32_t otp_stat_idx;
 static uint32_t otp_idx;
@@ -95,7 +95,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
       status = HAL_BSEC_OtpProgram(hbsec, otp_idx, valueW);
 
       /* Check the status */
-      if (status != HAL_OK) return OTP_ERROR;
+      if (status != HAL_OK) { return OTP_ERROR; }
     }
 
     /*### Program the otp status ###*/
@@ -119,7 +119,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
       status = HAL_BSEC_SetOtpStickyLock(hbsec, otp_idx, stickyLockValue);
 
       /* Check the status */
-      if (status != HAL_OK) return OTP_ERROR;
+      if (status != HAL_OK) { return OTP_ERROR; }
     }
 
     /* Get the permanent lock value */
@@ -132,7 +132,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
       status = HAL_BSEC_SetOtpPermanentProgLock(hbsec, otp_idx);
     }
     /* Check the status */
-    if (status != HAL_OK) return OTP_ERROR;
+    if (status != HAL_OK) { return OTP_ERROR; }
   }
 
   return OTP_OK;

@@ -708,7 +708,7 @@ static void get_entry_string(char *entry)
     }
 #else
     /* if new line is detected */
-    if (user_entry_value == 0xa)
+    if ( (user_entry_value == 0xa) || (user_entry_value == 0xd) )
     {
       entry[i] = '\0';
       printf("\r\n");

@@ -23,6 +23,7 @@
 #include "usb_interface.h"
 #include "openbl_util.h"
 #include "otp_interface.h"
+#include "pmic_interface.h"
 
 /* External variables --------------------------------------------------------*/
 extern OPENBL_Flashlayout_TypeDef FlashlayoutStruct;
@@ -128,6 +129,11 @@ void OPENBL_USB_Download(uint8_t *pSrc, uint32_t Alt, uint32_t Length, uint32_t 
       while(1){};
     }
     break;
+
+  case PHASE_PMIC_NVM :
+	  OPENBL_PMIC_Write(pSrc);
+	  break;
+
 
   default:
     break;
@@ -240,8 +246,12 @@ uint8_t *OPENBL_USB_ReadMemory(uint32_t Alt, uint8_t *pDest, uint32_t Length, ui
 	    }
 	}
     break;
-  default:
 
+  case PHASE_PMIC_NVM:
+	  OPENBL_PMIC_Read(pDest);
+	  break;
+
+  default:
     break;
   }
 
@@ -280,9 +290,14 @@ uint8_t OPENBL_USB_GetPhase(uint32_t Alt)
     ret = PHASE_OTP;
     break;
 
+  case 5:
+    ret = PHASE_PMIC_NVM;
+    break;
+
   default:
     ret = PHASE_END;
     break;
+
   }
 
   return ret;

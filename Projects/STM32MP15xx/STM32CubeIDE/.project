@@ -42,19 +42,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/main.c</locationURI>
 		</link>
 		<link>
-			<name>Application/OTP_Console/otp_interface_cli.c</name>
-			<type>1</type>
-			<location>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli.c</location>
-		</link>
-		<link>
-			<name>Application/OTP_Console/otp_interface_cli_util.c</name>
-			<type>1</type>
-			<location>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli_util.c</location>
-		</link>
-		<link>
 			<name>Application/Core/otp_util.c</name>
 			<type>1</type>
-			<location>PARENT-2-PROJECT_LOC/Common/Core/Src/otp_util.c</location>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/Core/Src/otp_util.c</locationURI>
+		</link>
+		<link>
+			<name>Application/Core/pmic_util.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/Core/Src/pmic_util.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Core/stm32mp1xx_hal_msp.c</name>
@@ -65,6 +60,16 @@
 			<name>Application/Core/stm32mp1xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32mp1xx_it.c</locationURI>
+		</link>
+		<link>
+			<name>Application/OTP_Console/otp_interface_cli.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli.c</locationURI>
+		</link>
+		<link>
+			<name>Application/OTP_Console/otp_interface_cli_util.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli_util.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Startup/startup_stm32mp157cxx_ca7.c</name>
@@ -95,6 +100,11 @@
 			<name>Drivers/STM32MP1xx_HAL_Driver/stm32mp1xx_hal_gpio.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_gpio.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32MP1xx_HAL_Driver/stm32mp1xx_hal_i2c.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Drivers/STM32MP1xx_HAL_Driver/Src/stm32mp1xx_hal_i2c.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/STM32MP1xx_HAL_Driver/stm32mp1xx_hal_iwdg.c</name>
@@ -182,9 +192,24 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/otp_interface.c</locationURI>
 		</link>
 		<link>
+			<name>Application/Openbootloader/Target/pmic_interface.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/pmic_interface.c</locationURI>
+		</link>
+		<link>
 			<name>Application/Openbootloader/Target/ram_interface.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/ram_interface.c</locationURI>
+		</link>
+		<link>
+			<name>Application/Openbootloader/Target/usart_interface.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/usart_interface.c</locationURI>
+		</link>
+		<link>
+			<name>Application/Openbootloader/Target/usb_interface.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/usb_interface.c</locationURI>
 		</link>
 		<link>
 			<name>Application/USB_Device/App/usb_device.c</name>
@@ -207,19 +232,14 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Common/USB_Device/Target/usbd_conf.c</locationURI>
 		</link>
 		<link>
-			<name>Application/Openbootloader/Target/usart_interface.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/usart_interface.c</locationURI>
-		</link>
-		<link>
-			<name>Application/Openbootloader/Target/usb_interface.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Common/OpenBootloader/Target/usb_interface.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/OpenBootloader/Core/openbl_core.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/OpenBootloader/Core/openbl_core.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/OpenBootloader/Util/openbl_util.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/OpenBootloader/Util/openbl_util.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/OpenBootloader/Modules/MEM/openbl_mem.c</name>
@@ -237,16 +257,6 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/OpenBootloader/Modules/USB/openbl_usb_cmd.c</locationURI>
 		</link>
 		<link>
-			<name>Middlewares/OpenBootloader/Util/openbl_util.c</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/OpenBootloader/Util/openbl_util.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/STM32_USB_Device_Library/Class/DFU/Src/usbd_dfu.c</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Class/DFU/Src/usbd_dfu.c</locationURI>
-		</link>
-		<link>
 			<name>Middlewares/STM32_USB_Device_Library/Core/Src/usbd_core.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</locationURI>
@@ -260,6 +270,11 @@
 			<name>Middlewares/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/STM32_USB_Device_Library/Class/DFU/Src/usbd_dfu.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Middlewares/ST/STM32_USB_Device_Library/Class/DFU/Src/usbd_dfu.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

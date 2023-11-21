@@ -69,8 +69,8 @@ extern "C" {
 #define FL_DESC_STR                    "@Flashlayout /0x00/1*1Ke"
 #define FSBL_EXT_DESC_STR              "@FSBL-EXT /0x03/1*70Ke"
 #define FSBL_APP_DESC_STR              "@FSBL-APP /0x04/1*64Me"
-#define OTP_DESC_STR                   "@OTP /0xF2/1*2920Be"
-//#define OTP_DESC_STR                   "@OTP /0xF2/1*776Be"
+#define OTP_DESC_STR                   "@OTP /0xF2/1*776Be"
+#define PMIC_NVM_STR                   "@PMIC /0xF4/1*8Be"
 
 
 /**************************************************/

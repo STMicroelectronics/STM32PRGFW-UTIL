@@ -43,6 +43,7 @@ typedef struct
 /* Exported constants --------------------------------------------------------*/
 #define PHASE_FLASHLAYOUT                    0x00                /* Flashlayout phase */
 #define PHASE_OTP                            0xF2                /* OTP partion phase */
+#define PHASE_PMIC_NVM                       0XF4                /* PMIC NVM partition phase */
 #define PHASE_0x1                            0x01                /* Phase ID 0x1  */
 #define PHASE_0x3                            0x03                /* Phase ID 0x3 */
 #define PHASE_0x4                            0x04                /* Phase ID 0x4 */

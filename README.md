@@ -17,8 +17,8 @@ Please find below the more appropriated mode depending on your setup.<br>
 
 | Major Use cases / Setup                                                                                                                                                  | CP_Serial_boot<br />(Preferred) |                         Console_SH                         |                                             Console_UART                                             | CP_Dev_Boot |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-----------------------------: | :--------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------: |
-| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v1.12.0 minimum) |                X                |                                                            |                                                                                                      |            |
-| * Board with Debug port<br />* [STM32CubeIDE](https://wiki.st.com/stm32mpu/wiki/STM32CubeIDE_release_note) PC tool installed (v1.11.0 minimum)                              |                                | X<br />Note: KO on Windows PC<br />Partially supported |                                                                                                      |            |
+| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v2.15.0 minimum) |                X                |                                                            |                                                                                                      |            |
+| * Board with Debug port<br />* [STM32CubeIDE](https://wiki.st.com/stm32mpu/wiki/STM32CubeIDE_release_note) PC tool installed (v1.13.0 minimum)                              |                                | X |                                                                                                      |            |
 | * Board with Debug port and 1 UART interface<br />* Semihosting (Terminal I/O through debug port)<br /> NOT available on PC                                            |                                |                                                            | X<br />Note: need to<br />modify UART<br />instance in source code <br />if different from ST boards |            |
 | * Need to debug your own tool based on this package                                                                                                                     |                                |                                                            |                                                                                                      |      X      |
 
@@ -82,6 +82,21 @@ Please Read STM32CubeProgrammer user manual for further details if needed
   $STM32_Programmer_CLI.exe -c port=COM8 -otp displ<br>
   $STM32_Programmer_CLI.exe -c port=COM8 -otp write word=10 value=0x1<br>
 
+  #### PMIC NVM Programming
+* PMIC NVM can be programmed in serial boot mode using USB DFU or UART. 
+  * Read the entire NVM partition by following command
+  $STM32_Programmer_CLI -c port=usb1  -rp 0xf4 0x0 `<size of partition>` `<Your Directory Path>\`PMIC_NVM_read.bin
+  here NVM data is written to PMIC_NVM_read.bin.
+  * To read NVM using UART in serial boot mode replace usb1 with COM port appearing on the HOST.
+  $STM32_Programmer_CLI -c port=COM`<num>`  -rp 0xf4 0x0 `<size of partition>` `<Your Directory Path>\`PMIC_NVM_read.bin
+  * Backup it by creating a copy PMIC_NVM_write.bin
+  * using hex editor modify PMIC_NVM_write.bin.
+  * Write the NVM partion using below command for USB DFU.
+  $STM32_Programmer_CLI -c port=usb1 -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
+  * To write NVM using UART in serial boot mode replace usb1 with COM port appearing on the HOST.
+  $STM32_Programmer_CLI -c port=COM`<num>` -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
+##### Note: - For STPMIC1 size of partition is 8 Bytes.
+ 
 ## How to Use Console_SH
 
 In this mode, you will use STM32CubeIDE and build config Console_SH
@@ -107,19 +122,18 @@ mon arm semihosting_redirect tcp 2323
 
 ![](_htmresc/1668782761216.png)
 
-* Run Debug configuration
-* In a shell, run following command to get *User> prompt*
-  * $netcat localhost 2323
-  * Note: in future CubeIDE version, connection to TCP port will be done inside STM32CubeIDE with opening any shell
-  * **Note: !!! it works only on Ubuntu !!!**
-* Some command examples:<br>
-  $help<br>
-  $displ<br>
-  $displ word=10 <br>
-  $write word=10 value=1<br>
+* Run Debug configuration and Open TCP window with localhost and port number as described below (Window ->Show View-> Other-> TCP Console)
+* Some command examples:
 
-![1668782420376](_htmresc/1668782420376.png)
+```
+  $help
+  $displ
+  $displ word=10
+  $write word=10 value=1
+```
 
+![1668782420376](_htmresc/OpenTCPWindow.PNG)
+![1668782420376](_htmresc/TCPWindow.PNG)
 ## How to Use Console_Uart
 
 In this mode, you will use STM32CubeIDE and build config Console_UART
