@@ -47,7 +47,7 @@ In this section, you will  use "Binary" directory  containing a STM32PRGFW-UTIL 
 * Set boot boot pins  to b000 (BOOT0/1/2 to OFF) position to select **[serial boot](https://wiki.st.com/stm32mpu/wiki/STM32_MPU_ROM_code_overview#Boot_device_selection)**
 * If you want to use USB DFU interface
 
-  * connect USB cable bewten PC and the board. PC shoud test USB DFU interface
+  * connect USB cable between PC and the board. PC shoud test USB DFU interface
 * else if you want to use UART interface
 
   * connect UART cable between PC and the board
