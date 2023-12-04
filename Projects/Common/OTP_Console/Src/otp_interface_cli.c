@@ -24,6 +24,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum {
@@ -713,6 +714,7 @@ static void get_entry_string(char *entry)
       entry[i] = '\0';
       printf("\r\n");
       user_entry_valid = 1;
+      fflush(stdin);
     }
 #endif
     else /* if user keep writing */
