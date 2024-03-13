@@ -82,6 +82,8 @@ Please Read STM32CubeProgrammer user manual for further details if needed
   $STM32_Programmer_CLI.exe -c port=COM8 -otp displ<br>
   $STM32_Programmer_CLI.exe -c port=COM8 -otp write word=10 value=0x1<br>
 
+Note: In MP15 if connection is lost while programming, Do port refresh, connect and download or Power Reset.
+---
   #### PMIC NVM Programming
 * PMIC NVM can be programmed in serial boot mode using USB DFU or UART. 
   * Read the entire NVM partition by following command

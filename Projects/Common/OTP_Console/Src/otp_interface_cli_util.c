@@ -18,6 +18,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <stdio.h>
 #include "otp_interface_cli_util.h"
 
 /* Private typedef -----------------------------------------------------------*/

@@ -268,6 +268,8 @@ void SecurePhysicalTimer_IRQHandler(void)
   * @param  None
   * @retval None
   */
+#pragma GCC push_options
+#pragma GCC target("general-regs-only")
 void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void) {
   uint32_t ItId;
   IRQHandler_t handler;
@@ -319,7 +321,7 @@ void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void) {
     }
   }
 }
-
+#pragma GCC pop_options
 /**
   * @brief  Ensure all bss part of code is initialized with zeros
   * @param  None

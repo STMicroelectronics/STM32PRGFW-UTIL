@@ -12,7 +12,7 @@
 **
 **  Target      : STMicroelectronics STM32
 **
-**  Distribution: The file is distributed “as is,” without any warranty
+**  Distribution: The file is distributed ï¿½as is,ï¿½ without any warranty
 **                of any kind.
 **
 *****************************************************************************
@@ -68,6 +68,13 @@ SVC_STACK = ABT_STACK - __ABT_STACK_SIZE;
 UND_STACK = SVC_STACK - __SVC_STACK_SIZE;
 SYS_STACK = UND_STACK - __UND_STACK_SIZE;
 
+PHDRS
+{
+	text PT_LOAD FLAGS(5); /* READ ONLY */
+	data PT_LOAD FLAGS(6); /* READ + WRITE */
+	bss PT_LOAD FLAGS(6); /*  READ + WRITE */
+}
+
 SECTIONS
 {
     . = __MEM_START__;
@@ -103,7 +110,7 @@ SECTIONS
          */
         . = NEXT(4096);
         __RO_END__ = .;
-    } >RAM
+    } >RAM :text
 
 
     .ARM.extab   : {

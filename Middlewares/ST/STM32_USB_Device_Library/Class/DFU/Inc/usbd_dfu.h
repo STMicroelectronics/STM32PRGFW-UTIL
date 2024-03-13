@@ -67,11 +67,20 @@ extern "C" {
 #define DFU_DESCRIPTOR_TYPE            0x21U
 
 #define FL_DESC_STR                    "@Flashlayout /0x00/1*1Ke"
+#define FL_DESC_PARTSIZE                (1024)
 #define FSBL_EXT_DESC_STR              "@FSBL-EXT /0x03/1*70Ke"
+#define FSBL_EXT_PARTSIZE               (70*1024)
 #define FSBL_APP_DESC_STR              "@FSBL-APP /0x04/1*64Me"
+#define FSBL_APP_DESC_PARTSIZE          (64*1024*1024)
 #define OTP_DESC_STR                   "@OTP /0xF2/1*776Be"
+#define OTP_DESC_PARTSIZE               (776)
+#if defined (STPMIC2)
+#define PMIC_NVM_STR                   "@PMIC /0xF4/1*42Be"
+#define PMIC_NVM_PARTSIZE               (42)
+#else
 #define PMIC_NVM_STR                   "@PMIC /0xF4/1*8Be"
-
+#define PMIC_NVM_PARTSIZE               (8)
+#endif /* STM32MP257Cxx */
 
 /**************************************************/
 /* DFU Requests  DFU states                       */

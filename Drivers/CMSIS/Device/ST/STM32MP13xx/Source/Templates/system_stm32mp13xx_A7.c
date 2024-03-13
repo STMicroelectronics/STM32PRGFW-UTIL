@@ -279,6 +279,8 @@ void SecurePhysicalTimer_IRQHandler(void)
   * @retval None
   */
 #if defined ( __GNUC__ )
+#pragma GCC push_options
+#pragma GCC target("general-regs-only")
 void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void) {
 #elif defined ( __ICCARM__ )
 __irq __arm void IRQ_Handler(void) {
@@ -333,7 +335,9 @@ __irq __arm void IRQ_Handler(void) {
     }
   }
 }
-
+#ifdef __GNUC__
+#pragma GCC pop_options
+#endif
 /**
   * @brief  Ensure all bss part of code is initialized with zeros
   * @param  None

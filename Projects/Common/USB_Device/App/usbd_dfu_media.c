@@ -30,6 +30,7 @@
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 #define VIRTUAL_DESC_STR    "@virtual /0xF1/1*512Be"
+#define VIRTUAL_DESC_SIZE    (512)
 
 extern USBD_HandleTypeDef hUsbDeviceHS;
 
@@ -41,7 +42,7 @@ static uint16_t USB_DFU_If_Init(void);
 static uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len, uint32_t BlockNumber);
 static uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len, uint32_t BlockNumber);
 static uint16_t USB_DFU_If_DeInit(void);
-
+static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber);
 USBD_DFU_MediaTypeDef USBD_DFU_MEDIA_fops =
 {
   (uint8_t *)VIRTUAL_DESC_STR,
@@ -77,6 +78,15 @@ uint16_t USB_DFU_If_Write(uint8_t *pSrc, uint32_t alt, uint32_t Len, uint32_t Bl
   */
 uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len, uint32_t BlockNumber)
 {
+  uint32_t partition_size = USBD_DFU_GetPartSize(alt, BlockNumber);
+
+  if (Len > partition_size)
+  {
+	  ((USBD_DFU_HandleTypeDef *)hUsbDeviceHS.pClassDataCmsit[0])->wlength =
+			  partition_size;
+	  Len = partition_size;
+  }
+
   return OPENBL_USB_ReadMemory(alt, pDest, Len, BlockNumber);
 }
 
@@ -97,3 +107,47 @@ uint16_t USB_DFU_If_DeInit(void)
 {
   return 0;
 }
+
+static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
+{
+	uint32_t part_size = USBD_DFU_XFER_SIZE;
+
+  switch(alt)
+  {
+				  case 0:
+					  part_size = FL_DESC_PARTSIZE;
+					  break;
+				  case 1:
+					  part_size = FSBL_EXT_PARTSIZE;
+					  break;
+				  case 2:
+					  part_size = FSBL_APP_DESC_PARTSIZE;
+					  break;
+				  case 3:
+					  part_size = VIRTUAL_DESC_SIZE;
+					  break;
+				  case 4:
+					  part_size = OTP_DESC_PARTSIZE;
+					  break;
+				  case 5:
+					  part_size = PMIC_NVM_PARTSIZE;
+					  break;
+
+				  default:
+					  break;
+  }
+
+  if ((((blocknumber + 1) * USBD_DFU_XFER_SIZE) < part_size) || (part_size == USBD_DFU_XFER_SIZE))
+    return USBD_DFU_XFER_SIZE;
+  else if (part_size > (blocknumber * USBD_DFU_XFER_SIZE))
+  {
+	return (part_size - (blocknumber * USBD_DFU_XFER_SIZE));
+  }
+  else
+  {
+	return part_size;
+  }
+
+  return 0;
+}
+
