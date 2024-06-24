@@ -21,12 +21,13 @@
 #define OTP_INTERFACE_CLI_H
 
 /* Private includes ----------------------------------------------------------*/
+#include <stdbool.h>
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions prototypes ---------------------------------------------*/
-void otp_commands_interactive(void);
-void print_header(void);
+bool otp_commands_interactive(void);
+void otp_print_header(void);
 /* Private defines -----------------------------------------------------------*/
 
 #endif /* OTP_INTERFACE_CLI_H */

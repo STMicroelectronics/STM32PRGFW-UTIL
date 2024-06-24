@@ -19,8 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #if defined (__CONSOLE__)
-#include "otp_interface_cli.h"
-#include "otp_interface_cli_util.h"
+#include "mainmenu_interface_cli.h"
 #else
 #include "usb_device.h"
 #endif /* __CONSOLE__ */
@@ -63,14 +62,11 @@ int main(void)
   UART_Config();
 #endif
 
-  /* print the console header message */
-  print_header();
-
   /* Infinite loop */
-  while(1)
+  while (1)
   {
-	  /* Wait for the user to interact with the console */
-    otp_commands_interactive();
+    /* Wait for the user to interact with the console */
+    MainMenu_interface_start();
   }
 #else /* __CONSOLE__ */
 
@@ -80,7 +76,7 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-	/* Wait for a protocol detection */
+    /* Wait for a protocol detection */
     OpenBootloader_ProtocolDetection();
   }
 #endif /* __CONSOLE__ */
@@ -103,8 +99,8 @@ void SystemClock_Config(void)
 
   /**Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE
-                |RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE
+                                     | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS_DIG;
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -125,7 +121,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.RPDFN_DIS = RCC_RPDFN_DIS_DISABLED;
   RCC_OscInitStruct.PLL.TPDFN_DIS = RCC_TPDFN_DIS_DISABLED;
 
-    /**PLL2 Config
+  /**PLL2 Config
     */
   RCC_OscInitStruct.PLL2.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL2.PLLSource = RCC_PLL12SOURCE_HSE;
@@ -139,7 +135,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL2.RPDFN_DIS = RCC_RPDFN_DIS_DISABLED;
   RCC_OscInitStruct.PLL2.TPDFN_DIS = RCC_TPDFN_DIS_DISABLED;
 
-    /**PLL3 Config
+  /**PLL3 Config
     */
   RCC_OscInitStruct.PLL3.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL3.PLLSource = RCC_PLL3SOURCE_HSE;
@@ -154,7 +150,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL3.RPDFN_DIS = RCC_RPDFN_DIS_DISABLED;
   RCC_OscInitStruct.PLL3.TPDFN_DIS = RCC_TPDFN_DIS_DISABLED;
 
-    /**PLL4 Config
+  /**PLL4 Config
     */
   RCC_OscInitStruct.PLL4.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL4.PLLSource = RCC_PLL4SOURCE_HSE;
@@ -171,14 +167,14 @@ void SystemClock_Config(void)
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-  Error_Handler();
+    Error_Handler();
   }
   /**RCC Clock Config
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_ACLK
-                |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
-                |RCC_CLOCKTYPE_PCLK3|RCC_CLOCKTYPE_PCLK4
-                |RCC_CLOCKTYPE_PCLK5|RCC_CLOCKTYPE_MPU;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_ACLK
+                                | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2
+                                | RCC_CLOCKTYPE_PCLK3 | RCC_CLOCKTYPE_PCLK4
+                                | RCC_CLOCKTYPE_PCLK5 | RCC_CLOCKTYPE_MPU;
   RCC_ClkInitStruct.MPUInit.MPU_Clock = RCC_MPUSOURCE_PLL1;
   RCC_ClkInitStruct.MPUInit.MPU_Div = RCC_MPU_DIV2;
   RCC_ClkInitStruct.AXISSInit.AXI_Clock = RCC_AXISSOURCE_PLL2;
@@ -193,7 +189,7 @@ void SystemClock_Config(void)
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct) != HAL_OK)
   {
-  Error_Handler();
+    Error_Handler();
   }
 
   /**Set the HSE division factor for RTC clock
@@ -235,7 +231,7 @@ PUTCHAR_PROTOTYPE
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART1 and Loop until the end of transmission */
 #if defined (__LOG_UART_IO_)
-extern UART_HandleTypeDef huart;
+  extern UART_HandleTypeDef huart;
   HAL_UART_Transmit(&huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 #endif
 #if defined (__LOG_TRACE_IO_)
@@ -261,11 +257,12 @@ void Error_Handler(void)
 #if defined(__TERMINAL_IO__)
 int _kill(int pid, int sig)
 {
-    return -1;
+  return -1;
 }
 
 #endif
 #endif
+
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number

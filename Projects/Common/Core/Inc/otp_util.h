@@ -20,21 +20,43 @@
 #ifndef OTP_UTIL_H
 #define OTP_UTIL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* Exported types ------------------------------------------------------------*/
+#define OTP_HASH_SIZE         (32U)
 typedef struct
 {
   uint32_t Version;
   uint32_t GlobalState;
+#if defined (STM32MP257Cxx)
+  uint32_t OtpPart[768];
+#else
   uint32_t OtpPart[192];
+#endif
+#if defined(USE_HASH_OVER_OTP)
+  uint8_t  Sha256Hash[OTP_HASH_SIZE];
+#endif /* USE_HASH_OVER_OTP */
 } Otp_TypeDef;
 
 /* Exported constants --------------------------------------------------------*/
+#if defined (STM32MP257Cxx)
+#define OTP_PART_SIZE                   (2 * 384)
+#define OTP_VALUE_SIZE                  384
+#define OTP_HASH_PART_SIZE        (2 * 376) /* exclude HW key.private key needs to be included to ensure RAZ */
+#define OPENBL_OTP_VERSION              (3)      /* This version supports hash */
+#define BSEC_API_CHANGE					(1)
+#else
 #define OTP_PART_SIZE                   (2 * 96)
 #define OTP_VALUE_SIZE                  96
-#define OPENBL_OTP_VERSION              2
+#define OPENBL_OTP_VERSION              (2)  /* This version does not support hash */
+#define OTP_HASH_PART_SIZE        OTP_PART_SIZE
+#endif
+
 #define OTP_STICKY_PROG_LOCK_MASK       (1 << 27)
 #define OTP_STICKY_WRITE_LOCK_MASK      (1 << 28)
 #define OTP_STICKY_READ_LOCK_MASK       (1 << 29)
@@ -66,5 +88,9 @@ void OTP_Util_Init(void);
 void OTP_Util_DeInit(void);
 int OTP_Util_Write(Otp_TypeDef Otp);
 Otp_TypeDef OTP_Util_Read(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* OTP_UTIL_H */

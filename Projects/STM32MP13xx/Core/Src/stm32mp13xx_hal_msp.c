@@ -20,7 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #if defined (__CONSOLE__)
-#include "otp_interface_cli_util.h"
+#include "console_util.h"
 #endif
 
 /**

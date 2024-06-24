@@ -115,13 +115,13 @@ static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
   switch(alt)
   {
 				  case 0:
-					  part_size = FL_DESC_PARTSIZE;
+					  part_size =  FL_DESC_PARTSIZE;
 					  break;
 				  case 1:
 					  part_size = FSBL_EXT_PARTSIZE;
 					  break;
 				  case 2:
-					  part_size = FSBL_APP_DESC_PARTSIZE;
+					  part_size =  FSBL_APP_DESC_PARTSIZE;
 					  break;
 				  case 3:
 					  part_size = VIRTUAL_DESC_SIZE;
@@ -130,7 +130,7 @@ static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
 					  part_size = OTP_DESC_PARTSIZE;
 					  break;
 				  case 5:
-					  part_size = PMIC_NVM_PARTSIZE;
+					  part_size =  PMIC_NVM_PARTSIZE;
 					  break;
 
 				  default:

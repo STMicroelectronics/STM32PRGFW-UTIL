@@ -72,11 +72,22 @@ extern "C" {
 #define FSBL_EXT_PARTSIZE               (70*1024)
 #define FSBL_APP_DESC_STR              "@FSBL-APP /0x04/1*64Me"
 #define FSBL_APP_DESC_PARTSIZE          (64*1024*1024)
+
+/*On MP2:368 OTP = (2 * 368 + 2) * 4 bytes = 2952 bytes 
+(for 32 bits word, with M = 0 to 367 (no access to HWKEY and STM32PRVKEY))
+but we keep part size according to M = 0 to 383 i.e 3080 because of compatibilty with open source tools.
+On MP13 = (96*2+2)*4 = 776 bytes*/
+#if defined (STM32MP257Cxx)
+#define OTP_DESC_STR                   "@OTP /0xF2/1*3080Be"
+#define OTP_DESC_PARTSIZE               (3080)
+#else
 #define OTP_DESC_STR                   "@OTP /0xF2/1*776Be"
 #define OTP_DESC_PARTSIZE               (776)
+#endif /*STM32MP257Cxx*/
+
 #if defined (STPMIC2)
-#define PMIC_NVM_STR                   "@PMIC /0xF4/1*42Be"
-#define PMIC_NVM_PARTSIZE               (42)
+#define PMIC_NVM_STR                   "@PMIC /0xF4/1*40Be"
+#define PMIC_NVM_PARTSIZE               (40)
 #else
 #define PMIC_NVM_STR                   "@PMIC /0xF4/1*8Be"
 #define PMIC_NVM_PARTSIZE               (8)

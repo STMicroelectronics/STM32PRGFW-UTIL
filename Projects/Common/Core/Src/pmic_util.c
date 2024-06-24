@@ -25,6 +25,20 @@
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static I2C_HandleTypeDef hi2c;
+#if defined(STPMIC2)
+static const pmic_data_t pmic_database[PMIC_MAX] =
+{
+  /*Supported, Identifier, NVMSize, DisplayString, NVMStartAddress, NVMSRRegisterAddr, NVMCRRegisterAddr */
+  {PMIC_SUPPORTED,     0x20, 40, "25", 0x90, 0x8E, 0x8F},    /* PMIC_STPMIC25 */
+};
+#else
+static const pmic_data_t pmic_database[PMIC_MAX] =
+{
+  /*Supported, Identifier, NVMSize, DisplayString, NVMStartAddress, NVMSRRegisterAddr, NVMCRRegisterAddr */
+  {PMIC_SUPPORTED, 0x20, 8, "1", 0xF8, 0xB8, 0xB9}, /* PMIC_STPMIC1 */
+};
+#endif /* defined STPMIC2 */
+
 /* Private function prototypes -----------------------------------------------*/
 /* Functions Definition ------------------------------------------------------*/
 
@@ -92,34 +106,58 @@ void PMIC_Util_Init(void)
   * @brief api to perform read write operations on PMIC
   * @param addr: address of the memory from which to read or write the PMIC.
   * @param ops: operation to perform PMIC_SHADOW_WRITE or PMIC_SHADOW_READ.
+  * @param pmic_data: PMIC information.
   * @retval none
   */
-void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops)
+void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops, pmic_data_t *pmic_data)
 {
   uint8_t data;
   uint16_t count = 0U;
 
+  if ((pmic_data == NULL) || (addr == NULL))
+  {
+    return;
+  }
+
   switch (ops)
   {
     case PMIC_SHADOW_READ:
-      for (uint8_t idx = 0; idx < PMIC_NVM_SIZE; idx++)
+      for (uint8_t idx = 0; idx < pmic_data->NVMSize; idx++)
       {
         if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
-                         PMIC_NVM_SHDW_START_ADDR + idx, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
+                             (pmic_data->NVMStartAddress) + idx, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
+        {
           *(addr + idx) = data;
+        }
         else
         {
-        	while(1){}; /* Error */
+          while (1) {}; /* Error */
         }
       }
       break;
 
     case PMIC_SHADOW_WRITE:
-      for (uint8_t idx = 0; idx < PMIC_NVM_SIZE; idx++)
+      for (uint8_t idx = 0; idx < pmic_data->NVMSize; idx++)
       {
-        data = *(addr + idx);
-        HAL_I2C_Mem_Write(&hi2c, PMIC_I2C_ADDRESS, PMIC_NVM_SHDW_START_ADDR + idx,
-                          I2C_MEMADD_SIZE_8BIT, &data, 1, 1000);
+        if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
+                             (pmic_data->NVMStartAddress) + idx, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
+        {
+          if (data != *(addr + idx))
+          {
+            data = *(addr + idx);
+            HAL_I2C_Mem_Write(&hi2c, PMIC_I2C_ADDRESS, (pmic_data->NVMStartAddress) + idx,
+                              I2C_MEMADD_SIZE_8BIT, &data, 1, 1000);
+          }
+          else
+          {
+            /* Do nothing value is already programmed */
+          }
+        }
+        else
+        {
+          while (1) {}; /* Error */
+        }
+
       }
       break;
 
@@ -132,14 +170,14 @@ void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops)
 
     data = 0xfd;
 
-    HAL_I2C_Mem_Write(&hi2c, PMIC_I2C_ADDRESS, PMIC_NVM_CR, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
+    HAL_I2C_Mem_Write(&hi2c, PMIC_I2C_ADDRESS, pmic_data->NVMCRRegisterAddr, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
 
     count = PMIC_SR_REG_TIMEOUT;
 
     for (count = 0; count < PMIC_SR_REG_TIMEOUT; count++)
     {
 
-      HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS, PMIC_NVM_SR, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
+      HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS, pmic_data->NVMSRRegisterAddr, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);
 
       if ((PMIC_NVM_BUSY_MSK & data) == 0U)
       {
@@ -153,4 +191,51 @@ void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops)
       while (1); /* hold the code so that a system reset can be performed. */
     }
   }
+
 }
+
+/**
+  * @brief api to perform detection of PMIC based on the database created and I2C initialized
+  * @param pmic_detected: pointer to fetch data base entry.
+  * @retval bool: true if Valid PMIC detected
+  */
+bool PMIC_Util_Detect_PMIC(pmic_data_t *pmic_detected)
+{
+  uint8_t data;
+  uint8_t idx;
+
+  if (pmic_detected == NULL)
+  {
+    return false;
+  }
+#if defined(STPMIC2)
+  if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
+                       PMIC_PRODUCT_ID_SR_ADDR, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
+#else
+  if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
+                       PMIC_VERSION_ID_SR_ADDR, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
+#endif /* defined(STPMIC2) */
+  {
+    data &= 0xF0;
+
+    for (idx = 0; idx < PMIC_MAX; idx++)
+    {
+      if (pmic_database[idx].Identifier == data)
+      {
+        memcpy(pmic_detected, &pmic_database[idx], sizeof(pmic_data_t));
+        return true;
+      }
+    }
+
+    if (idx == PMIC_MAX)
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
+  return false;
+}
+

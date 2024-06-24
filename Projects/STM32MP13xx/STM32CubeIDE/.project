@@ -32,9 +32,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Documentation/readme.txt</name>
+			<name>Application/Core/console_util.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Documentation/readme.txt</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/Core/Src/console_util.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Core/main.c</name>
@@ -62,14 +62,19 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/stm32mp13xx_it.c</locationURI>
 		</link>
 		<link>
+			<name>Application/MainMenu_Console/mainmenu_interface_cli.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/MainMenu_Console/Src/mainmenu_interface_cli.c</locationURI>
+		</link>
+		<link>
 			<name>Application/OTP_Console/otp_interface_cli.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli.c</locationURI>
 		</link>
 		<link>
-			<name>Application/OTP_Console/otp_interface_cli_util.c</name>
+			<name>Application/PMIC_Console/pmic_interface_cli.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Common/OTP_Console/Src/otp_interface_cli_util.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Common/PMIC_Console/Src/pmic_interface_cli.c</locationURI>
 		</link>
 		<link>
 			<name>Application/Startup/startup_stm32mp135c_ca7.c</name>

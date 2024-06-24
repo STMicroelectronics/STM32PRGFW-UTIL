@@ -19,38 +19,48 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "otp_interface_cli.h"
-#include "otp_interface_cli_util.h"
+#include "console_util.h"
 #include "otp_util.h"
 #include <limits.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 
+#ifdef USE_HASH_OVER_OTP
+#include "hash_util.h"
+#endif /* USE_HASH_OVER_OTP */
+
 /* Private typedef -----------------------------------------------------------*/
-typedef enum {
+typedef enum
+{
   OTP_CMD_HELP = 0,
   OTP_CMD_DISPL,
   OTP_CMD_WRITE,
   OTP_CMD_LOCK,
+  OTP_CMD_EXIT,
   OTP_CMD_MAX,
 } otp_cmd_id;
 
-typedef struct {
+typedef struct
+{
   char *str;
   uint32_t param_min;
   uint32_t param_max;
 } otp_command;
 
-typedef struct {
+typedef struct
+{
   uint32_t off;
   uint32_t len;
 } otp_arg;
 
-const otp_command otp_cmd[OTP_CMD_MAX] = {
-    [OTP_CMD_HELP]         = { "help"        , 0, 0 },
-    [OTP_CMD_DISPL]        = { "displ"       , 0, OTP_VALUE_SIZE },
-    [OTP_CMD_WRITE]        = { "write"       , 2, ((2 * OTP_VALUE_SIZE) + 2)},
-    [OTP_CMD_LOCK]         = { "lock"        , 1, 2 },
+const otp_command otp_cmd[OTP_CMD_MAX] =
+{
+  [OTP_CMD_HELP]         = { "help", 0, 0 },
+  [OTP_CMD_DISPL]        = { "displ", 0, OTP_VALUE_SIZE },
+  [OTP_CMD_WRITE]        = { "write", 2, ((2 * OTP_VALUE_SIZE) + 2)},
+  [OTP_CMD_LOCK]         = { "lock", 1, 2 },
+  [OTP_CMD_EXIT]         = { "exit", 0, 0 }
 };
 
 /* Private define ------------------------------------------------------------*/
@@ -83,7 +93,6 @@ static void lock_otp(uint32_t word);
 static void print_otp_more_status(Otp_TypeDef Otp, uint32_t word);
 
 /* Exported variables --------------------------------------------------------*/
-
 /**
   * @brief print help message
   * @param None
@@ -96,11 +105,13 @@ static void print_help(void)
   printf("-displ                     : This command allows the user to display all or\n\r");
   printf("                             part of the OTP structure\n\r");
   printf(" [word=<id>]               : {Optional} display a specific OTP word {values and\n\r");
-  printf("                             status} up to %d words [0 to %d]. <id> value in\n\r",  OTP_VALUE_SIZE, (OTP_VALUE_SIZE - 1));
+  printf("                             status} up to %d words [0 to %d]. <id> value in\n\r",  OTP_VALUE_SIZE,
+         (OTP_VALUE_SIZE - 1));
   printf("                             dec/hex/oct format. Multiple words can be displayed\n\r");
   printf("                             at the same time (i.e. displ word=0 word=2)\n\r");
   printf("-write                     : This command allows to fuse or update OTP words up\n\r");
-  printf("                             to %d words [0 to %d] at the same command line\n\r", OTP_VALUE_SIZE, (OTP_VALUE_SIZE - 1));
+  printf("                             to %d words [0 to %d] at the same command line\n\r", OTP_VALUE_SIZE,
+         (OTP_VALUE_SIZE - 1));
   printf(" [-y]                      : {Optional} enable auto confirmation\n\r");
   printf(" [lock]                    : {Optional} indicate the operation type, update or\n\r");
   printf("                             permanent lock\n\r");
@@ -110,7 +121,8 @@ static void print_help(void)
   printf("                             words can be written at the same time\n\r");
   printf("                             (i.e. write word=0 value=0xff word=2 value=0x2F)\n\r");
   printf("-lock                      : This command allows to fuse permanently OTP words\n\r");
-  printf("                             up to %d words [0 to %d] at the same command line\n\r", OTP_VALUE_SIZE, (OTP_VALUE_SIZE - 1));
+  printf("                             up to %d words [0 to %d] at the same command line\n\r", OTP_VALUE_SIZE,
+         (OTP_VALUE_SIZE - 1));
   printf(" [-y]                      : {Optional} enable auto confirmation\n\r");
   printf(" [word=<id>]               : This field contains the OTP word number in\n\r");
   printf("                             dec/hex/oct format.\n\r");
@@ -119,7 +131,7 @@ static void print_help(void)
 /**
   * @brief print otp status description
   * @param Otp: otp structure
-  * 	   word: otp word
+  *      word: otp word
   * @retval None
   */
 static void print_otp_more_status(Otp_TypeDef Otp, uint32_t word)
@@ -153,7 +165,7 @@ static void print_otp_more_status(Otp_TypeDef Otp, uint32_t word)
 /**
   * @brief print the otp
   * @param argc:
-  * 	   argv:
+  *      argv:
   * @retval None
   */
 static void print_displ(int argc, char *argv[])
@@ -164,6 +176,9 @@ static void print_displ(int argc, char *argv[])
   /* Read otp */
   Otp = OTP_Util_Read();
 
+#ifdef USE_HASH_OVER_OTP
+  HASH_Util_calculate(&Otp);
+#endif /* USE_HASH_OVER_OTP */
   /* In case of specific otp words display */
   if (argc >= 2)
   {
@@ -201,9 +216,9 @@ static void print_displ(int argc, char *argv[])
               once = false;
             }
             printf("\n\r---------------------------------------------------------------------");
-            printf("\n\r    %02ld    |    0x%08lX    |    0x%08lX    ", val, Otp.OtpPart[val*2], Otp.OtpPart[val*2+1]);
+            printf("\n\r    %02ld    |    0x%08lX    |    0x%08lX    ", val, Otp.OtpPart[val * 2], Otp.OtpPart[val * 2 + 1]);
             /* print otp status description */
-            print_otp_more_status(Otp, val*2+1);
+            print_otp_more_status(Otp, val * 2 + 1);
           }
           else /* if value is out of otp word range */
           {
@@ -238,16 +253,23 @@ static void print_displ(int argc, char *argv[])
 
     printf("\n\r |_ Hardware Key Set : N");
     printf("\n\r |_ Encrypted data   : N\n\r");
-
+#ifdef USE_HASH_OVER_OTP
+    printf("\n\r |_ Hash Value       : \n\r");
+    for (idx = 0; idx < OTP_HASH_SIZE; idx += 4)
+    {
+      printf("0x%x ", (Otp.Sha256Hash[idx + 3] << 24) | (Otp.Sha256Hash[idx + 2] << 16) |
+             (Otp.Sha256Hash[idx + 1] << 8) | (Otp.Sha256Hash[idx]));
+    }
+#endif /* USE_HASH_OVER_OTP */
     printf("\n\rOTP DATA");
     printf("\n\r---------------------------------------------------------------------");
     printf("\n\r    ID    |      VALUE       |     STATUS     ");
     printf("\n\r---------------------------------------------------------------------");
-    for (idx = 0; idx < OTP_PART_SIZE; idx+=2)
+    for (idx = 0; idx < OTP_PART_SIZE; idx += 2)
     {
-      printf("\n\r    %02lu    |    0x%08lX    |    0x%08lX    ", (idx/2), Otp.OtpPart[idx], Otp.OtpPart[idx+1]);
+      printf("\n\r    %02lu    |    0x%08lX    |    0x%08lX    ", (idx / 2), Otp.OtpPart[idx], Otp.OtpPart[idx + 1]);
       /* print otp status description */
-      print_otp_more_status(Otp, idx+1);
+      print_otp_more_status(Otp, idx + 1);
     }
     printf("\n\r---------------------------------------------------------------------\n\r");
   }
@@ -280,8 +302,8 @@ static void print_outofrange_error(uint32_t num)
 /**
   * @brief print help message
   * @param word: otp word
-  * 	   val: otp value
-  * 	   lock: otp lock status
+  *      val: otp value
+  *      lock: otp lock status
   * @retval None
   */
 static void write_otp(uint32_t word, uint32_t val, bool lock)
@@ -347,7 +369,7 @@ static void lock_otp(uint32_t word)
 /**
   * @brief print help message
   * @param argc:
-  * 	     argv:
+  *        argv:
   * @retval None
   */
 static void print_write(int argc, char *argv[])
@@ -372,7 +394,7 @@ static void print_write(int argc, char *argv[])
     if (argc % 2 == 0)
     {
       /* if auto confirmation is enabled */
-      if(!strcmp(argv[0], "-y"))
+      if (!strcmp(argv[0], "-y"))
       {
         auto_conf = true;
         prev_opt_cmd++;
@@ -392,10 +414,10 @@ static void print_write(int argc, char *argv[])
     else /* if arguments size is impair */
     {
       /* if auto confirmation is enabled */
-      if(!strcmp(argv[0], "-y"))
+      if (!strcmp(argv[0], "-y"))
       {
         /* if lock is enabled */
-        if(!strcmp(argv[1], "lock"))
+        if (!strcmp(argv[1], "lock"))
         {
           lock = true;
         }
@@ -536,7 +558,7 @@ static void print_write(int argc, char *argv[])
 /**
   * @brief print help message
   * @param argc:
-  * 	   argv:
+  *      argv:
   * @retval None
   */
 static void print_lock(int argc, char *argv[])
@@ -549,7 +571,7 @@ static void print_lock(int argc, char *argv[])
   if (argc == 3)
   {
     /* if auto confirmation is enabled */
-    if(!strcmp(argv[0], "-y"))
+    if (!strcmp(argv[0], "-y"))
     {
       auto_conf = true;
       prev_opt_cmd++;
@@ -593,7 +615,7 @@ static void print_lock(int argc, char *argv[])
         printf("\n\r--------------------------");
         printf("\n\r Word     |  Value        ");
         printf("\n\r--------------------------");
-        printf("\n\r %02ld       |  0x%08lX         ", val, Otp.OtpPart[2 *val]);
+        printf("\n\r %02ld       |  0x%08lX         ", val, Otp.OtpPart[2 * val]);
         printf("\n\r Lock     |  YES          ");
         printf("\n\r--------------------------");
         printf("\n\rWarning: This operation cannot be reverted and may brick your device.");
@@ -648,10 +670,17 @@ static void print_lock(int argc, char *argv[])
   }
 }
 
+
+static bool print_exit(int argc, char *argv[])
+{
+  return true;
+}
+
+
 /**
   * @brief free the argv
   * @param argc:
-  * 	     argv:
+  *        argv:
   * @retval None
   */
 static void free_args(int argc, char *argv[])
@@ -686,7 +715,7 @@ static void get_entry_string(char *entry)
   printf("\rUser>\n\r");
 #endif
 
-  while(user_entry_valid == 0)
+  while (user_entry_valid == 0)
   {
     /* Scan for user entry */
     user_entry_value = Serial_Scanf(255);
@@ -709,7 +738,7 @@ static void get_entry_string(char *entry)
     }
 #else
     /* if new line is detected */
-    if ( (user_entry_value == 0xa) || (user_entry_value == 0xd) )
+    if ((user_entry_value == 0xa) || (user_entry_value == 0xd))
     {
       entry[i] = '\0';
       printf("\r\n");
@@ -727,9 +756,9 @@ static void get_entry_string(char *entry)
 /**
   * @brief parse the entry string
   * @param entry: user entry
-  * 	   size: user entry size
-  * 	   command: user command
-  * 	   argv:
+  *      size: user entry size
+  *      command: user command
+  *      argv:
   * @retval number of arguments
   */
 static int parse_entry_string(char *entry, size_t size, int *command, char *argv[])
@@ -816,14 +845,14 @@ static int parse_entry_string(char *entry, size_t size, int *command, char *argv
   if ((n - 1) < otp_cmd[*command].param_min)
   {
     printf("Error: %s: argument missing (min=%lu)\n\r", otp_cmd[*command].str,
-                                                otp_cmd[*command].param_min);
+           otp_cmd[*command].param_min);
     printf("Please refer to help for the supported commands\n\r");
     return -3;
   }
   else if ((n - 1) > otp_cmd[*command].param_max)
   {
     printf("Error: %s: too many arguments (max=%lu)\n\r", otp_cmd[*command].str,
-                                                  otp_cmd[*command].param_max);
+           otp_cmd[*command].param_max);
     printf("Please refer to help for the supported commands\n\r");
     return -4;
   }
@@ -839,7 +868,7 @@ static int parse_entry_string(char *entry, size_t size, int *command, char *argv
   * @param None
   * @retval None
   */
-void print_header(void)
+void otp_print_header(void)
 {
   /* Output a message on Hyperterminal using printf function */
   printf("\n\r=============== OTP Serial Interface ===============\r");
@@ -852,12 +881,13 @@ void print_header(void)
   * @param None
   * @retval None
   */
-void otp_commands_interactive(void)
+bool otp_commands_interactive(void)
 {
   char buffer[CMD_MAX_LEN];
   char *argv[CMD_MAX_ARG + 1]; /* NULL terminated */
   int argc;
   int cmd;
+  bool ret = false;
 
   /* Init the otp */
   OTP_Util_Init();
@@ -871,32 +901,38 @@ void otp_commands_interactive(void)
   /* if the size is not valid */
   if (argc <= 0)
   {
-    return;
+    return ret;
   }
 
   /* Check the command */
   switch (cmd)
   {
-  case OTP_CMD_HELP:
-    print_help();
-    break;
+    case OTP_CMD_HELP:
+      print_help();
+      break;
 
-  case OTP_CMD_DISPL:
-    print_displ(argc, argv);
-    break;
+    case OTP_CMD_DISPL:
+      print_displ(argc, argv);
+      break;
 
-  case OTP_CMD_WRITE:
-    print_write(argc, argv);
-    break;
+    case OTP_CMD_WRITE:
+      print_write(argc, argv);
+      break;
 
-  case OTP_CMD_LOCK:
-    print_lock(argc, argv);
-    break;
+    case OTP_CMD_LOCK:
+      print_lock(argc, argv);
+      break;
 
-  default:
-    break;
+    case OTP_CMD_EXIT:
+    	ret = print_exit(argc, argv); /* return console control to main console*/
+      break;
+
+    default:
+      break;
   }
 
   /* reset argc and argv */
   free_args(argc, argv);
+
+  return ret;
 }

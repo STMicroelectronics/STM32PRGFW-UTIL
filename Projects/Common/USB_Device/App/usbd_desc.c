@@ -70,6 +70,8 @@
 #define USBD_PRODUCT_STRING          "USB download gadget@Device ID /0x500, @Revision ID /0x2000"
 #elif defined (STM32MP135Fxx)
 #define USBD_PRODUCT_STRING          "USB download gadget@Device ID /0x501, @Revision ID /0x1000"
+#elif defined (STM32MP257Cxx)
+#define USBD_PRODUCT_STRING          "USB download gadget@Device ID /0x505, @Revision ID /0x1000"
 #endif
 #define USBD_CONFIGURATION_STRING    "DFU Config"
 #define USBD_INTERFACE_STRING        "DFU Interface"

@@ -23,7 +23,19 @@
 #define MEMORIES_SUPPORTED                2U
 
 /* ------------------------- Definitions for USART -------------------------- */
-#if   defined (STM32MP157Cxx)
+#if defined (STM32MP257Cxx)
+#define USARTx                            USART2
+#define USARTx_CLK_ENABLE()               __HAL_RCC_USART2_CLK_ENABLE()
+#define USARTx_RX_GPIO_CLK_ENABLE()       __HAL_RCC_GPIOA_CLK_ENABLE()
+#define USARTx_TX_GPIO_CLK_ENABLE()       __HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define USARTx_TX_PIN                     GPIO_PIN_4
+#define USARTx_TX_GPIO_PORT               GPIOA
+#define USARTx_TX_ALTERNATE               GPIO_AF6_USART2
+#define USARTx_RX_PIN                     GPIO_PIN_8
+#define USARTx_RX_GPIO_PORT               GPIOA
+#define USARTx_RX_ALTERNATE               GPIO_AF8_USART2
+#elif defined (STM32MP157Cxx)
 #define USARTx                            UART4
 #define USARTx_CLK_ENABLE()               __HAL_RCC_UART4_CLK_ENABLE()
 #define USARTx_RX_GPIO_CLK_ENABLE()       __HAL_RCC_GPIOB_CLK_ENABLE()

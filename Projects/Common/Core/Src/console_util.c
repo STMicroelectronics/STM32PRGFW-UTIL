@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    otp_interface_cli_util.c
+  * @file    console_util.c
   * @author  MCD Application Team
-  * @brief   This file contains common funtions used for otp interface cli
+  * @brief   This file contains common funtions used for cli
   ******************************************************************************
   * @attention
   *
@@ -18,9 +18,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "console_util.h"
 #include <stdio.h>
-#include "otp_interface_cli_util.h"
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define HAL_TIMEOUT_VALUE   HAL_MAX_DELAY

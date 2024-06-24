@@ -20,6 +20,10 @@
 #ifndef OTP_INTERFACE_H
 #define OTP_INTERFACE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Includes ------------------------------------------------------------------*/
 #include "otp_util.h"
 /* Exported types ------------------------------------------------------------*/
@@ -31,5 +35,12 @@ void OPENBL_OTP_Init(void);
 void OPENBL_OTP_DeInit(void);
 int OPENBL_OTP_Write(OPENBL_Otp_TypeDef Otp);
 OPENBL_Otp_TypeDef OPENBL_OTP_Read(void);
+#ifdef USE_HASH_OVER_OTP
+int OPENBL_Hash_Calculate(OPENBL_Otp_TypeDef *Otp);
+#endif /* USE_HASH_OVER_OTP */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* OTP_INTERFACE_H */

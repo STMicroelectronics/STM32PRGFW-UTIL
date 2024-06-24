@@ -89,7 +89,10 @@ void OpenBootloader_Init(void)
 	 USB_Handle.p_Ops = &USB_Ops;
 	 OPENBL_RegisterInterface(&USB_Handle);
   }
-
+  else
+  {
+	  while(1); /* error */
+  }
 
 #else
   /***************************************************/

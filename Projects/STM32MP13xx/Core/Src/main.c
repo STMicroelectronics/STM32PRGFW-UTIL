@@ -19,8 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #if defined (__CONSOLE__)
-#include "otp_interface_cli.h"
-#include "otp_interface_cli_util.h"
+#include "mainmenu_interface_cli.h"
 #else
 #include "usb_device.h"
 #endif /* __CONSOLE__ */
@@ -41,7 +40,8 @@ extern void initialise_monitor_handles(void);
   * @brief  The application entry point.
   * @retval int
   */
-int main(void){
+int main(void)
+{
 
 #if !defined (__CP_SERIAL_BOOT__)
   /* Reset of all peripherals, Initialize the Systick. */
@@ -61,12 +61,9 @@ int main(void){
   UART_Config();
 #endif /* __TERMINAL_IO__ */
 
-  /* print the console header message */
-  print_header();
-
-  while(1)
+  while (1)
   {
-    otp_commands_interactive();
+    MainMenu_interface_start();
   }
 #else /* __CONSOLE__ */
 
@@ -157,10 +154,11 @@ void SystemClock_Config(void)
   /* Configure LSEDRIVE value */
   __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_MEDIUMHIGH);
 
-  if (HAL_RCC_OscConfig(&RCC_OscInitStructure) != HAL_OK) {
+  if (HAL_RCC_OscConfig(&RCC_OscInitStructure) != HAL_OK)
+  {
     /* HAL RCC configuration error */
     Error_Handler();
-    }
+  }
 
   /* Select PLLx as MPU, AXI and MCU clock sources */
   RCC_ClkInitStructure.ClockType = (RCC_CLOCKTYPE_MPU   | RCC_CLOCKTYPE_ACLK  |
@@ -182,21 +180,22 @@ void SystemClock_Config(void)
   RCC_ClkInitStructure.APB5_Div = RCC_APB5_DIV4;
   RCC_ClkInitStructure.APB6_Div = RCC_APB6_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStructure) != HAL_OK) {
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStructure) != HAL_OK)
+  {
     /* HAL RCC configuration error */
     Error_Handler();
-    }
+  }
 
-/*-
-  Note : The activation of the I/O Compensation Cell is recommended with communication  interfaces
-  (GPIO, SPI, FMC, QSPI ...)  when  operating at  high frequencies(please refer to product datasheet)
-  The I/O Compensation Cell activation  procedure requires :
-  - The activation of the CSI clock
-  - The activation of the SYSCFG clock
-  - Enabling the I/O Compensation Cell : setting bit[0] of register SYSCFG_CCCSR
+  /*-
+    Note : The activation of the I/O Compensation Cell is recommended with communication  interfaces
+    (GPIO, SPI, FMC, QSPI ...)  when  operating at  high frequencies(please refer to product datasheet)
+    The I/O Compensation Cell activation  procedure requires :
+    - The activation of the CSI clock
+    - The activation of the SYSCFG clock
+    - Enabling the I/O Compensation Cell : setting bit[0] of register SYSCFG_CCCSR
 
-  To do this please uncomment the following code
-  */
+    To do this please uncomment the following code
+    */
 
   /*
   __HAL_RCC_CSI_ENABLE() ;
@@ -204,7 +203,7 @@ void SystemClock_Config(void)
   __HAL_RCC_SYSCFG_CLK_ENABLE() ;
 
   HAL_EnableCompensationCell();
-*/
+  */
 }
 
 
@@ -241,7 +240,7 @@ PUTCHAR_PROTOTYPE
   /* Place your implementation of fputc here */
   /* e.g. write a character to the USART1 and Loop until the end of transmission */
 #if defined (__LOG_UART_IO_)
-extern UART_HandleTypeDef huart;
+  extern UART_HandleTypeDef huart;
   HAL_UART_Transmit(&huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 #endif
 #if defined (__LOG_TRACE_IO_)
@@ -267,11 +266,12 @@ void Error_Handler(void)
 #if defined(__TERMINAL_IO__)
 int _kill(int pid, int sig)
 {
-    return -1;
+  return -1;
 }
 
 #endif
 #endif
+
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number

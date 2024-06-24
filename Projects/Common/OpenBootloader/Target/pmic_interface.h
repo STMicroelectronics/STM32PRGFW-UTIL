@@ -34,6 +34,7 @@ extern "C" {
 void OPENBL_PMIC_Init(void);
 void OPENBL_PMIC_Read(uint8_t *pDest);
 void OPENBL_PMIC_Write(uint8_t *pSource);
+uint32_t OPENBL_PMIC_Get_NVM_Size(void);
 
 #ifdef __cplusplus
 }

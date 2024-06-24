@@ -1,0 +1,2 @@
+#Opt	Id	Name	Type	IP	Offset	Binary
+P	0x1	FSBL	Binary	none	0x0	STM32PRGFW_UTIL_MP2xx_CP_Serial_Boot.stm32

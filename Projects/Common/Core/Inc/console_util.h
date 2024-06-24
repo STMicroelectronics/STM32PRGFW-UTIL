@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    otp_interface_cli_util.h
+  * @file    console_util.h
   * @author  MCD Application Team
-  * @brief   OTP Interface CLI header
+  * @brief   provide console utilities header
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef OTP_INTERFACE_CLI_UTIL_H
-#define OTP_INTERFACE_CLI_UTIL_H
+#ifndef CONSOLE_UTIL_H
+#define CONSOLE_UTIL_H
 
 /* Private includes ----------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
@@ -32,7 +32,21 @@ void UART_Config(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* UART related configuration */
-#if   (STM32MP157Cxx)
+#if defined (STM32MP257Cxx)
+#define USARTx                           USART2
+#define USARTx_CLK_ENABLE()              __HAL_RCC_USART2_CLK_ENABLE()
+#define USARTx_FORCE_RESET()             __HAL_RCC_USART2_FORCE_RESET()
+#define USARTx_RELEASE_RESET()           __HAL_RCC_USART2_RELEASE_RESET()
+
+#define MX_UART_INSTANCE        USART2
+#define MX_UART_TX_PIN          GPIO_PIN_4
+#define MX_UART_TX_GPIO_PORT    GPIOA
+#define MX_UART_TX_AF           GPIO_AF6_USART2
+#define MX_UART_RX_PIN          GPIO_PIN_8
+#define MX_UART_RX_GPIO_PORT    GPIOA
+#define MX_UART_RX_AF           GPIO_AF8_USART2
+#define MX_MODEL                "STM32MP2XX"
+#elif (STM32MP157Cxx)
 #define USARTx                           UART4
 #define USARTx_CLK_ENABLE()              __HAL_RCC_UART4_CLK_ENABLE()
 #define USARTx_FORCE_RESET()             __HAL_RCC_UART4_FORCE_RESET()
@@ -70,4 +84,4 @@ void UART_Config(void);
 #define MX_UART_MODE            UART_MODE_TX_RX
 #define MX_UART_OVERSAMPLING    UART_OVERSAMPLING_16
 
-#endif /* OTP_INTERFACE_CLI_UTIL_H */
+#endif /* CONSOLE_UTIL_H */

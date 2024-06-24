@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STM32MP2xx CMSIS</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<center>
+<h1 id="release-notes-for">Release Notes for</h1>
+<h1 id="stm32mp2xx-cmsis"><mark>STM32MP2xx CMSIS</mark></h1>
+<p>Copyright © 2022 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="./_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h1 id="license">License</h1>
+<p>This software component is licensed by ST under Apache-2.0 license, the "License"; You may not use this component except in compliance with the License. You may obtain a copy of the License at:</p>
+<p><a href="https://opensource.org/licenses/Apache-2.0">Apache License v2.0</a></p>
+<h1 id="purpose">Purpose</h1>
+<p>This driver provides the CMSIS device for the STM32MP2 products. This covers STM32MP25xx devices.</p>
+<p>This driver is composed of the descriptions of the registers under “Include” directory.</p>
+<p>Various template file are provided to easily build an application. They can be adapted to fit applications requirements.</p>
+<ul>
+<li>Include/Templates_TZ/partition_stm32mp2xx.h contain a default Secure Attribute Unit (SAU) set up from SystemInit() for secure application when the TrustZone-M security is enabled (TZEN=1).</li>
+<li>Source/Templates/system_stm32mp2xx_a35.c contains the initialization code referred as SystemInit() for CA35 core.</li>
+<li>Source/Templates/system_stm32mp2xx_m33_s.c contains the initialization code referred as SystemInit() for CM33 core secure code and security extension enabled (secure code and TZEN=1).</li>
+<li>Source/Templates/system_stm32mp2xx_m33_ns.c contains the initialization code referred as SystemInit() for CM33 core with security extension not enabled or non secure code with security extension enables (TZEN=0).</li>
+<li>Source/Templates/system_stm32mp2xx_m33.c contains the initialization code referred as SystemInit() for CM33 core with security extension enabled or not enabled (both of above cases, configured by __ARM_FEATURE_CMSE compilation flag).</li>
+<li>Source/Templates/system_stm32mp2xx_m0plus.c contains the initialization code referred as SystemInit() for CM0+ core.</li>
+<li>Startup files are provided as example for STM32CubeIDE.</li>
+<li>Linker files are provided as example for STM32CubeIDE.</li>
+</ul>
+</div>
+<div class="col-sm-12 col-lg-8">
+<h1 id="update-history">Update History</h1>
+<div class="collapse">
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true"> <label for="collapse-section4" aria-hidden="true"><strong>V0.0.8 / 08-June-2022</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<p><strong>Forth internal release</strong></p>
+<ul>
+<li>Base addresses
+<ul>
+<li>DDRDGB base address added</li>
+</ul></li>
+<li>Register definitions
+<ul>
+<li>DDR Controller Registers DBG def added</li>
+<li>ADC, DDR Controller, RCC, SPDIFRX Registers def updated</li>
+</ul></li>
+<li>Other changes
+<ul>
+<li>M33 TZ Partiton template updated</li>
+<li>startup source code for GCC (STM32CubeIDE) templates updated</li>
+<li>system source code templates updated</li>
+<li>Updated GCC (STM32CubeIDE) Linker scripts templates for Secure M33 in RETRAM, Secure and non secure M33 in MCUSRAM, A35_0 in SYSRAM</li>
+<li>MISRA-C Compatibility improved</li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<p>Internal release of STM32MP2xx CMSIS Device drivers to support <strong>STM32MP25xx</strong> devices</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section3" aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V0.0.7 / 02-February-2022</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<p><strong>Third internal release</strong></p>
+<ul>
+<li>Base addresses
+<ul>
+<li>ADF1 base address added</li>
+<li>ETH Switch base addreses updated</li>
+</ul></li>
+<li>Register definitions
+<ul>
+<li>DDR Controller Registers def added</li>
+<li>DSI Controller, ETH, IWDG, PKA, RIFSC, RISC, SAES Registers def updated</li>
+</ul></li>
+<li>Other changes
+<ul>
+<li>CSI Oscillator renamed to MSI to be in line with Reference Manual</li>
+<li>startup source code for GCC (STM32CubeIDE) templates updated</li>
+<li>system source code templates updated</li>
+<li>Added GCC (STM32CubeIDE) Linker scripts templates for Secure M33 in RETRAM, Secure and non secure M33 in MCUSRAM, A35_0 in SYSRAM</li>
+<li>MISRA-C Compatibility improved</li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<p>Internal release of STM32MP2xx CMSIS Device drivers to support <strong>STM32MP25xx</strong> devices</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V0.0.6 / 01-July-2021</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<p><strong>Second internal release</strong></p>
+<h2 id="contents">Contents</h2>
+<p>Internal release of STM32MP2xx CMSIS Device drivers to support <strong>STM32MP25xx</strong> devices</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V0.0.5 / 09-April-2021</strong></label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<p><strong>First internal release</strong></p>
+<h2 id="contents">Contents</h2>
+<p>Internal release of STM32MP2xx CMSIS Device drivers to support <strong>STM32MP25xx</strong> devices</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="sticky">
+<p>For complete documentation on STM32MP2xx, visit: [<a href="http://www.st.com/stm32mp2">www.st.com/stm32mp2</a>]</p>
+<em>This release note uses up to date web standards and, for this reason, should not be opened with Internet Explorer but preferably with popular browsers such as Google Chrome, Mozilla Firefox, Opera or Microsoft Edge.</em>
+</footer>
+</body>
+</html>

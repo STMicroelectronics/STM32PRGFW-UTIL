@@ -33,7 +33,7 @@ case "$(uname -s)" in
     cmd="python"
     ;;
   *)
-    #line for window executeable
+    #line for window executable
     echo Postbuild with windows executable
     imgtool="${local_script_path}/exe.win-amd64-2.7/Stm32ImageAddHeader.exe"
     cmd=""

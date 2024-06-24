@@ -27,6 +27,10 @@
 #include "pmic_interface.h"
 #include "openbl_util.h"
 
+#ifdef USE_HASH_OVER_OTP
+#include "hash_interface.h"
+#endif /* USE_HASH_OVER_OTP */
+
 /* External variables --------------------------------------------------------*/
 extern OPENBL_Flashlayout_TypeDef FlashlayoutStruct;
 
@@ -55,7 +59,10 @@ static uint32_t cur_part = 1;
 static OPENBL_Otp_TypeDef Otp;
 static uint32_t otp_idx_rp = 0;
 static uint32_t otp_idx_wm = 0;
-
+static bool     otp_write_done = false;
+#ifdef USE_HASH_OVER_OTP
+static uint32_t hash_sent = 0U;
+#endif /* USE_HASH_OVER_OTP */
 /* Private function prototypes -----------------------------------------------*/
 static void OPENBL_USART_GetCommand(void);
 static void OPENBL_USART_GetVersion(void);
@@ -102,6 +109,10 @@ static void OPENBL_USART_GetCommand(void)
 
   /* Init usefull gloabl varialble */
   otp_idx_rp = 0;
+
+#ifdef USE_HASH_OVER_OTP
+  hash_sent = 0;
+#endif /* USE_HASH_OVER_OTP */
 
   const uint8_t a_OPENBL_USART_CommandsList[OPENBL_USART_COMMANDS_NB] =
   {
@@ -310,7 +321,6 @@ static void OPENBL_USART_Download(void)
   uint32_t res;
   uint32_t offset = 0;
 
-
   OPENBL_USART_SendByte(ACK_BYTE);
 
   /* Get the memory address */
@@ -355,9 +365,15 @@ static void OPENBL_USART_Download(void)
       /* If otp operation */
       if (operation == PHASE_OTP)
       {
+
         /* If first otp packet */
         if (packet_number == 0)
         {
+          /* we are at starting packet hence make the read write pointers zero */
+          otp_idx_rp = 0;
+          otp_idx_wm = 0;
+          otp_write_done = false;
+
           /* Check otp version */
           Otp.Version = (USART_RAM_Buf[0] << 0) | (USART_RAM_Buf[1] << 8) | (USART_RAM_Buf[2] << 16) | (USART_RAM_Buf[3] << 24);
 
@@ -375,7 +391,7 @@ static void OPENBL_USART_Download(void)
         }
 
         /* Get otp word and status */
-        for (counter = 0 + offset; (counter < codesize) && (otp_idx_wm < OTP_PART_SIZE); counter += 4)
+        for (counter = 0 + offset; ((counter < codesize) && (otp_idx_wm < OTP_PART_SIZE)) ; counter += 4)
         {
           Otp.OtpPart[otp_idx_wm] = (USART_RAM_Buf[counter] << 0) | (USART_RAM_Buf[counter + 1] << 8) | (USART_RAM_Buf[counter + 2] << 16) | (USART_RAM_Buf[counter + 3] << 24);
           otp_idx_wm++;
@@ -385,10 +401,11 @@ static void OPENBL_USART_Download(void)
         if (otp_idx_wm == OTP_PART_SIZE)
         {
           OPENBL_OTP_Write(Otp);
-
-          /* Reset otp index */
-          otp_idx_wm = 0;
-          otp_idx_rp = 0;
+          /* no need to make read write pointers zero as we make them zero at packet_number equal to 0*/
+          otp_write_done = true;
+#ifdef USE_HASH_OVER_OTP
+          hash_sent = 0;
+#endif /* USE_HASH_OVER_OTP */
         }
       }
       else if (operation == PHASE_PMIC_NVM)
@@ -464,8 +481,8 @@ static void OPENBL_USART_ReadPartition(void)
   uint8_t data;
   uint8_t tmpOffset[4] = {0, 0, 0, 0};
   uint8_t partId;
-  uint8_t pmic_nvm_reg[PMIC_NVM_SIZE] = {0};
-
+  uint8_t pmic_nvm_reg[MAX_PMIC_NVM_SIZE] = {0};
+  uint32_t nvm_size;
   OPENBL_USART_SendByte(ACK_BYTE);
 
   /* Get partition ID byte */
@@ -500,6 +517,14 @@ static void OPENBL_USART_ReadPartition(void)
         /* Save the packet number */
         packet_number = offset / OPENBL_USART_PACKET_SIZE;
 
+        if (packet_number == 0)
+        {
+          otp_idx_rp = 0;
+          otp_idx_wm = 0;
+#ifdef USE_HASH_OVER_OTP
+          hash_sent = 0;
+#endif /* USE_HASH_OVER_OTP */
+        }
         OPENBL_USART_SendByte(ACK_BYTE);
 
         /* NbrOfData to read = data + 1 */
@@ -528,6 +553,10 @@ static void OPENBL_USART_ReadPartition(void)
         /* Read otp */
         Otp = OPENBL_OTP_Read();
 
+        /* Calculate Hash over OTP values */
+#ifdef USE_HASH_OVER_OTP
+        OPENBL_Hash_Calculate(&Otp);
+#endif
         /* Check if first otp packet */
         if (offset == 0)
         {
@@ -540,11 +569,41 @@ static void OPENBL_USART_ReadPartition(void)
           /* Update codesize */
           codesize -= 2;
         }
-
-        /* Send otp words */
+#ifdef USE_HASH_OVER_OTP
         for (i = 0; i < codesize; i++)
         {
-          /* Send otp words until its end and send 0 after to fill */
+          /* Send OTP words until its end and send 0 after to fill */
+          if (otp_idx_rp < OTP_PART_SIZE)
+          {
+            OPENBL_USART_SendWord(Otp.OtpPart[otp_idx_rp]);
+            otp_idx_rp++;
+          }
+          else
+          {
+            /* After OTP words, transfer the 32 bytes of Hash */
+            break;
+          }
+        }
+        /* Transfer 32 hash bytes*/
+        if ((otp_idx_rp >= OTP_PART_SIZE) && (hash_sent == 0))
+        {
+          for (uint8_t hash_idx = 0; hash_idx < OTP_HASH_SIZE; hash_idx++)
+          {
+            OPENBL_USART_SendByte(Otp.Sha256Hash[hash_idx]);
+          }
+          hash_sent = 1;
+          i += (OTP_HASH_SIZE / 4);
+        }
+        /* Transfer padding bytes */
+        for (uint32_t j = i; j < codesize; j++)
+        {
+          OPENBL_USART_SendWord(0);
+        }
+#else
+        /* Send OTP words */
+        for (i = 0; i < codesize; i++)
+        {
+          /* Send OTP words until its end and send 0 after to fill */
           if (otp_idx_rp < OTP_PART_SIZE)
           {
             OPENBL_USART_SendWord(Otp.OtpPart[otp_idx_rp]);
@@ -555,6 +614,7 @@ static void OPENBL_USART_ReadPartition(void)
             OPENBL_USART_SendWord(0);
           }
         }
+#endif /* USE_HASH_OVER_OTP */
         break;
 
       case PHASE_PMIC_NVM:
@@ -563,8 +623,9 @@ static void OPENBL_USART_ReadPartition(void)
         data = OPENBL_USART_ReadByte();
         OPENBL_USART_SendByte(ACK_BYTE);
         OPENBL_PMIC_Read(pmic_nvm_reg);
+        nvm_size = OPENBL_PMIC_Get_NVM_Size();
 
-        for (uint8_t idx = 0; idx < PMIC_NVM_SIZE; idx++)
+        for (uint8_t idx = 0; idx < nvm_size; idx++)
         {
           OPENBL_USART_SendByte(*(pmic_nvm_reg + idx));
         }

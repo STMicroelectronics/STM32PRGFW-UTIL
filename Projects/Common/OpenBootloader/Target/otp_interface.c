@@ -23,6 +23,9 @@
 #include "common_interface.h"
 #include "otp_interface.h"
 
+#ifdef USE_HASH_OVER_OTP
+#include "hash_interface.h"
+#endif /* USE_HASH_OVER_OTP */
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -72,3 +75,15 @@ OPENBL_Otp_TypeDef OPENBL_OTP_Read(void)
   OPENBL_Otp_TypeDef ret = OTP_Util_Read();
   return ret;
 }
+#ifdef USE_HASH_OVER_OTP
+int OPENBL_Hash_Calculate(OPENBL_Otp_TypeDef *Otp)
+{
+  int ret = -1;
+  OPENBL_Hash_DeInit();
+  OPENBL_Hash_Init();
+
+  /* calculate hash over OTP value & status */
+  ret = OPENBL_Hash_Start(Otp);
+  return ret;
+}
+#endif /* USE_HASH_OVER_OTP */
