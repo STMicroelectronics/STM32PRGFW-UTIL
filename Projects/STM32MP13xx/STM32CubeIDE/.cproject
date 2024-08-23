@@ -104,9 +104,6 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.1867520672" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1826275.1211935602" name="console_util.c" rcbsApplicability="disable" resourcePath="Application/Core/console_util.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1280666855.1736575945">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1280666855.1736575945" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1280666855"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Application/Core/console_util.c|Application/PMIC_Console|Application/MainMenu_Console|Application/OTP_Console|Application/Core/otp_interface_cli.c|Application/Core/otp_interface_cli_util.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
