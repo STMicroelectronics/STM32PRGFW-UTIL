@@ -56,7 +56,7 @@ EndBSPDependencies */
 #include "usbd_dfu.h"
 #include "usbd_ctlreq.h"
 
-
+extern int8_t pmic_nvm_str;
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{
   */
@@ -627,7 +627,7 @@ static uint8_t *USBD_DFU_GetUsrStringDesc(USBD_HandleTypeDef *pdev, uint8_t inde
     }
     else
     {
-      USBD_GetString((uint8_t *)PMIC_NVM_STR, USBD_StrDesc, length);
+      USBD_GetString((uint8_t *)&pmic_nvm_str, USBD_StrDesc, length);
     }
     return USBD_StrDesc;
   }

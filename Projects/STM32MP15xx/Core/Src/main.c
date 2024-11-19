@@ -40,7 +40,8 @@ extern void initialise_monitor_handles(void);
   * @brief  The application entry point.
   * @retval int
   */
-int main(void){
+int main(void)
+{
   /* Reset of all peripherals, Initialize the Systick. */
   HAL_Init();
 
@@ -88,7 +89,6 @@ int main(void){
 void SystemClock_Config(void)
 {
   HAL_RCC_DeInit();
-
   RCC_ClkInitTypeDef RCC_ClkInitStructure;
   RCC_OscInitTypeDef RCC_OscInitStructure;
 
@@ -163,7 +163,6 @@ void SystemClock_Config(void)
   RCC_OscInitStructure.PLL4.PLLMODE = RCC_PLL_INTEGER;
   /* Enable access to RTC and backup registers */
   SET_BIT(PWR->CR1, PWR_CR1_DBP);
-  /* Configure LSEDRIVE value */
   __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_MEDIUMHIGH);
 
   if (HAL_RCC_OscConfig(&RCC_OscInitStructure) != HAL_OK)
@@ -187,7 +186,6 @@ void SystemClock_Config(void)
   RCC_ClkInitStructure.APB3_Div = RCC_APB3_DIV2;
   RCC_ClkInitStructure.APB4_Div = RCC_APB4_DIV2;
   RCC_ClkInitStructure.APB5_Div = RCC_APB5_DIV4;
-
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStructure) != HAL_OK)
   {

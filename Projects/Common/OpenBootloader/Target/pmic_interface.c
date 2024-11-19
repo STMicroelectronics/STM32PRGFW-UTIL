@@ -21,12 +21,15 @@
 #include "pmic_interface.h"
 
 /* Global variables ----------------------------------------------------------*/
+extern int8_t pmic_nvm_str[];
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t PMIC_Initilized = 0U;
+uint8_t PMIC_Initialized = 0U;
+static uint8_t pmic_status = PMIC_ERROR_NONE;
 static pmic_data_t identified_pmic;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Functions Definition ------------------------------------------------------*/
 
@@ -38,14 +41,32 @@ static pmic_data_t identified_pmic;
   */
 void OPENBL_PMIC_Init(void)
 {
+
   PMIC_Util_Init();
 
-  if (PMIC_Util_Detect_PMIC(&identified_pmic) == false)
+  pmic_status = PMIC_Util_Detect_PMIC(&identified_pmic);
+
+  if (pmic_status == PMIC_ERROR_INVALID_ARG)
   {
-	  while(1); /* halt the code so that a system reset is performed */
+	  while(1); /* coding defect halt the code */
+  }
+  else if (pmic_status == PMIC_ERROR_NO_PMIC)
+  {
+	  /* Do nothing size default to 8 bytes for protocol header */
+  }
+  else if (pmic_status == PMIC_ERROR_INVALID_PMIC)
+  {
+	  /* Do nothing size default to 8 bytes for protocol header */
+  }
+  else
+  {
+	  uint8_t tmp;
+	  tmp = (identified_pmic.NVMSize + PMIC_PROTOCOL_HEADER_SIZE);
+	  pmic_nvm_str[14] = (tmp/10) + 48U;
+	  pmic_nvm_str[15] = (tmp%10) + 48U;
   }
 
-  PMIC_Initilized = 1U;
+  PMIC_Initialized = 1U;
 }
 
 /**
@@ -55,12 +76,30 @@ void OPENBL_PMIC_Init(void)
   */
 void OPENBL_PMIC_Read(uint8_t *pDest)
 {
-  if (PMIC_Initilized == 0)
+  uint8_t pmic_info;
+
+  if (PMIC_Initialized == 0)
   {
     OPENBL_PMIC_Init();
   }
 
-  PMIC_Util_ReadWrite(pDest, PMIC_SHADOW_READ, &identified_pmic);
+  /* protocol version specified in Macro PMIC_PROTOCOL_VERSION */
+  pmic_info = PMIC_Util_GetNVMID();
+
+  *pDest = PMIC_PROTOCOL_VERSION;
+
+  if (pmic_status == PMIC_ERROR_NO_PMIC)
+  {
+	  *(pDest + 1) = 0xFF;
+  }
+  else
+  {
+    *(pDest + 1) = (pmic_info & 0xF0) >> 4;
+    *(pDest + 3) = (pmic_info & 0x0F);
+    *(pDest + 4) = (PMIC_I2C_ADDRESS >> 1);
+    PMIC_Util_ReadWrite(pDest + PMIC_PROTOCOL_HEADER_SIZE, PMIC_SHADOW_READ, &identified_pmic);
+  }
+
 }
 
 /**
@@ -70,7 +109,7 @@ void OPENBL_PMIC_Read(uint8_t *pDest)
   */
 void OPENBL_PMIC_Write(uint8_t *pSource)
 {
-  if (PMIC_Initilized == 0)
+  if (PMIC_Initialized == 0)
   {
     OPENBL_PMIC_Init();
   }
@@ -85,7 +124,7 @@ void OPENBL_PMIC_Write(uint8_t *pSource)
   */
 uint32_t OPENBL_PMIC_Get_NVM_Size(void)
 {
-  if (PMIC_Initilized == 0)
+  if (PMIC_Initialized == 0)
   {
     OPENBL_PMIC_Init();
   }

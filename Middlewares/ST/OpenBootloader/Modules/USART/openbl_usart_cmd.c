@@ -481,7 +481,7 @@ static void OPENBL_USART_ReadPartition(void)
   uint8_t data;
   uint8_t tmpOffset[4] = {0, 0, 0, 0};
   uint8_t partId;
-  uint8_t pmic_nvm_reg[MAX_PMIC_NVM_SIZE] = {0};
+  uint8_t pmic_nvm_reg[MAX_PMIC_NVM_SIZE + PMIC_PROTOCOL_HEADER_SIZE] = {0};
   uint32_t nvm_size;
   OPENBL_USART_SendByte(ACK_BYTE);
 
@@ -623,9 +623,10 @@ static void OPENBL_USART_ReadPartition(void)
         data = OPENBL_USART_ReadByte();
         OPENBL_USART_SendByte(ACK_BYTE);
         OPENBL_PMIC_Read(pmic_nvm_reg);
+
         nvm_size = OPENBL_PMIC_Get_NVM_Size();
 
-        for (uint8_t idx = 0; idx < nvm_size; idx++)
+        for (uint8_t idx = 0; idx < (nvm_size + PMIC_PROTOCOL_HEADER_SIZE); idx++)
         {
           OPENBL_USART_SendByte(*(pmic_nvm_reg + idx));
         }

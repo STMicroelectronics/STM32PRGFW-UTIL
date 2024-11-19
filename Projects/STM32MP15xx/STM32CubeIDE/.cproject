@@ -64,7 +64,6 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.1076934337" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORE_CA7"/>
-									<listOptionValue builtIn="false" value="STPMIC1"/>
 									<listOptionValue builtIn="false" value="NO_MMU_USE"/>
 									<listOptionValue builtIn="false" value="NO_CACHE_USE"/>
 									<listOptionValue builtIn="false" value="__CONSOLE__"/>
@@ -194,7 +193,6 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.217068599" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORE_CA7"/>
-									<listOptionValue builtIn="false" value="STPMIC1"/>
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="__CP_SERIAL_BOOT__"/>
 									<listOptionValue builtIn="false" value="NO_MMU_USE"/>
@@ -314,7 +312,6 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.762262274" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CORE_CA7"/>
-									<listOptionValue builtIn="false" value="STPMIC1"/>
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="NO_MMU_USE"/>
 									<listOptionValue builtIn="false" value="NO_CACHE_USE"/>
@@ -441,7 +438,6 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.1839768223" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
-									<listOptionValue builtIn="false" value="STPMIC1"/>
 									<listOptionValue builtIn="false" value="CORE_CA7"/>
 									<listOptionValue builtIn="false" value="NO_MMU_USE"/>
 									<listOptionValue builtIn="false" value="NO_CACHE_USE"/>

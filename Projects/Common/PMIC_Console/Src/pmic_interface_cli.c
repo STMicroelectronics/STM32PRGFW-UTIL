@@ -562,7 +562,7 @@ bool pmic_commands_interactive(void)
 
   if (once_nvm_read_in_buffer == false)
   {
-    if (PMIC_Util_Detect_PMIC(&identified_pmic) == true)
+    if (PMIC_Util_Detect_PMIC(&identified_pmic) == PMIC_ERROR_NONE)
     {
       printf("\n\r----------------------------------\n\r");
       printf("*** PMIC Detected : STPMIC%s ***\n\r", identified_pmic.DisplayString);

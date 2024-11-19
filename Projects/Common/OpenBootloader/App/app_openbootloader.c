@@ -116,6 +116,8 @@ void OpenBootloader_Init(void)
   /* Initialize otp */
   OPENBL_OTP_Init();
 
+  OPENBL_PMIC_Init();
+
   /* Initialize memories */
   OPENBL_MEM_RegisterMemory(&RAM_Descriptor);
   OPENBL_MEM_RegisterMemory(&EXTERNAL_MEMORY_Descriptor);

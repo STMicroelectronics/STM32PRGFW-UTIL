@@ -124,7 +124,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
       status = HAL_BSEC_OTP_Program(hbsec, otp_idx, valueW, otpPermWLockValue);
       if (status != HAL_OK)
       {
-        ret = OTP_ERROR;
+    	  ret = OTP_ERROR;
       }
 #else
       /* Skip write value if value = 0 */

@@ -25,20 +25,14 @@
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static I2C_HandleTypeDef hi2c;
-#if defined(STPMIC2)
 static const pmic_data_t pmic_database[PMIC_MAX] =
 {
   /*Supported, Identifier, NVMSize, DisplayString, NVMStartAddress, NVMSRRegisterAddr, NVMCRRegisterAddr */
-  {PMIC_SUPPORTED,     0x20, 40, "25", 0x90, 0x8E, 0x8F},    /* PMIC_STPMIC25 */
+  {PMIC_SUPPORTED,     0x20, 40, "25", 0x90, 0x8E, 0x8F}, /* PMIC_STPMIC25 */
+  {PMIC_SUPPORTED,     0x00,  8, "1", 0xF8, 0xB8, 0xB9}, /* PMIC_STPMIC1 */
 };
-#else
-static const pmic_data_t pmic_database[PMIC_MAX] =
-{
-  /*Supported, Identifier, NVMSize, DisplayString, NVMStartAddress, NVMSRRegisterAddr, NVMCRRegisterAddr */
-  {PMIC_SUPPORTED, 0x20, 8, "1", 0xF8, 0xB8, 0xB9}, /* PMIC_STPMIC1 */
-};
-#endif /* defined STPMIC2 */
 
+static uint32_t nvm_id = 0U;
 /* Private function prototypes -----------------------------------------------*/
 /* Functions Definition ------------------------------------------------------*/
 
@@ -199,43 +193,49 @@ void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops, pmic_data_t *pmic_da
   * @param pmic_detected: pointer to fetch data base entry.
   * @retval bool: true if Valid PMIC detected
   */
-bool PMIC_Util_Detect_PMIC(pmic_data_t *pmic_detected)
+uint32_t PMIC_Util_Detect_PMIC(pmic_data_t *pmic_detected)
 {
   uint8_t data;
   uint8_t idx;
 
   if (pmic_detected == NULL)
   {
-    return false;
+    return PMIC_ERROR_INVALID_ARG;
   }
-#if defined(STPMIC2)
+
   if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
                        PMIC_PRODUCT_ID_SR_ADDR, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
-#else
-  if (HAL_I2C_Mem_Read(&hi2c, PMIC_I2C_ADDRESS,
-                       PMIC_VERSION_ID_SR_ADDR, I2C_MEMADD_SIZE_8BIT, &data, 1, 1000) == 0U)
-#endif /* defined(STPMIC2) */
   {
-    data &= 0xF0;
 
     for (idx = 0; idx < PMIC_MAX; idx++)
     {
-      if (pmic_database[idx].Identifier == data)
+      if (pmic_database[idx].Identifier == (data & 0xF0))
       {
         memcpy(pmic_detected, &pmic_database[idx], sizeof(pmic_data_t));
-        return true;
+        nvm_id = data;
+        return PMIC_ERROR_NONE;
       }
     }
 
     if (idx == PMIC_MAX)
     {
-      return false;
+      return PMIC_ERROR_INVALID_PMIC;
     }
   }
   else
   {
-    return false;
+    return PMIC_ERROR_NO_PMIC;
   }
-  return false;
+
+  return PMIC_ERROR_NO_PMIC; /* Control should not reach here */
+}
+
+/**
+  * @brief api to return nvm id
+  * @retval uint8_t: nvm id
+  */
+uint8_t PMIC_Util_GetNVMID(void)
+{
+	return nvm_id;
 }
 

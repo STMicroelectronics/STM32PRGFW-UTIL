@@ -37,7 +37,7 @@ typedef enum
   PMIC_SHADOW_READ,
 } pmic_nvm_ops_t;
 
-typedef struct
+typedef struct __attribute__ ((aligned (4)))
 {
   int8_t     Supported;
   uint8_t    Identifier;
@@ -49,30 +49,19 @@ typedef struct
 } pmic_data_t;
 
 /* Exported constants --------------------------------------------------------*/
-#if defined(STPMIC1)
 
 typedef enum
 {
+	PMIC_STPMIC25,
 	PMIC_STPMIC1,
 	PMIC_MAX,
 }pmic_types;
 
-#elif defined(STPMIC2)
-typedef enum
-{
-	PMIC_STPMIC25,
-	PMIC_MAX,
-}pmic_types;
-#endif
 
 /* Exported variables --------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
 
-#if defined(STPMIC1)
-#define PMIC_VERSION_ID_SR_ADDR     0x06
-#elif defined(STPMIC2)
 #define PMIC_PRODUCT_ID_SR_ADDR     0x00
-#endif /* STPMIC1 */
 
 #define OWN_I2C_SLAVE_ADDRESS       0x33
 #define PMIC_NVM_BUSY_MSK           0x01
@@ -174,10 +163,20 @@ typedef enum
 #endif /* STM32MP135Fxx */
 #define PMIC_NOT_SUPPORTED       (-1)
 #define PMIC_SUPPORTED           (0)
+
+#define PMIC_ERROR_NONE                        0x00U
+#define PMIC_ERROR_NO_PMIC                     0x01U
+#define PMIC_ERROR_INVALID_PMIC                0x02U
+#define PMIC_ERROR_INVALID_ARG                 0x03U
+
+#define PMIC_PROTOCOL_VERSION                  1U
+#define PMIC_PROTOCOL_HEADER_SIZE              8 /* Bytes */
+
 /* Exported functions ------------------------------------------------------- */
 void PMIC_Util_Init(void);
 void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops, pmic_data_t * pmic_data);
-bool PMIC_Util_Detect_PMIC(pmic_data_t * pmic_detected);
+uint32_t PMIC_Util_Detect_PMIC(pmic_data_t * pmic_detected);
+uint8_t PMIC_Util_GetNVMID(void);
 
 #ifdef __cplusplus
 }

@@ -1,8 +1,12 @@
-# STM32PRGFW-UTIL Firmware utility to manage One-Time Programmable (OTP) memories
+# STM32PRGFW-UTIL Firmware utility to manage One-Time Programmable (OTP) memories & PMIC NVM.
+
 
 ## Warning
 
 Please use **v1.0.2 tag and later** from now as an important fix done to avoid **bricking your device**.
+
+PMIC Programming steps have changed using CLI. Refer steps to avoid 
+**bricking your device**. The GUI method is preferred for updating PMIC NVM.
 
 ## Project overview
 
@@ -19,8 +23,8 @@ Please find below the more appropriated mode depending on your setup.<br>
 
 | Major Use cases / Setup                                                                                                                                                                             | CP_Serial_boot<br /> |         Console_SH         |                                             Console_UART                                             | CP_Dev_Boot |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------: | :------------------------: | :---------------------------------------------------------------------------------------------------: | :---------: |
-| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v2.17.0 minimum)                     | &#10003;<br /> |                            |                                                                                                      |            |
-| * Board with Debug port<br />* STM32CubeIDE 1.16.0 |                                | &#10003;<br /> |                                                                                                      |            |
+| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v2.18.0 minimum)                         | &#10003;<br /> |                            |                                                                                                      |            |
+| * Board with Debug port<br />* STM32CubeIDE 1.16.1 |                                | &#10003;<br /> |                                                                                                      |            |
 | * Board with Debug port and 1 UART interface<br />* Semihosting (Terminal I/O through debug port)<br /> NOT available on PC                                                                       |                                |                            | &#10003;<br />Note: need to<br />modify UART<br />instance in source code <br />if different from ST boards |            |
 | * Need to debug your own tool based on this package                                                                                                                                                |                                |                            |                                                                                                      |      &#10003;      |
 
@@ -41,10 +45,10 @@ The project structure is described as below:
 ![](_htmresc/project_structure.png)
 
 ## How to Use CP_Serial_Boot
-
+ 
 In this section, you will  use "Binary" directory  containing a STM32PRGFW-UTIL binary and a tsv file used by STM32CubeProgrammer.
 
-### Hardware prerequisites
+### Hardware prerequisites 
 
 * Set boot pins according to table below 
 
@@ -61,12 +65,12 @@ In this section, you will  use "Binary" directory  containing a STM32PRGFW-UTIL 
     * Note: could be STLink connector if Virtal COM port is connected on  the board like ST DK boards
   * **!!! NOTE: USB cable should not be connected if you want to use UART !!! - ROM CODE will USB DFU if both interface are available!**
 
-### STM32CubeProgrammer GUI interface
+
 ### Note: to build binary for STM32MP25XX REV A, define CONFIG_STM32MP25X_REVA in preprocessor build for serial boot. Select the project, right click Properties>C/C++ Build>Settings> Build Steps, Do the change shown in image below. Apply the settings and Build. Place the generated binary in `<Your Directory Path>\`Projects\\`<STM32 device>`\Binary\\
 
 ![](_htmresc/PostbuildChange.png)
 
-### STM32CubeProgrammer GUI interface
+### STM32CubeProgrammer GUI interface 
 
 Please Read STM32CubeProgrammer user manual for further details if needed
 
@@ -78,11 +82,16 @@ Please Read STM32CubeProgrammer user manual for further details if needed
 
 ![](_htmresc/1668778230675.png)
 
-* Click on OTP button to get OTP Panel
+* Click on OTP button to get OTP Panel 
 
 ![](_htmresc/1668778375616.png)
 
-### STM32CubeProgrammer CLI interface
+* Click on PMIC button to get PMIC Panel 
+
+![](_htmresc/pmic_gui.png)
+NOTE:- I2C address shows the I2C device address for which firmware is build to communicate with PMIC. If it is changed, firmware needs to be rebuild.
+ 
+### STM32CubeProgrammer CLI interface 
 
 Please Read STM32CubeProgrammer user manual for further details if needed
 
@@ -94,27 +103,27 @@ Please Read STM32CubeProgrammer user manual for further details if needed
   $STM32_Programmer_CLI.exe -c port=COM8 -otp displ<br>
   $STM32_Programmer_CLI.exe -c port=COM8 -otp write word=10 value=0x1<br>
 
-  #### PMIC NVM Programming
+  #### PMIC NVM Programming 
 * PMIC NVM can be programmed in serial boot mode using USB DFU or UART. 
   * Read the entire NVM partition by following command
-  $STM32_Programmer_CLI -c port=usb1  -rp 0xf4 0x0 `<size of partition>` `<Your Directory Path>\`PMIC_NVM_read.bin
-  here NVM data is written to PMIC_NVM_read.bin.
+  $STM32_Programmer_CLI -c port=usb1  -rp 0xf4 0x0 `<size of partition> + <size of protocol header>` `<Your Directory Path>\`PMIC_NVM_read.bin
+  here NVM data is written to PMIC_NVM_read.bin along with protocol header.
   * To read NVM using UART in serial boot mode replace usb1 with COM port appearing on the HOST.
-  $STM32_Programmer_CLI -c port=COM`<num>`  -rp 0xf4 0x0 `<size of partition>` `<Your Directory Path>\`PMIC_NVM_read.bin
+  $STM32_Programmer_CLI -c port=COM`<num>`  -rp 0xf4 0x0 `<size of partition> + <size of protocol header>` `<Your Directory Path>\`PMIC_NVM_read.bin
   * Backup it by creating a copy PMIC_NVM_write.bin
-  * using hex editor modify PMIC_NVM_write.bin.
+  * using hex editor modify PMIC_NVM_write.bin, and remove the header bytes present in the File.
   * Write the NVM partion using below command for USB DFU.
   $STM32_Programmer_CLI -c port=usb1 -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
   * To write NVM using UART in serial boot mode replace usb1 with COM port appearing on the HOST.
   $STM32_Programmer_CLI -c port=COM`<num>` -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
-##### Note: - For STPMIC1 `<size of partition>` is 8 Bytes, For STPMIC2 `<size of partition>` is 40 Bytes.
+##### Note: - For STPMIC1 `<size of partition>` is 8 Bytes, For STPMIC2 `<size of partition>` is 40 Bytes. <size of protocol header> for protocol version 1 is 8 Bytes.
 **Warning!!:- Care must be taken while modifying the NVM data. Invalid settings can cause board not to power up.**
 
-## How to Use Console_SH
+## How to Use Console_SH 
 
 In this mode, you will use STM32CubeIDE and build config Console_SH
 
-### Hardware prerequisites
+### Hardware prerequisites 
 
 * Set boot pins as per below table
 
@@ -126,7 +135,7 @@ In this mode, you will use STM32CubeIDE and build config Console_SH
 
 * Connect cable from Board/STLINK connector to the PC
 
-### STM32CubeIDE Step by Step
+### STM32CubeIDE Step by Step 
 
 * Build Project by selecting Console_SH build confiuration
 * Setup Debug Configuration as below and in particular (in Startup tab):
@@ -166,12 +175,12 @@ mon arm semihosting_redirect tcp 2323
 
 In this mode, you will use STM32CubeIDE and build config Console_UART
 
-### Hardware prerequisites
+### Hardware prerequisites 
 
 * Set boot pins according to this [table](#devmode_bootspins) .
 * Connect cable from Board/STLINK connector to the PC
 
-### STM32CubeIDE Step by Step
+### STM32CubeIDE Step by Step 
 
 * Depending your own board, you should change UART instance and GPIO into console_util.h file
   * By default it is the instance used on ST board (UART4  PD6&PD8 for STM32MP13xx  / UART4 PG11/PB2 for STM32MP15xx and USART2 PA4&PA8 for MP25xx)
@@ -188,11 +197,11 @@ monitor halt
 
 ![1668783155427](_htmresc/1668783155427.png)
 
-## Release note
+## Release note 
 
 Details about the content of this release are available in the release note **Release_Notes.html**.
 
-## Troubleshooting
+## Troubleshooting 
 
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.
 

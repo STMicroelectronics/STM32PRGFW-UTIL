@@ -85,13 +85,6 @@ On MP13 = (96*2+2)*4 = 776 bytes*/
 #define OTP_DESC_PARTSIZE               (776)
 #endif /*STM32MP257Cxx*/
 
-#if defined (STPMIC2)
-#define PMIC_NVM_STR                   "@PMIC /0xF4/1*40Be"
-#define PMIC_NVM_PARTSIZE               (40)
-#else
-#define PMIC_NVM_STR                   "@PMIC /0xF4/1*8Be"
-#define PMIC_NVM_PARTSIZE               (8)
-#endif /* STM32MP257Cxx */
 
 /**************************************************/
 /* DFU Requests  DFU states                       */

@@ -31,8 +31,8 @@
 /* Private variables ---------------------------------------------------------*/
 #define VIRTUAL_DESC_STR    "@virtual /0xF1/1*512Be"
 #define VIRTUAL_DESC_SIZE    (512)
-
 extern USBD_HandleTypeDef hUsbDeviceHS;
+int8_t pmic_nvm_str[] = "@PMIC /0xF4/1*08Be";
 
 /* USER CODE END PV */
 
@@ -130,7 +130,7 @@ static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
 					  part_size = OTP_DESC_PARTSIZE;
 					  break;
 				  case 5:
-					  part_size =  PMIC_NVM_PARTSIZE;
+					  part_size = ((pmic_nvm_str[14] - 0x30) * 10) + (pmic_nvm_str[15] - 0x30);
 					  break;
 
 				  default:
@@ -150,4 +150,3 @@ static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
 
   return 0;
 }
-
