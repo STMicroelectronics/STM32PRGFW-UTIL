@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
 #include "main.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
@@ -60,28 +61,39 @@ extern void SystemClock_Config(void);
                        LL Driver Callbacks (PCD -> USB Device Library)
 *******************************************************************************/
 /* MSP Init */
-
 void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
 {
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
   RCC_PeriphCLKInitTypeDef clk;
 
+#if defined(STM32MP257Cxx)
+  /* Switch ON USB3DRD */
   __HAL_RCC_USB3DRD_CLK_DISABLE();
+#else
+  __HAL_RCC_OTG_CLK_DISABLE();
+#endif
+
   __HAL_RCC_USB2PHY2_CLK_DISABLE();
   __HAL_RCC_USB2PHY2_FORCE_RESET();
+
+#if defined(STM32MP257Cxx)
+  /* Switch ON USB3DRD */
   __HAL_RCC_USB3DRD_FORCE_RESET();
+#else
+  __HAL_RCC_OTG_FORCE_RESET();
+#endif
 
   HAL_Delay(10);
 
+#if defined(STM32MP257Cxx)
   //Set USB3DR_USB2ONLYD
   SYSCFG->USB3DRCR |= SYSCFG_USB3DRCR_USB3DR_USB2ONLYD;
-
   SYSCFG->USB2PHY2CR |= SYSCFG_USB2PHY2CR_VBUSVLDEXT | SYSCFG_USB2PHY2CR_VBUSVLDEXTSEL;
+#endif 
 
   RISC->SECCFGR[2] |= (1<<2);
   RISC->PRIVCFGR[2] |= (1<<2);
   RIMC->ATTR[4] = 0x314;
-
 
   clk.XBAR_Channel = RCC_PERIPHCLK_USB2PHY2;
   clk.XBAR_ClkSrc = RCC_XBAR_CLKSRC_HSE; // 40Mhz
@@ -90,8 +102,13 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
 	  Error_Handler();
   }
 
+#if defined(STM32MP257Cxx)
   /* Switch ON USB3DRD */
   __HAL_RCC_USB3DRD_CLK_ENABLE();
+#else
+  __HAL_RCC_OTG_CLK_ENABLE();
+#endif
+
   __HAL_RCC_USB2PHY2_CLK_ENABLE();
   __HAL_RCC_USB2PHY2_RELEASE_RESET();
   /*
@@ -101,16 +118,27 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
    */
   HAL_Delay(1);
 
+#if defined(STM32MP257Cxx)
   __HAL_RCC_USB3DRD_RELEASE_RESET();
-
+#else
+  __HAL_RCC_OTG_RELEASE_RESET();
+#endif
 
   /* Set USBHS Interrupt to the lowest priority */
+#if defined(STM32MP257Cxx)
   GIC_SetPriority(USB3DR_IRQn, 7);
+#else
+  GIC_SetPriority(OTG_IRQn, 7);
+#endif
   /* Change SysTick Preempt-Priority to be higher than USB, so we can call HAL_Delay from IRQs */
   //HAL_NVIC_SetPriority(SysTick_IRQn, 6, 0);
 
   /* Enable USBHS Interrupt */
+#if defined(STM32MP257Cxx)
   GIC_EnableIRQ(USB3DR_IRQn);
+#else
+  GIC_EnableIRQ(OTG_IRQn);
+#endif
 
 #else /* STM32MP257Cxx */
   if(pcdHandle->Instance==USB_OTG_HS)
@@ -141,11 +169,21 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* pcdHandle)
 #ifndef PD_PORTING
 void HAL_PCD_MspDeInit(PCD_HandleTypeDef* pcdHandle)
 {
-#if defined (STM32MP257Cxx)
-	  __HAL_RCC_USB3DRD_CLK_DISABLE();
-	  __HAL_RCC_USB2PHY2_CLK_DISABLE();
-	  __HAL_RCC_USB2PHY2_FORCE_RESET();
-	  __HAL_RCC_USB3DRD_FORCE_RESET();
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
+
+#if defined(STM32MP257Cxx)
+  __HAL_RCC_USB3DRD_CLK_DISABLE();
+#else
+  __HAL_RCC_OTG_CLK_DISABLE();
+#endif
+  __HAL_RCC_USB2PHY2_CLK_DISABLE();
+  __HAL_RCC_USB2PHY2_FORCE_RESET();
+#if defined(STM32MP257Cxx)
+  __HAL_RCC_USB3DRD_FORCE_RESET();
+#else
+  __HAL_RCC_OTG_FORCE_RESET();
+#endif
+
 #else /* STM32MP257Cxx */
   if(pcdHandle->Instance==USB_OTG_HS)
   {
@@ -436,18 +474,32 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
   */
 USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
 {
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
 #ifdef USE_USB_FS
   /* Set LL Driver parameters */
+  #if defined(STM32MP257Cxx)
   hpcd.Instance = USB3;
+#else
+  hpcd.Instance = USBDR;
+#endif
+#if !defined(STM32MP257Cxx)
+  hpcd.Init.dev_endpoints = 9;
+#endif
   hpcd.Init.use_dedicated_ep1 = 0;
   hpcd.Init.ep0_mps = 0x40;
   hpcd.Init.low_power_enable = 0;
+#if defined(STM32MP257Cxx)
   hpcd.Init.phy_itface = PCD_PHY_UTMI;
+#else
+  hpcd.Init.phy_itface = USB_OTG_HS_EMBEDDED_PHY;
+#endif
   hpcd.Init.Sof_enable = false;
   hpcd.Init.speed = PCD_SPEED_FULL;
   hpcd.Init.vbus_sensing_enable = 0;
   hpcd.Init.lpm_enable = 0;
+#if !defined(STM32MP257Cxx)
+  hpcd.Init.dma_enable = 0;
+#endif
 
   /* Link The driver to the stack */
   hpcd.pData = pdev;
@@ -455,14 +507,23 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
 
   /* Initialize LL Driver */
   HAL_PCD_Init(&hpcd);
-
+#if !defined(STM32MP257Cxx)
   HAL_PCDEx_SetRxFiFo(&hpcd, 0xA0);
   HAL_PCDEx_SetTxFiFo(&hpcd, 0, 0xA0);
 #endif
 
+#endif /* USE_USB_FS */
+
 #ifdef USE_USB_HS
   /* Set LL Driver parameters */
+#if defined(STM32MP257Cxx)
   hpcd.Instance = USB3;
+#else
+  hpcd.Instance = USBDR;
+#endif
+#if !defined(STM32MP257Cxx)
+  hpcd.Init.dev_endpoints = 9;
+#endif
   hpcd.Init.use_dedicated_ep1 = 0;
   hpcd.Init.ep0_mps = 0x40;
 
@@ -473,11 +534,17 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   unless required. */
   hpcd.Init.low_power_enable = 0;
   hpcd.Init.lpm_enable = 0;
-  hpcd.Init.phy_itface = PCD_PHY_UTMI;
+#if defined(STM32MP257Cxx)
+  hpcd.Init.phy_itface |= PCD_PHY_UTMI;
+#else
+  hpcd.Init.phy_itface = USB_OTG_HS_EMBEDDED_PHY;
+#endif
   hpcd.Init.Sof_enable = false;
   hpcd.Init.speed = PCD_SPEED_HIGH;
-  hpcd.Init.vbus_sensing_enable = 1;
-
+  hpcd.Init.vbus_sensing_enable = 0;
+#if !defined(STM32MP257Cxx)
+  hpcd.Init.dma_enable = 0; // HS and DMA
+#endif
   /* Link The driver to the stack */
   hpcd.pData = pdev;
   pdev->pData = &hpcd;
@@ -486,7 +553,10 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   HAL_PCD_Init(&hpcd);
 
 #endif
-
+#if !defined(STM32MP257Cxx)
+  HAL_PCDEx_SetRxFiFo(&hpcd, 0x100);
+  HAL_PCDEx_SetTxFiFo(&hpcd, 0, 0x40);
+#endif
 #else /* STM32MP257Cxx */
 
     /* Set LL Driver parameters */

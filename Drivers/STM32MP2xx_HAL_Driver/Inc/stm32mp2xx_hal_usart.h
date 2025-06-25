@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -113,7 +112,7 @@ typedef struct __USART_HandleTypeDef
 
   USART_InitTypeDef             Init;                    /*!< USART communication parameters      */
 
-  uint8_t                       *pTxBuffPtr;             /*!< Pointer to USART Tx transfer Buffer */
+  const uint8_t                 *pTxBuffPtr;             /*!< Pointer to USART Tx transfer Buffer */
 
   uint16_t                      TxXferSize;              /*!< USART Tx Transfer size              */
 
@@ -141,10 +140,12 @@ typedef struct __USART_HandleTypeDef
 
   void (*TxISR)(struct __USART_HandleTypeDef *husart);   /*!< Function pointer on Tx IRQ handler  */
 
+#if defined(HAL_DMA_MODULE_ENABLED)
   DMA_HandleTypeDef             *hdmatx;                 /*!< USART Tx DMA Handle parameters      */
 
   DMA_HandleTypeDef             *hdmarx;                 /*!< USART Rx DMA Handle parameters      */
 
+#endif /* HAL_DMA_MODULE_ENABLED */
   HAL_LockTypeDef               Lock;                    /*!< Locking object                      */
 
   __IO HAL_USART_StateTypeDef   State;                   /*!< USART communication state           */
@@ -213,7 +214,9 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
 #define HAL_USART_ERROR_NE               (0x00000002U)    /*!< Noise error               */
 #define HAL_USART_ERROR_FE               (0x00000004U)    /*!< Frame error               */
 #define HAL_USART_ERROR_ORE              (0x00000008U)    /*!< Overrun error             */
+#if defined(HAL_DMA_MODULE_ENABLED)
 #define HAL_USART_ERROR_DMA              (0x00000010U)    /*!< DMA transfer error        */
+#endif /* HAL_DMA_MODULE_ENABLED */
 #define HAL_USART_ERROR_UDR              (0x00000020U)    /*!< SPI slave underrun error  */
 #if (USE_HAL_USART_REGISTER_CALLBACKS == 1)
 #define HAL_USART_ERROR_INVALID_CALLBACK (0x00000040U)    /*!< Invalid Callback error    */
@@ -250,15 +253,6 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
 #define USART_MODE_RX                       USART_CR1_RE                    /*!< RX mode        */
 #define USART_MODE_TX                       USART_CR1_TE                    /*!< TX mode        */
 #define USART_MODE_TX_RX                    (USART_CR1_TE |USART_CR1_RE)    /*!< RX and TX mode */
-/**
-  * @}
-  */
-
-/** @defgroup USART_Over_Sampling USART Over Sampling
-  * @{
-  */
-#define USART_OVERSAMPLING_16               0x00000000U         /*!< Oversampling by 16 */
-#define USART_OVERSAMPLING_8                USART_CR1_OVER8     /*!< Oversampling by 8  */
 /**
   * @}
   */
@@ -596,7 +590,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
   */
 #define __HAL_USART_GET_IT(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->ISR\
                                                          & (0x01U << (((__INTERRUPT__) & USART_ISR_MASK)>>\
-                                                                                USART_ISR_POS))) != 0U) ? SET : RESET)
+                                                                      USART_ISR_POS))) != 0U) ? SET : RESET)
 
 /** @brief  Check whether the specified USART interrupt source is enabled or not.
   * @param  __HANDLE__ specifies the USART Handle.
@@ -722,78 +716,41 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
   */
 /** @brief  Report the USART clock.
   * @param  __HANDLE__ specifies the UART Handle.
-  * @param  __CLOCK__ output variable.
-  * @retval USART clock, written in __CLOCK__.
-  */
-
-#if defined (CORE_CA35) || defined (CORE_CM33)
-#define USART_GETCLOCK(__HANDLE__,__CLOCK__)                  \
-  do {                                                        \
-        if((__HANDLE__)->Instance == USART1)                  \
-        {                                                     \
-          (__CLOCK__) = RCC_PERIPHCLK_USART1;                 \
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART2)             \
-        {                                                     \
-          (__CLOCK__) = RCC_PERIPHCLK_UART2_4;                \
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART3)             \
-        {                                                     \
-          (__CLOCK__) = RCC_PERIPHCLK_UART3_5;                \
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART6)             \
-        {                                                     \
-          (__CLOCK__) = RCC_PERIPHCLK_USART6;                 \
-        }                                                     \
-        else                                                  \
-        {                                                     \
-          (__CLOCK__) = 0;                                    \
-        }                                                     \
-  } while(0U)
-#elif defined (CORE_CM0PLUS)
-#define USART_GETCLOCK(__HANDLE__,__CLOCK__)                  \
-  do {                                                        \
-          (__CLOCK__) = 0;                                    \
-  } while(0U)
-#endif	  
-  
-
-/** @brief  Report the USART clock source.
-  * @param  __HANDLE__ specifies the UART Handle.
   * @param  __CLOCKSOURCE__ output variable.
-  * @retval USART clocking source, written in __CLOCKSOURCE__.
+  * @retval USART clock, written in __CLOCKSOURCE__.
   */
 
 #if defined (CORE_CA35) || defined (CORE_CM33)
-  #define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)    \
-  do {                                                        \
-        if((__HANDLE__)->Instance == USART1)                  \
-        {                                                     \
-          (__CLOCKSOURCE__) = RCC_PERIPHCLK_USART1;\
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART2)             \
-        {                                                     \
-          (__CLOCKSOURCE__) = RCC_PERIPHCLK_UART2_4;\
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART3)             \
-        {                                                     \
-          (__CLOCKSOURCE__) = RCC_PERIPHCLK_UART3_5;\
-        }                                                     \
-        else if((__HANDLE__)->Instance == USART6)             \
-        {                                                     \
-          (__CLOCKSOURCE__) = RCC_PERIPHCLK_USART6;\
-        }                                                     \
-        else                                                  \
-        {                                                     \
-          (__CLOCKSOURCE__) = 0;                              \
-        }                                                     \
+#define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)  \
+  do {                                                    \
+    if((__HANDLE__)->Instance == USART1)                  \
+    {                                                     \
+      (__CLOCKSOURCE__) = RCC_PERIPHCLK_USART1;           \
+    }                                                     \
+    else if((__HANDLE__)->Instance == USART2)             \
+    {                                                     \
+      (__CLOCKSOURCE__) = RCC_PERIPHCLK_UART2_4;          \
+    }                                                     \
+    else if((__HANDLE__)->Instance == USART3)             \
+    {                                                     \
+      (__CLOCKSOURCE__) = RCC_PERIPHCLK_UART3_5;          \
+    }                                                     \
+    else if((__HANDLE__)->Instance == USART6)             \
+    {                                                     \
+      (__CLOCKSOURCE__) = RCC_PERIPHCLK_USART6;           \
+    }                                                     \
+    else                                                  \
+    {                                                     \
+      (__CLOCKSOURCE__) = 0;                              \
+    }                                                     \
   } while(0U)
 #elif defined (CORE_CM0PLUS)
-  #define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)    \
-  do {                                                        \
-          (__CLOCKSOURCE__) = 0;                              \
+#define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__) \
+  do {                                                   \
+    (__CLOCKSOURCE__) = 0;                               \
   } while(0U)
-#endif	  
+#endif /* CORE_CA35 CORE_CM33 CORE_CM0PLUS*/
+
 
 /** @brief  Check USART Baud rate.
   * @param  __BAUDRATE__ Baudrate specified by the user.
@@ -827,14 +784,6 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
 #define IS_USART_MODE(__MODE__) ((((__MODE__) & 0xFFFFFFF3U) == 0x00U) && ((__MODE__) != 0x00U))
-
-/**
-  * @brief Ensure that USART oversampling is valid.
-  * @param __SAMPLING__ USART oversampling.
-  * @retval SET (__SAMPLING__ is valid) or RESET (__SAMPLING__ is invalid)
-  */
-#define IS_USART_OVERSAMPLING(__SAMPLING__) (((__SAMPLING__) == USART_OVERSAMPLING_16) || \
-                                             ((__SAMPLING__) == USART_OVERSAMPLING_8))
 
 /**
   * @brief Ensure that USART clock state is valid.
@@ -930,21 +879,24 @@ HAL_StatusTypeDef HAL_USART_UnRegisterCallback(USART_HandleTypeDef *husart, HAL_
   */
 
 /* IO operation functions *****************************************************/
-HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size, uint32_t Timeout);
+HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size,
+                                     uint32_t Timeout);
 HAL_StatusTypeDef HAL_USART_Receive(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size, uint32_t Timeout);
-HAL_StatusTypeDef HAL_USART_TransmitReceive(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                             uint16_t Size, uint32_t Timeout);
-HAL_StatusTypeDef HAL_USART_Transmit_IT(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size);
+HAL_StatusTypeDef HAL_USART_Transmit_IT(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size);
 HAL_StatusTypeDef HAL_USART_Receive_IT(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size);
-HAL_StatusTypeDef HAL_USART_TransmitReceive_IT(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive_IT(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                                uint16_t Size);
-HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size);
+#if defined(HAL_DMA_MODULE_ENABLED)
+HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size);
 HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size);
-HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                                 uint16_t Size);
 HAL_StatusTypeDef HAL_USART_DMAPause(USART_HandleTypeDef *husart);
 HAL_StatusTypeDef HAL_USART_DMAResume(USART_HandleTypeDef *husart);
 HAL_StatusTypeDef HAL_USART_DMAStop(USART_HandleTypeDef *husart);
+#endif /* HAL_DMA_MODULE_ENABLED */
 /* Transfer Abort functions */
 HAL_StatusTypeDef HAL_USART_Abort(USART_HandleTypeDef *husart);
 HAL_StatusTypeDef HAL_USART_Abort_IT(USART_HandleTypeDef *husart);
@@ -967,8 +919,8 @@ void HAL_USART_AbortCpltCallback(USART_HandleTypeDef *husart);
   */
 
 /* Peripheral State and Error functions ***************************************/
-HAL_USART_StateTypeDef HAL_USART_GetState(USART_HandleTypeDef *husart);
-uint32_t               HAL_USART_GetError(USART_HandleTypeDef *husart);
+HAL_USART_StateTypeDef HAL_USART_GetState(const USART_HandleTypeDef *husart);
+uint32_t               HAL_USART_GetError(const USART_HandleTypeDef *husart);
 
 /**
   * @}
@@ -992,4 +944,3 @@ uint32_t               HAL_USART_GetError(USART_HandleTypeDef *husart);
 
 #endif /* STM32MP2xx_HAL_USART_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -55,8 +55,9 @@ typedef struct
 
   uint32_t Algorithm;   /*!<  HASH algorithm MD5, SHA1 or SHA2.
                             This parameter can be a value of @ref HASH_Algorithm_Selection */
-  uint32_t DigestOutputLength;
-                            
+  uint32_t DigestOutputLength;  /*!< User can set desired length of Message Digest.
+                                     Applicable only for SHAKE128 and SHAKE256 algorithms  */
+
 } HASH_ConfigTypeDef;
 
 /**
@@ -213,26 +214,19 @@ typedef  void (*pHASH_CallbackTypeDef)(HASH_HandleTypeDef *hhash);  /*!< pointer
 /** @defgroup HASH_Algorithm_Selection   HASH algorithm selection
   * @{
   */
-#define HASH_ALGOSELECTION_SHA1				0x00000000U
-#define HASH_ALGOSELECTION_SHA2_224			(HASH_CR_ALGO_1)
-#define HASH_ALGOSELECTION_SHA2_256	        (HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
-#define HASH_ALGOSELECTION_SHA2_384			(HASH_CR_ALGO_3 | HASH_CR_ALGO_2)
-#define HASH_ALGOSELECTION_SHA2_512_224		(HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_0)
-#define HASH_ALGOSELECTION_SHA2_512_256		(HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_1)
-#define HASH_ALGOSELECTION_SHA2_512			(HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
-#define HASH_ALGOSELECTION_SHA3_224			(HASH_CR_ALGO_2)
-#define HASH_ALGOSELECTION_SHA3_256			(HASH_CR_ALGO_2 | HASH_CR_ALGO_0)
-#define HASH_ALGOSELECTION_SHA3_384			(HASH_CR_ALGO_2 | HASH_CR_ALGO_1)
-#define HASH_ALGOSELECTION_SHA3_512			(HASH_CR_ALGO_2 | HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
-#define HASH_ALGOSELECTION_SHAKE_128		(HASH_CR_ALGO_3)
-#define HASH_ALGOSELECTION_SHAKE_256		(HASH_CR_ALGO_3 | HASH_CR_ALGO_0)
-
-#define HASH_ALGOSELECTION_SHA224       	HASH_ALGOSELECTION_SHA2_224
-#define HASH_ALGOSELECTION_SHA256       	HASH_ALGOSELECTION_SHA2_256
-#define HASH_ALGOSELECTION_SHA384       	HASH_ALGOSELECTION_SHA2_384
-#define HASH_ALGOSELECTION_SHA512_224   	HASH_ALGOSELECTION_SHA2_512_224
-#define HASH_ALGOSELECTION_SHA512_256   	HASH_ALGOSELECTION_SHA2_512_256
-#define HASH_ALGOSELECTION_SHA512        	HASH_ALGOSELECTION_SHA2_512
+#define HASH_ALGOSELECTION_SHA1       0x00000000U
+#define HASH_ALGOSELECTION_SHA2_224     (HASH_CR_ALGO_1)
+#define HASH_ALGOSELECTION_SHA2_256         (HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
+#define HASH_ALGOSELECTION_SHA2_384     (HASH_CR_ALGO_3 | HASH_CR_ALGO_2)
+#define HASH_ALGOSELECTION_SHA2_512_224   (HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_0)
+#define HASH_ALGOSELECTION_SHA2_512_256   (HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_1)
+#define HASH_ALGOSELECTION_SHA2_512     (HASH_CR_ALGO_3 | HASH_CR_ALGO_2 | HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
+#define HASH_ALGOSELECTION_SHA3_224     (HASH_CR_ALGO_2)
+#define HASH_ALGOSELECTION_SHA3_256     (HASH_CR_ALGO_2 | HASH_CR_ALGO_0)
+#define HASH_ALGOSELECTION_SHA3_384     (HASH_CR_ALGO_2 | HASH_CR_ALGO_1)
+#define HASH_ALGOSELECTION_SHA3_512     (HASH_CR_ALGO_2 | HASH_CR_ALGO_1 | HASH_CR_ALGO_0)
+#define HASH_ALGOSELECTION_SHAKE_128    (HASH_CR_ALGO_3)
+#define HASH_ALGOSELECTION_SHAKE_256    (HASH_CR_ALGO_3 | HASH_CR_ALGO_0)
 /**
   * @}
   */
@@ -373,13 +367,13 @@ typedef  void (*pHASH_CallbackTypeDef)(HASH_HandleTypeDef *hhash);  /*!< pointer
   * @note   This bit is set when hashing large files when multiple DMA transfers are needed.
   * @retval None
   */
-#define __HAL_HASH_SET_MDMAT()          SET_BIT(HASH->CR, HASH_CR_MDMAT)
+#define __HAL_HASH_SET_MDMAT(__HANDLE__)          SET_BIT((__HANDLE__)->Instance->CR, HASH_CR_MDMAT)
 
 /**
   * @brief  Disable the multi-buffer DMA transfer mode.
   * @retval None
   */
-#define __HAL_HASH_RESET_MDMAT()        CLEAR_BIT(HASH->CR, HASH_CR_MDMAT)
+#define __HAL_HASH_RESET_MDMAT(__HANDLE__)        CLEAR_BIT((__HANDLE__)->Instance->CR, HASH_CR_MDMAT)
 
 /**
   * @brief  HAL HASH driver version.
@@ -516,36 +510,9 @@ uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash);
                                                   == HASH_ALGOSELECTION_SHA3_256) ?  32U : \
                                                  ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
                                                    == HASH_ALGOSELECTION_SHA3_384) ?  48U : \
-												  ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
+                                                  ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
                                                     == HASH_ALGOSELECTION_SHA3_512) ?  64U : \
                                                    ((uint32_t)(__HANDLE__)->Init.DigestOutputLength) ))))))))))))
-
-#define HASH_DIGEST_VALID_OUTPUT_REGISTERS_LENGTH(__HANDLE__) (((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                 == HASH_ALGOSELECTION_SHA1) ?  20U : \
-                                                               ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                 == HASH_ALGOSELECTION_SHA2_224) ?  28U : \
-                                                                ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                  == HASH_ALGOSELECTION_SHA2_256) ?  32U : \
-                                                                 ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                   == HASH_ALGOSELECTION_SHA2_384) ?  48U : \
-                                                                  ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                    == HASH_ALGOSELECTION_SHA2_512_224) ?  28U : \
-                                                                   ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                     == HASH_ALGOSELECTION_SHA2_512_256) ?  32U : \
-                                                                    ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                      == HASH_ALGOSELECTION_SHA2_512) ?  64U : \
-                                                                     ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                       == HASH_ALGOSELECTION_SHA3_224) ?  28U : \
-                                                                      ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                        == HASH_ALGOSELECTION_SHA3_256) ?  32U : \
-                                                                       ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                         == HASH_ALGOSELECTION_SHA3_384) ?  48U : \
-                                                                        ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                          == HASH_ALGOSELECTION_SHA3_512) ?  64U : \
-                                                                         ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                           == HASH_ALGOSELECTION_SHAKE_128) ?  168U : \
-                                                                          ((READ_BIT((__HANDLE__)->Instance->CR, HASH_CR_ALGO) \
-                                                                            == HASH_ALGOSELECTION_SHAKE_256) ?  136U :20U ))))))))))))))
 
 /**
   * @brief Ensure that HASH input data type is valid.
@@ -566,8 +533,8 @@ uint32_t HAL_HASH_GetError(const HASH_HandleTypeDef *hhash);
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_224)|| \
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_256)|| \
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_384)|| \
-										  ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_512_224)|| \
-										  ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_512_256)|| \
+                                          ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_512_224)|| \
+                                          ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_512_256)|| \
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA2_512)|| \
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA3_224)|| \
                                           ((__ALGORITHM__) == HASH_ALGOSELECTION_SHA3_256)|| \

@@ -92,6 +92,11 @@
 			<locationURI>PARENT-3-PROJECT_LOC/Drivers/CMSIS/Core_A/Source/irq_ctrl_gic.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/CMSIS/startup_stm32mp21xx_a35.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp21xx_a35.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/CMSIS/startup_stm32mp2xx_a35.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp2xx_a35.c</locationURI>

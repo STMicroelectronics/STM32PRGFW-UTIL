@@ -36,10 +36,14 @@ static uint8_t Hash_Initialized = 0U;
   */
 void HASH_Util_Init(void)
 {
+#if defined (STM32MP257Cxx)
   hhash.Instance = HASH;
+#else
+  hhash.Instance = HASH1;
+#endif
   HAL_HASH_DeInit(&hhash);
   hhash.Init.DataType = HASH_NO_SWAP;
-  hhash.Init.Algorithm = HASH_ALGOSELECTION_SHA256;
+  hhash.Init.Algorithm = HASH_ALGOSELECTION_SHA2_256;
   HAL_HASH_Init(&hhash);
   Hash_Initialized = 1U;
 }

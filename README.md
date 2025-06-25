@@ -8,9 +8,9 @@ Please use **v1.0.2 tag and later** from now as an important fix done to avoid *
 PMIC Programming steps have changed using CLI. Refer steps to avoid 
 **bricking your device**. The GUI method is preferred for updating PMIC NVM.
 
-## Project overview
+## Project overview 
 
-**STM32PRGFW-UTIL** package  provides embedded SW applications to manage the One-Time Programmable (OTP) memories on **STM32MP13xx, STM3MP15xx  and STM32MP25xx devices** as described in the following [wiki page](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_OTP_management)
+**STM32PRGFW-UTIL** package  provides embedded SW applications to manage the One-Time Programmable (OTP) memories on **STM32MP13xx, STM3MP15xx, STM32MP25xx, STM32MP23xx and STM32MP21xx devices** as described in the following [wiki page](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_OTP_management)
 
 It is **alternative** to the use of **U-Boot embedded SW package** described in article [How to fuse OTP↑](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer#How_to_fuse_STM32MP15x_OTP) but of course U-Boot services are still available.
 
@@ -23,8 +23,8 @@ Please find below the more appropriated mode depending on your setup.<br>
 
 | Major Use cases / Setup                                                                                                                                                                             | CP_Serial_boot<br /> |         Console_SH         |                                             Console_UART                                             | CP_Dev_Boot |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------: | :------------------------: | :---------------------------------------------------------------------------------------------------: | :---------: |
-| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v2.18.0 minimum)                         | &#10003;<br /> |                            |                                                                                                      |            |
-| * Board with Debug port<br />* STM32CubeIDE 1.16.1 |                                | &#10003;<br /> |                                                                                                      |            |
+| * Board with USB DFU or UART serial if<br />*[ STM32CubeProgrammer](https://wiki.st.com/stm32mpu/wiki/STM32CubeProgrammer_release_note) PC tool installed (v2.20.0 minimum)                     | &#10003;<br /> |                            |                                                                                                      |            |
+| * Board with Debug port<br />* For MP13,15,25,21 STM32CubeIDE 1.19.0 |                                | &#10003;<br /> |                                                                                                      |            |
 | * Board with Debug port and 1 UART interface<br />* Semihosting (Terminal I/O through debug port)<br /> NOT available on PC                                                                       |                                |                            | &#10003;<br />Note: need to<br />modify UART<br />instance in source code <br />if different from ST boards |            |
 | * Need to debug your own tool based on this package                                                                                                                                                |                                |                            |                                                                                                      |      &#10003;      |
 
@@ -32,7 +32,7 @@ The functional chart of the project describing all applications mentioned above:
 
 ![](_htmresc/functionnal_chart.png)
 
-## Repository structure
+## Repository structure 
 
 The **STM32PRGFW-UTIL** repository consists of the following repositories:
 
@@ -44,9 +44,11 @@ The project structure is described as below:
 
 ![](_htmresc/project_structure.png)
 
-## How to Use CP_Serial_Boot
- 
+## How to Use CP_Serial_Boot 
+
 In this section, you will  use "Binary" directory  containing a STM32PRGFW-UTIL binary and a tsv file used by STM32CubeProgrammer.
+
+##### Note: STM32MP25xx binaries can be used on STM32MP23xx for OTP and PMIC NVM programming.
 
 ### Hardware prerequisites 
 
@@ -55,14 +57,14 @@ In this section, you will  use "Binary" directory  containing a STM32PRGFW-UTIL 
 | SOC | **[Serial Boot](https://wiki.st.com/stm32mpu/wiki/STM32_MPU_ROM_code_overview#Boot_device_selection)** Configuration |
 |----|------------------- |
 |MP15, MP13 | b000 (BOOT0/1/2 = OFF) |
-| MP25 | b0000 (BOOT0/1/2/3 = OFF)   |
+|MP25, MP21 | b0000 (BOOT0/1/2/3 = OFF)  |
 * If you want to use USB DFU interface
 
-  * connect USB cable between PC and the board. PC shoud test USB DFU interface
+  * connect USB cable between PC and the board. PC should display USB DFU interface
 * else if you want to use UART interface
 
   * connect UART cable between PC and the board
-    * Note: could be STLink connector if Virtal COM port is connected on  the board like ST DK boards
+    * Note: STLink connector can be used with Virtual COM port connected on the board like ST DK/EV boards.
   * **!!! NOTE: USB cable should not be connected if you want to use UART !!! - ROM CODE will USB DFU if both interface are available!**
 
 
@@ -87,11 +89,9 @@ Please Read STM32CubeProgrammer user manual for further details if needed
 ![](_htmresc/1668778375616.png)
 
 * Click on PMIC button to get PMIC Panel 
-
 ![](_htmresc/pmic_gui.png)
 NOTE:- I2C address shows the I2C device address for which firmware is build to communicate with PMIC. If it is changed, firmware needs to be rebuild.
- 
-### STM32CubeProgrammer CLI interface 
+### STM32CubeProgrammer CLI interface
 
 Please Read STM32CubeProgrammer user manual for further details if needed
 
@@ -116,7 +116,8 @@ Please Read STM32CubeProgrammer user manual for further details if needed
   $STM32_Programmer_CLI -c port=usb1 -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
   * To write NVM using UART in serial boot mode replace usb1 with COM port appearing on the HOST.
   $STM32_Programmer_CLI -c port=COM`<num>` -pmic "`<Your Directory Path>\`PMIC_NVM_write.bin"
-##### Note: - For STPMIC1 `<size of partition>` is 8 Bytes, For STPMIC2 `<size of partition>` is 40 Bytes. <size of protocol header> for protocol version 1 is 8 Bytes.
+##### Note: - For STPMIC1 `<size of partition>` is 8 Bytes, For STPMIC2/1L/2L `<size of partition>` is 40 Bytes.`<size of protocol header>` for protocol version 1 is 8 Bytes.
+
 **Warning!!:- Care must be taken while modifying the NVM data. Invalid settings can cause board not to power up.**
 
 ## How to Use Console_SH 
@@ -130,7 +131,7 @@ In this mode, you will use STM32CubeIDE and build config Console_SH
 | SOC | **[Engineering Boot/ Development Mode](https://wiki.st.com/stm32mpu/wiki/STM32_MPU_ROM_code_overview#Boot_device_selection) Configuration** <a name="devmode_bootspins"></a> |
 |----|------------------- |
 |MP15, MP13 | b100 (BOOT2 = ON, BOOT0/1=OFF) |
-| MP25 | b0011 (BOOT2/3 = OFF, BOOT0/1=ON)   |
+|MP25, MP21 | b0011 (BOOT2/3 = OFF, BOOT0/1=ON)   |
 
 
 * Connect cable from Board/STLINK connector to the PC
@@ -171,7 +172,7 @@ mon arm semihosting_redirect tcp 2323
 ```
 ![1668782420376](_htmresc/OpenTCPWindow.PNG)
 ![1668782420376](_htmresc/TCPWindow.PNG)
-## How to Use Console_Uart
+## How to Use Console_Uart 
 
 In this mode, you will use STM32CubeIDE and build config Console_UART
 
@@ -183,7 +184,7 @@ In this mode, you will use STM32CubeIDE and build config Console_UART
 ### STM32CubeIDE Step by Step 
 
 * Depending your own board, you should change UART instance and GPIO into console_util.h file
-  * By default it is the instance used on ST board (UART4  PD6&PD8 for STM32MP13xx  / UART4 PG11/PB2 for STM32MP15xx and USART2 PA4&PA8 for MP25xx)
+  * By default it is the instance used on ST board (UART4  PD6&PD8 for STM32MP13xx  / UART4 PG11/PB2 for STM32MP15xx and USART2 PA4&PA8 for MP25xx and MP21xx)
 * Build Project by selecting Console_UART build confiuration
 * Setup Debug Configuration  and in particular (in Startup tab):
 
@@ -201,7 +202,7 @@ monitor halt
 
 Details about the content of this release are available in the release note **Release_Notes.html**.
 
-## Troubleshooting 
+## Troubleshooting
 
 **Caution**  : The issues are  **strictly limited**  to submit problems or suggestions related to the software delivered in this repository.
 

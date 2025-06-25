@@ -77,7 +77,11 @@ void SysTick_Handler(void)
   * @param  None
   * @retval None
   */
+#if defined(STM32MP257Cxx)
 void USB3DR_IRQHandler(void)
+#else
+void OTG_IRQHandler(void)
+#endif
 {
   HAL_PCD_IRQHandler(&hpcd);
 }

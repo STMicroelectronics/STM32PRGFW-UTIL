@@ -44,16 +44,16 @@ void OTP_Util_Init(void)
   HAL_PWR_EnableBkUpD3Access();
 #else
   HAL_PWR_EnableBkUpAccess();
-#endif /* STM32MP257Cxx */
+#endif /* STM32MP257Cxx  || STM32MP215Fxx */
   __HAL_RCC_BSEC_CLK_ENABLE();
 
 #if !defined(BSEC_API_CHANGE)
   HAL_BSEC_Init(hbsec);
 #endif
 
-#if !defined (STM32MP257Cxx)
+#if !(defined (STM32MP257Cxx) || defined (STM32MP215Fxx))
   HAL_BSEC_SafMemPwrUp(hbsec, BSEC_SAFMEM_CLK_RANGE_MAX);
-#endif /* !STM32MP257Cxx */
+#endif /* !STM32MP257Cxx  || STM32MP215Fxx */
 }
 
 /**
@@ -64,7 +64,7 @@ void OTP_Util_Init(void)
 void OTP_Util_DeInit(void)
 {
   hbsec->Instance = BSEC;
-#if !defined (STM32MP257Cxx)
+#if !(defined (STM32MP257Cxx) || defined (STM32MP215Fxx))
   HAL_BSEC_SafMemPwrDown(hbsec);
 #endif
 #if !defined(BSEC_API_CHANGE)
@@ -85,7 +85,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
   uint32_t otpPermWLockValue = 0;
   uint32_t stickyLockValue;
   uint32_t requestUpdateValue;
-#if defined (STM32MP257Cxx)
+#if (defined (STM32MP257Cxx)  || defined (STM32MP215Fxx))
   /* This is for MP2 as during bulk update some OPT might throw an error because of access issue
     we dont want to abort programming because of these OTPs. */
   int ret = OTP_OK;
@@ -179,7 +179,7 @@ int OTP_Util_Write(Otp_TypeDef Otp)
 #endif
   }
 
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx)  || defined (STM32MP215Fxx)
   if (ret != OTP_OK)
   {
     return ret;
@@ -225,14 +225,14 @@ Otp_TypeDef OTP_Util_Read(void)
   if (status != HAL_OK)
   {
     /* Save otp security as invalid */
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx)  || defined (STM32MP215Fxx)
   secR = HAL_BSEC_INVALID_STATE;
 #else
     secR = BSEC_INVALID_STATE;
 #endif
   }
   /* Set the otp security */
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
   if (secR == HAL_BSEC_OPEN_STATE)
   {
     Otp.GlobalState = BSEC_SEC_OTP_INVALID;
@@ -267,7 +267,7 @@ Otp_TypeDef OTP_Util_Read(void)
   {
     Otp.GlobalState = BSEC_SEC_OTP_INVALID;
   }
-#endif /* STM32MP257Cxx */
+#endif /* STM32MP257Cxx  || STM32MP215Fxx */
 
   /* Get the otp values */
   for (otp_val_idx = 0, otp_stat_idx = otp_val_idx + 1, otp_idx = (otp_val_idx / 2); otp_val_idx < OTP_PART_SIZE; otp_val_idx += 2, otp_stat_idx = otp_val_idx + 1, otp_idx = (otp_val_idx / 2))

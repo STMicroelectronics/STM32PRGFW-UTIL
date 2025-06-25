@@ -98,6 +98,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 void HAL_HASH_MspInit(HASH_HandleTypeDef *hhash)
 {
   /* Prevent unused argument(s) compilation warning */
+#if defined (HASH)
   /* Enable HASH clock */
   __HAL_RCC_HASH_CLK_ENABLE();
 
@@ -110,6 +111,20 @@ void HAL_HASH_MspInit(HASH_HandleTypeDef *hhash)
   /* NOTE : This function should not be modified; when the callback is needed,
             HAL_HASH_MspInit() can be implemented in the user file.
    */
+#else
+  /* Enable HASH clock */
+  __HAL_RCC_HASH1_CLK_ENABLE();
+
+  /* Force the HASH Periheral Clock Reset */
+  __HAL_RCC_HASH1_FORCE_RESET();
+
+  /* Release the HASH Periheral Clock Reset */
+  __HAL_RCC_HASH1_RELEASE_RESET();
+
+  /* NOTE : This function should not be modified; when the callback is needed,
+            HAL_HASH_MspInit() can be implemented in the user file.
+   */
+#endif
 }
 #endif /* USE_HASH_OVER_OTP */
 

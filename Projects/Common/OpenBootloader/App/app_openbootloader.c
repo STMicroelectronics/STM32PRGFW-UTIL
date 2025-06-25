@@ -26,6 +26,7 @@
 #include "openbl_usart_cmd.h"
 
 #include "otp_interface.h"
+#include "pmic_interface.h"
 #include "openbl_core.h"
 #include "usb_interface.h"
 #include "openbl_usb_cmd.h"
@@ -78,16 +79,16 @@ void OpenBootloader_Init(void)
   if (itx == UART_ID)
   {
      /* Register USART interfaces */
-	 USART_Handle.p_Ops = &USART_Ops;
-	 USART_Handle.p_Cmd = OPENBL_USART_GetCommandsList();
-	 OPENBL_RegisterInterface(&USART_Handle);
+     USART_Handle.p_Ops = &USART_Ops;
+     USART_Handle.p_Cmd = OPENBL_USART_GetCommandsList();
+     OPENBL_RegisterInterface(&USART_Handle);
   }
 
   else if (itx == USB_ID)
   {
-	 /* Register USB interfaces */
-	 USB_Handle.p_Ops = &USB_Ops;
-	 OPENBL_RegisterInterface(&USB_Handle);
+     /* Register USB interfaces */
+     USB_Handle.p_Ops = &USB_Ops;
+     OPENBL_RegisterInterface(&USB_Handle);
   }
   else
   {
@@ -115,7 +116,6 @@ void OpenBootloader_Init(void)
 
   /* Initialize otp */
   OPENBL_OTP_Init();
-
   OPENBL_PMIC_Init();
 
   /* Initialize memories */

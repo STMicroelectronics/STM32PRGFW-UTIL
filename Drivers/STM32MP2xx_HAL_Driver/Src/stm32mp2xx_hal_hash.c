@@ -128,6 +128,51 @@
   * @}
   */
 
+#define HASH_ALGOSELECTION_SHA224         HASH_ALGOSELECTION_SHA2_224
+#define HASH_ALGOSELECTION_SHA256         HASH_ALGOSELECTION_SHA2_256
+#define HASH_ALGOSELECTION_SHA512         HASH_ALGOSELECTION_SHA2_512
+
+#define HASH_DIGEST_VALID_OUTPUT_REGISTERS_LENGTH(__HANDLE__) (((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                          HASH_CR_ALGO) \
+                                                                 == HASH_ALGOSELECTION_SHA1) ?  20U : \
+                                                                ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                           HASH_CR_ALGO) \
+                                                                  == HASH_ALGOSELECTION_SHA2_224) ?  28U : \
+                                                                 ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                            HASH_CR_ALGO) \
+                                                                   == HASH_ALGOSELECTION_SHA2_256) ?  32U : \
+                                                                  ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                             HASH_CR_ALGO) \
+                                                                    == HASH_ALGOSELECTION_SHA2_384) ?  48U : \
+                                                                   ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                              HASH_CR_ALGO) \
+                                                                     == HASH_ALGOSELECTION_SHA2_512_224) ?  28U : \
+                                                                    ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                               HASH_CR_ALGO) \
+                                                                      == HASH_ALGOSELECTION_SHA2_512_256) ?  32U : \
+                                                                     ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                                HASH_CR_ALGO) \
+                                                                       == HASH_ALGOSELECTION_SHA2_512) ?  64U : \
+                                                                      ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                          HASH_CR_ALGO) \
+                                                                        == HASH_ALGOSELECTION_SHA3_224) ?  28U : \
+                                                                       ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                           HASH_CR_ALGO) \
+                                                                         == HASH_ALGOSELECTION_SHA3_256) ?  32U : \
+                                                                        ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                            HASH_CR_ALGO) \
+                                                                          == HASH_ALGOSELECTION_SHA3_384) ?  48U : \
+                                                                         ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                             HASH_CR_ALGO) \
+                                                                           == HASH_ALGOSELECTION_SHA3_512) ?  64U : \
+                                                                          ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                              HASH_CR_ALGO) \
+                                                                            == HASH_ALGOSELECTION_SHAKE_128) ?  168U : \
+                                                                           ((READ_BIT((__HANDLE__)->Instance->CR, \
+                                                                               HASH_CR_ALGO) \
+                                                                             == HASH_ALGOSELECTION_SHAKE_256) ? 136U : \
+                                                                            20U ) )))))))))))))
+
 /* Private Constants ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -135,7 +180,7 @@
 /** @defgroup HASH_Private_Functions HASH Private Functions
   * @{
   */
-static HAL_StatusTypeDef HASH_GetDigest(HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint32_t Size);
+static HAL_StatusTypeDef HASH_GetDigest(HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint32_t size);
 static void HASH_WriteData(HASH_HandleTypeDef *hhash, const uint8_t *pInBuffer, uint32_t Size);
 static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash);
 static void HASH_DMAXferCplt(DMA_HandleTypeDef *hdma);
@@ -751,8 +796,13 @@ HAL_StatusTypeDef HAL_HASH_ProcessSuspend(HASH_HandleTypeDef *hhash)
       /* DMA3 used, DMA_CBR1_BNDT in bytes, DMA_CSR_FIFOL in words */
       remainingwords = ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CBR1) \
                         & DMA_CBR1_BNDT) / 4U;
+#if defined(DMA_VER_V1_6)
+      remainingwords += (((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
+                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos) / 4U;
+#else
       remainingwords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
+#endif /* DMA_VER_V1_6 */
 
       if (remainingwords <= nbbytePartialHash)
       {
@@ -901,7 +951,10 @@ HAL_StatusTypeDef HAL_HASH_Start(HASH_HandleTypeDef *hhash, const uint8_t *const
     }
 
     /* Read the message digest */
-    HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash));
+    if (HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
 
     /* Change the HASH state */
     hhash->State = HAL_HASH_STATE_READY;
@@ -1211,7 +1264,6 @@ HAL_StatusTypeDef HAL_HASH_AccumulateLast(HASH_HandleTypeDef *hhash, const uint8
                                           uint8_t *const pOutBuffer, uint32_t Timeout)
 {
   HAL_HASH_StateTypeDef temp_state;
-
   /* Check the hash handle allocation */
   if (hhash == NULL)
   {
@@ -1259,7 +1311,10 @@ HAL_StatusTypeDef HAL_HASH_AccumulateLast(HASH_HandleTypeDef *hhash, const uint8
       return HAL_ERROR;
     }
     /* Read the message digest */
-    HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash));
+    if (HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
 
     /* Change the HASH state */
     hhash->State = HAL_HASH_STATE_READY;
@@ -1468,7 +1523,6 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start(HASH_HandleTypeDef *hhash, const uint8_t *
                                       uint8_t *const pOutBuffer, uint32_t Timeout)
 {
   uint32_t blocksize; /* Block size in bytes */
-
   /* Check the hash handle allocation */
   if (hhash == NULL)
   {
@@ -1565,7 +1619,10 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start(HASH_HandleTypeDef *hhash, const uint8_t *
     }
 
     /* Read the message digest */
-    HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash));
+    if (HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
 
     /* Change the HASH state */
     hhash->State = HAL_HASH_STATE_READY;
@@ -1648,7 +1705,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate(HASH_HandleTypeDef *hhash, const uint
       else
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
-                  HASH_ALGOMODE_HMAC | HASH_CR_INIT);
+                   HASH_ALGOMODE_HMAC | HASH_CR_INIT);
       }
       /* Set phase process */
       hhash->Phase = HAL_HASH_PHASE_PROCESS;
@@ -1761,7 +1818,10 @@ HAL_StatusTypeDef HAL_HASH_HMAC_AccumulateLast(HASH_HandleTypeDef *hhash, const 
       }
 
       /* Read the message digest */
-      HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash));
+      if (HASH_GetDigest(hhash, pOutBuffer, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+      {
+        return HAL_ERROR;
+      }
     }
 
     /* Change the HASH state */
@@ -1931,7 +1991,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Accumulate_IT(HASH_HandleTypeDef *hhash, const u
       else
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
-                  HASH_ALGOMODE_HMAC | HASH_CR_INIT);
+                   HASH_ALGOMODE_HMAC | HASH_CR_INIT);
       }
 
       /* Configure the number of valid bits in last word of the Key */
@@ -2069,7 +2129,7 @@ HAL_StatusTypeDef HAL_HASH_HMAC_Start_DMA(HASH_HandleTypeDef *hhash, const uint8
       else
       {
         MODIFY_REG(hhash->Instance->CR, HASH_CR_LKEY | HASH_CR_MODE | HASH_CR_INIT,
-                  HASH_ALGOMODE_HMAC | HASH_CR_INIT);
+                   HASH_ALGOMODE_HMAC | HASH_CR_INIT);
       }
 
       /* Set the phase */
@@ -2223,7 +2283,10 @@ void HAL_HASH_IRQHandler(HASH_HandleTypeDef *hhash)
   if ((itflag & HASH_FLAG_DCIS) == HASH_FLAG_DCIS)
   {
     /* Read the digest */
-    HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash));
+    if (HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+    {
+      return;
+    }
 
     /* Disable Interrupts */
     __HAL_HASH_DISABLE_IT(hhash, HASH_IT_DINI | HASH_IT_DCI);
@@ -2396,7 +2459,10 @@ static void HASH_DMAXferCplt(DMA_HandleTypeDef *hdma)
 #endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
 
       /* Read the message digest */
-      HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash));
+      if (HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+      {
+        return;
+      }
 
       /* Change the HASH state to ready */
       hhash->State = HAL_HASH_STATE_READY;
@@ -2459,7 +2525,10 @@ static void HASH_DMAXferCplt(DMA_HandleTypeDef *hdma)
         } while (HAL_IS_BIT_CLR(hhash->Instance->SR, HASH_FLAG_DCIS));
 
         /* Read the message digest */
-        HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash));
+        if (HASH_GetDigest(hhash, hhash->pHashOutBuffPtr, HASH_DIGEST_LENGTH(hhash)) != HAL_OK)
+        {
+          return;
+        }
 
         /* Change the HASH state to ready */
         hhash->State = HAL_HASH_STATE_READY;
@@ -2577,7 +2646,7 @@ static void HASH_WriteData(HASH_HandleTypeDef *hhash, const uint8_t *pInBuffer, 
 /**
   * @brief  Feed the input buffer to the HASH peripheral in interruption mode.
   * @param  hhash HASH handle.
-  * @retval HAL status
+  * @retval HAL_StatusTypeDef HAL status
   */
 static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash)
 {
@@ -2970,55 +3039,65 @@ static HAL_StatusTypeDef HASH_WriteData_IT(HASH_HandleTypeDef *hhash)
 
 /**
   * @brief  Retrieve the message digest.
+  *
   * @param hhash HASH handle
   * @param  pMsgDigest pointer to the computed digest.
-  * @param  Size message digest size in bytes.
-  * @retval None
+  * @param  size message digest size in bytes.
+  *
+  * @retval HAL_StatusTypeDef HAL status
   */
-static HAL_StatusTypeDef HASH_GetDigest(HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint32_t Size)
+static HAL_StatusTypeDef HASH_GetDigest(HASH_HandleTypeDef *hhash, const uint8_t *pMsgDigest, uint32_t size)
 {
   uint32_t msgDigest = (uint32_t)pMsgDigest;
-  uint32_t msgDigestSize;
+  uint32_t i;
   uint32_t validLength = HASH_DIGEST_VALID_OUTPUT_REGISTERS_LENGTH(hhash);
   uint32_t count;
-  for (msgDigestSize = 0; msgDigestSize < (Size / 4); msgDigestSize++)
-  {
-    if((msgDigestSize*4) >= validLength)
-    {
-    	Size = Size - (msgDigestSize*4);
-    	msgDigestSize = 0;
-        /* Start the message padding then the Digest calculation */
-        SET_BIT(hhash->Instance->STR, HASH_STR_DCAL);
-        /* Wait for DCIS flag to be set */
-        count = HASH_TIMEOUTVALUE;
-        do
-        {
-          count--;
-          if (count == 0U)
-          {
-            /* Disable the DMA transfer */
-            CLEAR_BIT(hhash->Instance->CR, HASH_CR_DMAE);
+  uint32_t msgDigestSize = 0U;
+  uint32_t actualSize   = size / 4U;
+  uint32_t RemaningSize = size % 4U;
 
-            /* Change state */
-            hhash->ErrorCode |= HAL_HASH_ERROR_DMA;
-            hhash->State = HAL_HASH_STATE_READY;
-            __HAL_UNLOCK(hhash);
-#if (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
-            hhash->ErrorCallback(hhash);
-#else
-            HAL_HASH_ErrorCallback(hhash);
-#endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
-            return HAL_ERROR;
-          }
-        } while (HAL_IS_BIT_CLR(hhash->Instance->SR, HASH_FLAG_DCIS));
-    }
+  for (i = 0; i < actualSize ; i++)
+  {
     *(uint32_t *)(msgDigest) = __REV(hhash->Instance->HR2[msgDigestSize]);
     msgDigest += 4U;
+
+    if ((msgDigestSize * 4U) < (validLength - 4U))
+    {
+      msgDigestSize++;
+    }
+    else
+    {
+      msgDigestSize = 0U;
+      /* Start the message padding then the Digest calculation */
+      SET_BIT(hhash->Instance->STR, HASH_STR_DCAL);
+      /* Wait for DCIS flag to be set */
+      count = HASH_TIMEOUTVALUE;
+      do
+      {
+        count--;
+        if (count == 0U)
+        {
+          /* Disable the DMA transfer */
+          CLEAR_BIT(hhash->Instance->CR, HASH_CR_DMAE);
+
+          /* Change state */
+          hhash->ErrorCode |= HAL_HASH_ERROR_DMA;
+          hhash->State = HAL_HASH_STATE_READY;
+          __HAL_UNLOCK(hhash);
+#if (USE_HAL_HASH_REGISTER_CALLBACKS == 1)
+          hhash->ErrorCallback(hhash);
+#else
+          HAL_HASH_ErrorCallback(hhash);
+#endif /* USE_HAL_HASH_REGISTER_CALLBACKS */
+          return HAL_ERROR;
+        }
+      } while (HAL_IS_BIT_CLR(hhash->Instance->SR, HASH_FLAG_DCIS));
+    }
   }
 
-  if ((Size % 4U) != 0U)
+  if ((RemaningSize % 4U) != 0U)
   {
-	  *(uint32_t *)(msgDigest) = __REV(hhash->Instance->HR2[msgDigestSize]);
+    *(uint32_t *)(msgDigest) = __REV(hhash->Instance->HR2[msgDigestSize]);
   }
 
   return HAL_OK;

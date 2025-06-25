@@ -77,7 +77,7 @@ extern "C" {
 (for 32 bits word, with M = 0 to 367 (no access to HWKEY and STM32PRVKEY))
 but we keep part size according to M = 0 to 383 i.e 3080 because of compatibilty with open source tools.
 On MP13 = (96*2+2)*4 = 776 bytes*/
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
 #define OTP_DESC_STR                   "@OTP /0xF2/1*3080Be"
 #define OTP_DESC_PARTSIZE               (3080)
 #else

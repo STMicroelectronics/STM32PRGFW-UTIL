@@ -46,6 +46,20 @@ void UART_Config(void);
 #define MX_UART_RX_GPIO_PORT    GPIOA
 #define MX_UART_RX_AF           GPIO_AF8_USART2
 #define MX_MODEL                "STM32MP2XX"
+#elif defined (STM32MP215Fxx)
+#define USARTx                           USART2
+#define USARTx_CLK_ENABLE()              __HAL_RCC_USART2_CLK_ENABLE()
+#define USARTx_FORCE_RESET()             __HAL_RCC_USART2_FORCE_RESET()
+#define USARTx_RELEASE_RESET()           __HAL_RCC_USART2_RELEASE_RESET()
+
+#define MX_UART_INSTANCE        USART2
+#define MX_UART_TX_PIN          GPIO_PIN_4
+#define MX_UART_TX_GPIO_PORT    GPIOA
+#define MX_UART_TX_AF           GPIO_AF6_USART2
+#define MX_UART_RX_PIN          GPIO_PIN_8
+#define MX_UART_RX_GPIO_PORT    GPIOA
+#define MX_UART_RX_AF           GPIO_AF8_USART2
+#define MX_MODEL                "STM32MP21XX"
 #elif (STM32MP157Cxx)
 #define USARTx                           UART4
 #define USARTx_CLK_ENABLE()              __HAL_RCC_UART4_CLK_ENABLE()

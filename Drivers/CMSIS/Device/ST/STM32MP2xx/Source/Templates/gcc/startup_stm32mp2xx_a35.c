@@ -249,8 +249,8 @@ void ETH2_LPI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")
 void USART6_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void I2C3_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void I3C3_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
-void USBH_OHCI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void USBH_EHCI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
+void USBH_OHCI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void DCMI_PSSI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void CSI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
 void DSI_IRQHandler (void) __attribute__ ((weak, alias("Default_ITHandler")));
@@ -708,8 +708,8 @@ IRQHandler_t Interrupt_Handlers_Table[MAX_IRQ_n] = {
    USART6_IRQHandler,
    I2C3_IRQHandler,
    I3C3_IRQHandler,                   /* 170 */
-   USBH_OHCI_IRQHandler,
    USBH_EHCI_IRQHandler,
+   USBH_OHCI_IRQHandler,
    DCMI_PSSI_IRQHandler,
    CSI_IRQHandler,
    DSI_IRQHandler,                    /* 175 */
@@ -1267,11 +1267,11 @@ void Reset_Handler(void) {
 /*----------------------------------------------------------------------------
   Default vector handlers for vector table
  *----------------------------------------------------------------------------*/
-__attribute__ ((weakref("While1_ITHandler"))) static void Default_Undef_Handler(void);
+__attribute__ ((weakref("While1_UndefITHandler"))) static void Default_Undef_Handler(void);
 __attribute__ ((weakref("Nop_ITHandler"))) static void Default_SVC_Handler(void);
-__attribute__ ((weakref("While1_ITHandler"))) static void Default_PAbt_Handler(void);
-__attribute__ ((weakref("While1_ITHandler"))) static void Default_DAbt_Handler(void);
-__attribute__ ((weakref("While1_ITHandler"))) static void Default_Rsvd_Handler(void);
+__attribute__ ((weakref("While1_PAbtITHandler"))) static void Default_PAbt_Handler(void);
+__attribute__ ((weakref("While1_DAbtITHandler"))) static void Default_DAbt_Handler(void);
+__attribute__ ((weakref("While1_RsvdITHandler"))) static void Default_Rsvd_Handler(void);
 __attribute__ ((weakref("Nop_ITHandler"))) static void Default_IRQ_Handler(void);
 __attribute__ ((weakref("Nop_ITHandler"))) static void Default_FIQ_Handler(void);
 
@@ -1288,6 +1288,22 @@ __attribute__ ((weak, alias("Default_ITHandler"))) void AAA_Default_ITHandler(vo
 __attribute__ ((interrupt)) void Nop_ITHandler(void)
 {
   return;
+}
+__attribute__ ((interrupt)) void While1_UndefITHandler(void)
+{
+  while(1);
+}
+__attribute__ ((interrupt)) void While1_DAbtITHandler(void)
+{
+  while(1);
+}
+__attribute__ ((interrupt)) void While1_PAbtITHandler(void)
+{
+  while(1);
+}
+__attribute__ ((interrupt)) void While1_RsvdITHandler(void)
+{
+  while(1);
 }
 __attribute__ ((interrupt)) void While1_ITHandler(void)
 {

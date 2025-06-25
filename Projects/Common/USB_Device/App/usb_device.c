@@ -77,6 +77,7 @@ void MX_USB_Device_Init(void)
   /* USER CODE END USB_Device_Init_PreTreatment */
 
   /* Init Device Library, add supported class and start the library. */
+
   if (USBD_Init(&hUsbDeviceHS, &DFU_Desc, DEVICE_HS) != USBD_OK) {
     Error_Handler();
   }
@@ -89,6 +90,9 @@ void MX_USB_Device_Init(void)
   if (USBD_Start(&hUsbDeviceHS) != USBD_OK) {
     Error_Handler();
   }
+#if defined(STM32MP215Fxx)
+  USBDR->GCCFG |= (0x1 << 28);
+#endif
 }
 
 /**

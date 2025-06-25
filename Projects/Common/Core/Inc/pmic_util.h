@@ -37,7 +37,7 @@ typedef enum
   PMIC_SHADOW_READ,
 } pmic_nvm_ops_t;
 
-typedef struct __attribute__ ((aligned (4)))
+typedef struct __attribute__((aligned(4)))
 {
   int8_t     Supported;
   uint8_t    Identifier;
@@ -52,10 +52,12 @@ typedef struct __attribute__ ((aligned (4)))
 
 typedef enum
 {
-	PMIC_STPMIC25,
-	PMIC_STPMIC1,
-	PMIC_MAX,
-}pmic_types;
+  PMIC_STPMIC25,
+  PMIC_STPMIC1L,
+  PMIC_STPMIC2L,
+  PMIC_STPMIC1,
+  PMIC_MAX,
+} pmic_types;
 
 
 /* Exported variables --------------------------------------------------------*/
@@ -160,6 +162,36 @@ typedef enum
 #define BUS_I2Cx_TIMING                      ((uint32_t)0x10805E89U)
 #endif  /* BUS_I2Cx_TIMING */
 
+#elif defined (STM32MP215Fxx)
+#define BUS_I2C_INSTANCE                      I2C3
+#define BUS_I2C_CLK_ENABLE()                  __HAL_RCC_I2C3_CLK_ENABLE()
+#define BUS_I2C_CLK_DISABLE()                 __HAL_RCC_I2C3_CLK_DISABLE()
+#define BUS_I2C_SCL_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOZ_CLK_ENABLE()
+#define BUS_I2C_SCL_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOZ_CLK_DISABLE()
+#define BUS_I2C_SDA_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOZ_CLK_ENABLE()
+#define BUS_I2C_SDA_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOZ_CLK_DISABLE()
+
+#define BUS_I2C_FORCE_RESET()                 __HAL_RCC_I2C3_FORCE_RESET()
+#define BUS_I2C_RELEASE_RESET()               __HAL_RCC_I2C3_RELEASE_RESET()
+
+/* Definition for I2Cx Pins */
+#define BUS_I2C_SCL_PIN                       GPIO_PIN_1
+#define BUS_I2C_SCL_GPIO_PORT                 GPIOZ
+#define BUS_I2C_SDA_PIN                       GPIO_PIN_0
+#define BUS_I2C_SDA_GPIO_PORT                 GPIOZ
+#define BUS_I2C_SCL_AF                        GPIO_AF8_I2C3
+#define BUS_I2C_SDA_AF                        GPIO_AF8_I2C3
+
+/* I2C interrupt requests */
+#define BUS_I2C_EV_IRQn                       I2C3_EV_IRQn
+#define BUS_I2C_ER_IRQn                       I2C3_ER_IRQn
+
+/* I2C TIMING Register define when I2C clock source is SYSCLK */
+/* I2C TIMING is calculated from Bus clock (HSI) = 64 MHz */
+
+#ifndef BUS_I2Cx_TIMING
+#define BUS_I2Cx_TIMING                      ((uint32_t)0x10805E89U)
+#endif  /* BUS_I2Cx_TIMING */
 #endif /* STM32MP135Fxx */
 #define PMIC_NOT_SUPPORTED       (-1)
 #define PMIC_SUPPORTED           (0)
@@ -174,8 +206,8 @@ typedef enum
 
 /* Exported functions ------------------------------------------------------- */
 void PMIC_Util_Init(void);
-void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops, pmic_data_t * pmic_data);
-uint32_t PMIC_Util_Detect_PMIC(pmic_data_t * pmic_detected);
+void PMIC_Util_ReadWrite(uint8_t *addr, pmic_nvm_ops_t ops, pmic_data_t *pmic_data);
+uint32_t PMIC_Util_Detect_PMIC(pmic_data_t *pmic_detected);
 uint8_t PMIC_Util_GetNVMID(void);
 
 #ifdef __cplusplus

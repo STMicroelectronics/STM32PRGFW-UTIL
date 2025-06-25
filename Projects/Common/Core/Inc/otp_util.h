@@ -33,7 +33,7 @@ typedef struct
 {
   uint32_t Version;
   uint32_t GlobalState;
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
   uint32_t OtpPart[768];
 #else
   uint32_t OtpPart[192];
@@ -44,12 +44,12 @@ typedef struct
 } Otp_TypeDef;
 
 /* Exported constants --------------------------------------------------------*/
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx)  || defined (STM32MP215Fxx)
 #define OTP_PART_SIZE                   (2 * 384)
 #define OTP_VALUE_SIZE                  384
 #define OTP_HASH_PART_SIZE        (2 * 376) /* exclude HW key.private key needs to be included to ensure RAZ */
-#define OPENBL_OTP_VERSION              (3)      /* This version supports hash */
-#define BSEC_API_CHANGE					(1)
+#define OPENBL_OTP_VERSION              (3)      /* 3 version supports hash */
+#define BSEC_API_CHANGE                 (1)
 #else
 #define OTP_PART_SIZE                   (2 * 96)
 #define OTP_VALUE_SIZE                  96

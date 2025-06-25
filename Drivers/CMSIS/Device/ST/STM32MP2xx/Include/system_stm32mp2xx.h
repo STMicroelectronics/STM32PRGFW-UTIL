@@ -138,14 +138,17 @@ typedef struct gic_interrupt_config
 /** @addtogroup STM32MP2xx_System_Exported_Variables
   * @{
   */
-  /* This variable is updated in three ways:
-      1) by calling CMSIS function SystemCoreClockUpdate()
-      2) by calling HAL API function HAL_RCC_GetSysClockFreq()
-      3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency
-         Note: If you use this function to configure the system clock; then there
-               is no need to call the 2 first functions listed above, since SystemCoreClock
-               variable is updated automatically.
-  */
+/* The SystemCoreClock variable is updated in two ways:
+    1) by calling CMSIS function SystemCoreClockUpdate()
+    2) For CA35, each time HAL_RCCEx_CA35SS_SetCA35SSClockSource() is called
+         to configure the CA35 clock frequency
+       For CM33, each time HAL_RCC_ClockConfig() is called to configure the
+         system clock frequency
+       Note: If you use these functions to configure CA35 or the
+             system clock frequency then there is no need to call
+             SystemCoreClockUpdate(), since SystemCoreClock variable is
+             updated automatically.
+*/
 extern uint32_t SystemCoreClock;          /*!< System Core1 Clock Frequency  */
 
 #ifdef CORE_CA35
@@ -196,6 +199,10 @@ extern uint32_t SystemA35_UnrouteInterrupt( uint32_t interrupt_index );
 extern uint32_t SystemA35_TriggerInterruptAtGICInput( gic_interrupt_config_t interrupt_config );
 /* A35ss specific function to get A35 secure state by reading GICD_ICFGR0 */
 extern uint32_t SystemA35_IsA35InSecureState( void );
+
+/* Creates Memory Management Unit Translation Table */
+extern void MMU_CreateTranslationTable(void);
+extern void MMU_CreateTranslationTable_LPAE(void);
 
 /* Functions to add specific user processing on system timers (if any) */
 void SecurePhysicalTimer_IRQHandler_CallBack(void);

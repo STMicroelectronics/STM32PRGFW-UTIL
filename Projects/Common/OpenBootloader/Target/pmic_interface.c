@@ -41,29 +41,27 @@ static pmic_data_t identified_pmic;
   */
 void OPENBL_PMIC_Init(void)
 {
-
   PMIC_Util_Init();
 
   pmic_status = PMIC_Util_Detect_PMIC(&identified_pmic);
-
   if (pmic_status == PMIC_ERROR_INVALID_ARG)
   {
-	  while(1); /* coding defect halt the code */
+    while(1); /* coding defect halt the code */
   }
   else if (pmic_status == PMIC_ERROR_NO_PMIC)
   {
-	  /* Do nothing size default to 8 bytes for protocol header */
+    /* Do nothing size default to 8 bytes for protocol header */
   }
   else if (pmic_status == PMIC_ERROR_INVALID_PMIC)
   {
-	  /* Do nothing size default to 8 bytes for protocol header */
+    /* Do nothing size default to 8 bytes for protocol header */
   }
   else
   {
-	  uint8_t tmp;
-	  tmp = (identified_pmic.NVMSize + PMIC_PROTOCOL_HEADER_SIZE);
-	  pmic_nvm_str[14] = (tmp/10) + 48U;
-	  pmic_nvm_str[15] = (tmp%10) + 48U;
+    uint8_t tmp;
+    tmp = (identified_pmic.NVMSize + PMIC_PROTOCOL_HEADER_SIZE);
+    pmic_nvm_str[14] = (tmp/10) + 48U;
+    pmic_nvm_str[15] = (tmp%10) + 48U;
   }
 
   PMIC_Initialized = 1U;

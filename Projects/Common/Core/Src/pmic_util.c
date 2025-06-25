@@ -28,7 +28,9 @@ static I2C_HandleTypeDef hi2c;
 static const pmic_data_t pmic_database[PMIC_MAX] =
 {
   /*Supported, Identifier, NVMSize, DisplayString, NVMStartAddress, NVMSRRegisterAddr, NVMCRRegisterAddr */
-  {PMIC_SUPPORTED,     0x20, 40, "25", 0x90, 0x8E, 0x8F}, /* PMIC_STPMIC25 */
+  {PMIC_SUPPORTED,     0x20, 40, "25", 0x90, 0x8E, 0x8F},    /* PMIC_STPMIC25 */
+  {PMIC_SUPPORTED,     0x30, 40, "2L", 0x90, 0x8E, 0x8F}, /* PMIC_STPMIC2L */
+  {PMIC_SUPPORTED,     0x10, 40, "1L", 0x90, 0x8E, 0x8F}, /* PMIC_STPMIC1L */
   {PMIC_SUPPORTED,     0x00,  8, "1", 0xF8, 0xB8, 0xB9}, /* PMIC_STPMIC1 */
 };
 
@@ -236,6 +238,6 @@ uint32_t PMIC_Util_Detect_PMIC(pmic_data_t *pmic_detected)
   */
 uint8_t PMIC_Util_GetNVMID(void)
 {
-	return nvm_id;
+  return nvm_id;
 }
 

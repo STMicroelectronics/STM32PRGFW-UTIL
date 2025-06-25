@@ -41,6 +41,8 @@ exe.win-amd64-2.7
 -- unicodedata.pyd
 Python27
 -- Stm32ImageAddHeader.py   -> Python script to generate STM32 Image Header on Linux OS
+Python3
+-- Stm32ImageAddHeader.py   -> Python script to generate STM32 Image Header on Linux OS
 EL3_Launcher
 -- STM32MP2_el3_launcher.bin --> binary added to the application to switch from EL3 64 bits to EL1 32 bits in order to execute A35 applications in aarch32 (default)
 -- STM32MP2_el3_launcher.elf -->  associated elf used to find entry point

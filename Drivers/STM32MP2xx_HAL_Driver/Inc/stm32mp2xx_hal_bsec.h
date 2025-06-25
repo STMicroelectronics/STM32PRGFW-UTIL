@@ -28,17 +28,17 @@ extern "C" {
 #include "stm32mp2xx_hal_def.h"
 
 /** @addtogroup STM32MP2xx_HAL_Driver
- * @{
- */
+  * @{
+  */
 
 /** @addtogroup BSEC
- * @{
- */
+  * @{
+  */
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup BSEC_Exported_Types BSEC Exported Types
- * @{
- */
+  * @{
+  */
 
 /**
   * @brief  HAL BSEC Handle Structure definition
@@ -77,11 +77,6 @@ typedef struct
 #endif /* defined(BSEC_HDPLSR_HDPL) */
 /**
   * @}
-  */
-
-/* Exported constants --------------------------------------------------------*/
-/** @defgroup BSEC_Exported_Constants BSEC Exported Constants
-  * @{
   */
 
 /** @defgroup BSEC_Error_Code BSEC Error code
@@ -142,7 +137,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup BSEC_State BSEC State
+/** @defgroup BSEC_LOCK_CFG BSEC Lock State
   * @{
   */
 #define HAL_BSEC_FUSE_PROG_LOCKED      (0x00000001U)        /*!< Fuse word programming is silently ignored until next reset               */
@@ -228,7 +223,7 @@ typedef struct
 /** @defgroup BSEC_Debug BSEC Debug Enable/Disable
   * @{
   */
-#define BSEC_DENR_MASK         (0x0000FFFF)
+#define BSEC_DENR_MASK         (0x0000FFFFU)
 /** Debug Profiles low level definition and BSEC_DENR related : Debug Enable / Disable **/
 /**
   * @}
@@ -238,7 +233,7 @@ typedef struct
   */
 /* Key used to protect against un-intentional write to register :                                       */
 /* to be written in upper 16 bits of register to be able to write value of signals in the 16 bits lower */
-#define BSEC_DENR_WRITE_KEY    (0xDEB60000)
+#define BSEC_DENR_WRITE_KEY    (0xDEB60000U)
 /**
   * @}
   */
@@ -300,7 +295,8 @@ HAL_StatusTypeDef HAL_BSEC_OTP_GetShadowState(BSEC_HandleTypeDef *const pHbsec, 
   */
 HAL_StatusTypeDef HAL_BSEC_GetDeviceLifeCycleState(BSEC_HandleTypeDef *const pHbsec, uint32_t *pState);
 #if  defined(BSEC_EPOCHSELR_EPSEL)
-HAL_StatusTypeDef HAL_BSEC_ReadEpochCounter(BSEC_HandleTypeDef *const pHbsec, uint32_t CounterId, uint32_t *pCounterData);
+HAL_StatusTypeDef HAL_BSEC_ReadEpochCounter(BSEC_HandleTypeDef *const pHbsec, uint32_t CounterId, \
+                                            uint32_t *pCounterData);
 HAL_StatusTypeDef HAL_BSEC_SelectEpochCounter(BSEC_HandleTypeDef *pHbsec, uint32_t SelectedCounter);
 HAL_StatusTypeDef HAL_BSEC_GetEpochCounterSelection(BSEC_HandleTypeDef *const pHbsec, uint32_t *pSelectedCounter);
 #endif /* defined(BSEC_EPOCHSELR_EPSEL) */
@@ -316,16 +312,17 @@ HAL_StatusTypeDef HAL_BSEC_GetHDPLValue(BSEC_HandleTypeDef *const pHbsec, uint32
 HAL_StatusTypeDef HAL_BSEC_IncrementHDPLValue(BSEC_HandleTypeDef *pHbsec);
 HAL_StatusTypeDef HAL_BSEC_ConfigSAESHDPLIncrementValue(BSEC_HandleTypeDef *pHbsec, uint32_t Increment);
 HAL_StatusTypeDef HAL_BSEC_GetSAESHDPLIncrementValue(BSEC_HandleTypeDef *const pHbsec, uint32_t *pIncrement);
-#endif /* defined(BSEC_HDPLSR_HDPL) */
 /**
   * @}
   */
-
+#endif /* defined(BSEC_HDPLSR_HDPL) */
 /** @addtogroup BSEC_Exported_Functions_Group6
   * @{
   */
-HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t Data);
-HAL_StatusTypeDef HAL_BSEC_ReadScratchValue(BSEC_HandleTypeDef *const pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t *pRegData);
+HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, \
+                                             uint32_t Data);
+HAL_StatusTypeDef HAL_BSEC_ReadScratchValue(BSEC_HandleTypeDef *const pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, \
+                                            uint32_t *pRegData);
 /**
   * @}
   */
@@ -354,7 +351,8 @@ HAL_StatusTypeDef HAL_BSEC_GetDHUKLockStatus(BSEC_HandleTypeDef *const pHbsec, u
 /** @addtogroup BSEC_Exported_Functions_Group9
   * @{
   */
-HAL_StatusTypeDef HAL_BSEC_GetNumberResets(BSEC_HandleTypeDef *const pHbsec, uint32_t ResetType, uint32_t *pResetNumber);
+HAL_StatusTypeDef HAL_BSEC_GetNumberResets(BSEC_HandleTypeDef *const pHbsec, uint32_t ResetType, \
+                                           uint32_t *pResetNumber);
 /**
   * @}
   */
@@ -366,24 +364,25 @@ HAL_StatusTypeDef HAL_BSEC_SetDebugSignals(BSEC_HandleTypeDef *const pHbsec, uin
 /**
   * @}
   */
-
 /* Private macros --------------------------------------------------------*/
 /**
   @cond 0
   */
 #define IS_BSEC_PERMANENT_LOCK(VALUE)  (((VALUE) == HAL_BSEC_NORMAL_PROG) || ((VALUE) == HAL_BSEC_LOCK_PROG))
 
-#define IS_BSEC_LOCK_CFG(CFG)          ((CFG) <= (HAL_BSEC_FUSE_PROG_LOCKED | HAL_BSEC_FUSE_WRITE_LOCKED | HAL_BSEC_FUSE_RELOAD_LOCKED))
+#define IS_BSEC_LOCK_CFG(CFG)          ((CFG) <= (HAL_BSEC_FUSE_PROG_LOCKED | \
+                                                  HAL_BSEC_FUSE_WRITE_LOCKED | HAL_BSEC_FUSE_RELOAD_LOCKED))
 
 #define IS_BSEC_STATE(STATE)           (((STATE) == HAL_BSEC_OPEN_STATE)    || ((STATE) == HAL_BSEC_CLOSED_STATE) \
-                                     || ((STATE) == HAL_BSEC_INVALID_STATE) || ((STATE) == HAL_BSEC_INVALID_STATE_WITH_TAMPER))
+                                        || ((STATE) == HAL_BSEC_INVALID_STATE) || \
+                                        ((STATE) == HAL_BSEC_INVALID_STATE_WITH_TAMPER))
 #if  defined(BSEC_EPOCHSELR_EPSEL)
 #define IS_BSEC_EPOCHSEL(VALUE)        (((VALUE) == HAL_BSEC_EPOCH_COUNTER_0) || ((VALUE) == HAL_BSEC_EPOCH_COUNTER_1))
 #endif /* defined(BSEC_EPOCHSELR_EPSEL) */
 
 #if  defined(BSEC_HDPLSR_HDPL)
 #define IS_BSEC_HDPL(LEVEL)            (((LEVEL) == HAL_BSEC_HDPL_0) || ((LEVEL) == HAL_BSEC_HDPL_1) \
-                                     || ((LEVEL) == HAL_BSEC_HDPL_2) || ((LEVEL) == HAL_BSEC_HDPL_3))
+                                        || ((LEVEL) == HAL_BSEC_HDPL_2) || ((LEVEL) == HAL_BSEC_HDPL_3))
 
 #define IS_BSEC_NEXTHDPL(VALUE)        ((VALUE) <= 3U)
 #endif /* defined(BSEC_HDPLSR_HDPL) */

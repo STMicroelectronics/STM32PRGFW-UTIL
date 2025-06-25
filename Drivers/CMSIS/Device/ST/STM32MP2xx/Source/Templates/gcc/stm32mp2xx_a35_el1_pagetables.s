@@ -266,7 +266,7 @@ mair1_value:
         .endm
 
 /*--------------------------------------------------------*/
-/* MP2 (MP2) EL1 First-level table                    */
+/* MP2 EL1 First-level table                              */
 /*                                                        */
 /*   Entry 0: -> Second-level table "mp2_el1_ttb0_level2" */
 /*               (see its description hereafter)          */

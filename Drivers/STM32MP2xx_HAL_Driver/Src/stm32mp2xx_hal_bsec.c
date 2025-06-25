@@ -97,8 +97,8 @@
   */
 
 /** @defgroup BSEC_Exported_Functions_Group1 General configuration functions
- *  @brief   General configuration functions
- *
+  *  @brief   General configuration functions
+  *
 @verbatim
  ===============================================================================
                 ##### General configuration functions #####
@@ -140,7 +140,7 @@ HAL_StatusTypeDef HAL_BSEC_GetStatus(BSEC_HandleTypeDef *const pHbsec, uint32_t 
   }
 
   /* Check the address of returned value and instance */
- if ((pStatus == NULL) || (pHbsec->Instance != BSEC))
+  if ((pStatus == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -225,7 +225,7 @@ HAL_StatusTypeDef HAL_BSEC_GetErrorCode(BSEC_HandleTypeDef *const pHbsec, uint32
   }
 
   /* Check the address of returned value */
- if (pError == NULL)
+  if (pError == NULL)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -241,8 +241,8 @@ HAL_StatusTypeDef HAL_BSEC_GetErrorCode(BSEC_HandleTypeDef *const pHbsec, uint32
   */
 
 /** @defgroup BSEC_Exported_Functions_Group2 OTP fuse management functions
- *  @brief   OTP fuse management functions
- *
+  *  @brief   OTP fuse management functions
+  *
 @verbatim
  ===============================================================================
                   ##### OTP fuse management functions #####
@@ -289,7 +289,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_Read(BSEC_HandleTypeDef *const pHbsec, uint32_t F
   }
 
   /* Check the address of returned value and instance */
- if ((pFuseData == NULL) || (pHbsec->Instance != BSEC))
+  if ((pFuseData == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -343,7 +343,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_Program(BSEC_HandleTypeDef *pHbsec, uint32_t Fuse
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -365,7 +365,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_Program(BSEC_HandleTypeDef *pHbsec, uint32_t Fuse
 
       /* Perform a program of the fuse register */
       MODIFY_REG(pHbsec->Instance->OTPCR, (BSEC_OTPCR_PPLOCK | BSEC_OTPCR_PROG | BSEC_OTPCR_ADDR),
-                                         (FuseId | BSEC_OTPCR_PROG | Lock));
+                 (FuseId | BSEC_OTPCR_PROG | Lock));
 
       /* Wait the operation is finished */
       while ((pHbsec->Instance->OTPSR & BSEC_OTPSR_BUSY) != 0U)
@@ -436,7 +436,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_Reload(BSEC_HandleTypeDef *pHbsec, uint32_t FuseI
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -509,7 +509,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_Lock(BSEC_HandleTypeDef *pHbsec, uint32_t FuseId,
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -574,7 +574,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_GetState(BSEC_HandleTypeDef *const pHbsec, uint32
   }
 
   /* Check the address of returned value and instance */
- if ((pState == NULL) || (pHbsec->Instance != BSEC))
+  if ((pState == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -662,8 +662,8 @@ HAL_StatusTypeDef HAL_BSEC_OTP_GetState(BSEC_HandleTypeDef *const pHbsec, uint32
   */
 
 /** @defgroup BSEC_Exported_Functions_Group3 Shadow fuse register management functions
- *  @brief   Shadow fuse register management functions
- *
+  *  @brief   Shadow fuse register management functions
+  *
 @verbatim
  ===============================================================================
              ##### Shadow fuse register management functions #####
@@ -706,7 +706,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_ReadShadow(BSEC_HandleTypeDef *const pHbsec, uint
   }
 
   /* Check the address of returned value and instance */
- if ((pRegData == NULL) || (pHbsec->Instance != BSEC))
+  if ((pRegData == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -759,7 +759,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_WriteShadow(BSEC_HandleTypeDef *pHbsec, uint32_t 
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -822,7 +822,7 @@ HAL_StatusTypeDef HAL_BSEC_OTP_GetShadowState(BSEC_HandleTypeDef *const pHbsec, 
   }
 
   /* Check the address of returned value and instance */
- if ((pValidity == NULL) || (pHbsec->Instance != BSEC))
+  if ((pValidity == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -865,8 +865,8 @@ HAL_StatusTypeDef HAL_BSEC_OTP_GetShadowState(BSEC_HandleTypeDef *const pHbsec, 
   */
 
 /** @defgroup BSEC_Exported_Functions_Group4 Device life cycle management functions
- *  @brief   Device life cycle management functions
- *
+  *  @brief   Device life cycle management functions
+  *
 @verbatim
  ===============================================================================
                ##### Device life cycle management functions #####
@@ -908,7 +908,7 @@ HAL_StatusTypeDef HAL_BSEC_GetDeviceLifeCycleState(BSEC_HandleTypeDef *const pHb
   }
 
   /* Check the address of returned value and instance */
- if ((pState == NULL) || (pHbsec->Instance != BSEC))
+  if ((pState == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -938,7 +938,8 @@ HAL_StatusTypeDef HAL_BSEC_GetDeviceLifeCycleState(BSEC_HandleTypeDef *const pHb
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
-HAL_StatusTypeDef HAL_BSEC_ReadEpochCounter(BSEC_HandleTypeDef *const pHbsec, uint32_t CounterId, uint32_t *pCounterData)
+HAL_StatusTypeDef HAL_BSEC_ReadEpochCounter(BSEC_HandleTypeDef *const pHbsec,
+                                            uint32_t CounterId, uint32_t *pCounterData)
 {
   /* Check the handle pointer */
   if (pHbsec == NULL)
@@ -947,7 +948,7 @@ HAL_StatusTypeDef HAL_BSEC_ReadEpochCounter(BSEC_HandleTypeDef *const pHbsec, ui
   }
 
   /* Check the address of returned value and instance */
- if ((pCounterData == NULL) || (pHbsec->Instance != BSEC))
+  if ((pCounterData == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -984,7 +985,7 @@ HAL_StatusTypeDef HAL_BSEC_SelectEpochCounter(BSEC_HandleTypeDef *pHbsec, uint32
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -1034,8 +1035,8 @@ HAL_StatusTypeDef HAL_BSEC_GetEpochCounterSelection(BSEC_HandleTypeDef *const pH
   */
 #if  defined(BSEC_HDPLSR_HDPL)
 /** @defgroup BSEC_Exported_Functions_Group5 HDPL management functions
- *  @brief   HDPL management functions
- *
+  *  @brief   HDPL management functions
+  *
 @verbatim
  ===============================================================================
                      ##### HDPL management functions #####
@@ -1111,7 +1112,7 @@ HAL_StatusTypeDef HAL_BSEC_IncrementHDPLValue(BSEC_HandleTypeDef *pHbsec)
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -1140,7 +1141,7 @@ HAL_StatusTypeDef HAL_BSEC_ConfigSAESHDPLIncrementValue(BSEC_HandleTypeDef *pHbs
   }
 
   /* Check the instance */
- if (pHbsec->Instance != BSEC)
+  if (pHbsec->Instance != BSEC)
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -1188,8 +1189,8 @@ HAL_StatusTypeDef HAL_BSEC_GetSAESHDPLIncrementValue(BSEC_HandleTypeDef *const p
   */
 #endif /*defined(BSEC_HDPLSR_HDPL) */
 /** @defgroup BSEC_Exported_Functions_Group6 Scratch registers management functions
- *  @brief   Scratch registers management functions
- *
+  *  @brief   Scratch registers management functions
+  *
 @verbatim
  ===============================================================================
                ##### Scratch registers management functions #####
@@ -1217,7 +1218,8 @@ HAL_StatusTypeDef HAL_BSEC_GetSAESHDPLIncrementValue(BSEC_HandleTypeDef *const p
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
-HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t Data)
+HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec,
+                                             BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t Data)
 {
   /* Check the handle pointer */
   if (pHbsec == NULL)
@@ -1226,7 +1228,7 @@ HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec, BSEC_Sc
   }
 
   /* Check the register configuration and instance */
- if ((pRegAddr == NULL) || (pHbsec->Instance != BSEC))
+  if ((pRegAddr == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -1273,7 +1275,8 @@ HAL_StatusTypeDef HAL_BSEC_WriteScratchValue(BSEC_HandleTypeDef *pHbsec, BSEC_Sc
   *
   * @retval HAL_StatusTypeDef HAL Status
   */
-HAL_StatusTypeDef HAL_BSEC_ReadScratchValue(BSEC_HandleTypeDef *const pHbsec, BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t *pRegData)
+HAL_StatusTypeDef HAL_BSEC_ReadScratchValue(BSEC_HandleTypeDef *const pHbsec,
+                                            BSEC_ScratchRegTypeDef *const pRegAddr, uint32_t *pRegData)
 {
   /* Check the handle pointer */
   if (pHbsec == NULL)
@@ -1282,7 +1285,7 @@ HAL_StatusTypeDef HAL_BSEC_ReadScratchValue(BSEC_HandleTypeDef *const pHbsec, BS
   }
 
   /* Check the register configuration, address of returned value and instance */
- if ((pRegAddr == NULL) || (pRegData == NULL) || (pHbsec->Instance != BSEC))
+  if ((pRegAddr == NULL) || (pRegData == NULL) || (pHbsec->Instance != BSEC))
   {
     pHbsec->ErrorCode = HAL_BSEC_PARAM_ERROR;
     return HAL_ERROR;
@@ -1381,8 +1384,8 @@ HAL_StatusTypeDef HAL_BSEC_ReceiveJTAGData(BSEC_HandleTypeDef *const pHbsec, uin
   return HAL_OK;
 }
 /** @defgroup BSEC_Exported_Functions_Group8 DHUK management functions
- *  @brief   DHUK management functions
- *
+  *  @brief   DHUK management functions
+  *
 @verbatim
  ===============================================================================
                     ##### DHUK management functions #####
@@ -1494,8 +1497,8 @@ HAL_StatusTypeDef HAL_BSEC_GetDHUKLockStatus(BSEC_HandleTypeDef *const pHbsec, u
   */
 
 /** @defgroup BSEC_Exported_Functions_Group9 Reset management functions
- *  @brief   Reset management functions
- *
+  *  @brief   Reset management functions
+  *
 @verbatim
  ===============================================================================
                     ##### Reset management functions #####
@@ -1553,16 +1556,20 @@ HAL_StatusTypeDef HAL_BSEC_GetNumberResets(BSEC_HandleTypeDef *const pHbsec, uin
   * @}
   */
 /** @defgroup BSEC_Exported_Functions_Group10 Debug management functions
- *  @brief   Debug management functions
- *
+  *  @brief   Debug management functions
+  *
+  * */
 /**
-* \brief   This function gets debug signals enabled/disabled status by reading BSEC register 'BSEC_DENR'.
-* @param   [in/out] pDebugSignals  : pointer to get debug signals.
-* \return  HAL_StatusTypeDef : Returned value is either :
-*          HAL_OK if no error was encountered
-*          or HAL_ERROR in case one or several errors were encountered.
-******************************************************************************
-*/
+  * @brief   This function gets debug signals enabled/disabled status by reading BSEC register 'BSEC_DENR'.
+  *
+  * @param   pHbsec BSEC handle
+  * @param   pDebugSignals pointer to get debug signals.
+  *
+  * @retval  HAL_StatusTypeDef : Returned value is either
+  *
+  *          HAL_OK if no error was encountered
+  *          or HAL_ERROR in case one or several errors were encountered.
+  */
 HAL_StatusTypeDef HAL_BSEC_GetDebugSignals(BSEC_HandleTypeDef *const pHbsec, uint32_t *pDebugSignals)
 {
   /* Check the handle pointer */
@@ -1579,19 +1586,22 @@ HAL_StatusTypeDef HAL_BSEC_GetDebugSignals(BSEC_HandleTypeDef *const pHbsec, uin
   /* return only the part lower 16 bits with debug signals */
   *pDebugSignals = (pHbsec->Instance->DENR & BSEC_DENR_MASK);
 
-   return HAL_OK;
+  return HAL_OK;
 }
 
 /**
-* \brief   This function set debug signals in register 'BSEC_DENR'
-*          This is possible if the HAL_BSEC_DENR register is not currently sticky write locked.
-*          It is checked here.
-* @param   [in] debugSignals  : debug signals to apply to HAL_BSEC_DENR' (payload part lower 16 bits).
-* \return  HAL_StatusTypeDef : Returned value is either :
-*          HAL_OK if no error was encountered
-*          or HAL_ERROR in case one or several errors were encountered.
-******************************************************************************
-*/
+  * @brief   This function set debug signals in register 'BSEC_DENR'
+  *          This is possible if the HAL_BSEC_DENR register is not currently sticky write locked.
+  *          It is checked here.
+  *
+  * @param   pHbsec BSEC handle
+  * @param   [in] debugSignals  : debug signals to apply to HAL_BSEC_DENR' (payload part lower 16 bits).
+  *
+  * @retval  HAL_StatusTypeDef : Returned value is either :
+  *          HAL_OK if no error was encountered
+  *          or HAL_ERROR in case one or several errors were encountered.
+  ******************************************************************************
+  */
 HAL_StatusTypeDef HAL_BSEC_SetDebugSignals(BSEC_HandleTypeDef *const pHbsec, uint32_t debugSignals)
 {
   uint32_t value;
@@ -1619,13 +1629,12 @@ HAL_StatusTypeDef HAL_BSEC_SetDebugSignals(BSEC_HandleTypeDef *const pHbsec, uin
 
   /* Update the debug value */
   pHbsec->Instance->DENR = (uint32_t)value;
-  
+
   return HAL_OK;
 }
 /**
   * @}
   */
-
 /**
   * @}
   */

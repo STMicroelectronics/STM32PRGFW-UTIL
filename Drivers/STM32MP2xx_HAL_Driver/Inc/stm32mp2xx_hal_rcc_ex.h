@@ -1,18 +1,17 @@
 /**
   ******************************************************************************
-  * @file    stm32mp25_hal_rcc_ex.h
+  * @file    stm32mp2xx_hal_rcc_ex.h
   * @author  MCD Application Team
   * @brief   Header file of RCC HAL Extended  module.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -36,6 +35,10 @@ extern "C" {
   * @{
   */
 
+/** @defgroup RCCEx_Exported_Constants RCCEx Exported Constants
+  * @{
+  */
+
 /** @defgroup RCCEx_RCC_BootCx RCC BootCx
   * @{
   */
@@ -53,14 +56,26 @@ extern "C" {
 /** @defgroup RCCEx_RCC_XBar RCC XBar Div
   * @{
   */
-#define IS_RCC_XBARDIV(__DIV__) ((((__DIV__) >=    1UL) && ((__DIV__) <=    64UL)) || \
-                                 (((__DIV__) >=    2UL) && ((__DIV__) <=   128UL) && (((__DIV__) %    2UL) == 0UL)) || \
-                                 (((__DIV__) >=    4UL) && ((__DIV__) <=   256UL) && (((__DIV__) %    4UL) == 0UL)) || \
-                                 (((__DIV__) >= 1024UL) && ((__DIV__) <= 65536UL) && (((__DIV__) % 1024UL) == 0UL)))
+#define RCC_XBAR_DIV_POS1       1UL
+#define RCC_XBAR_DIV_POS2       2UL
+#define RCC_XBAR_DIV_POS4       4UL
+#define RCC_XBAR_DIV_POS64      64UL
+#define RCC_XBAR_DIV_POS128     128UL
+#define RCC_XBAR_DIV_POS256     256UL
+#define RCC_XBAR_DIV_POS1024    1024UL
+#define RCC_XBAR_DIV_POS65536   65536UL
 
+#define IS_RCC_XBARDIV(__DIV__) ((((__DIV__) >= RCC_XBAR_DIV_POS1)    && ((__DIV__) <=    RCC_XBAR_DIV_POS64)) || \
+                                 (((__DIV__) >= RCC_XBAR_DIV_POS2)    && ((__DIV__) <=   RCC_XBAR_DIV_POS128)  && \
+                                  (((__DIV__) %    RCC_XBAR_DIV_POS2) == 0UL)) || \
+                                 (((__DIV__) >= RCC_XBAR_DIV_POS4)    && ((__DIV__) <=   RCC_XBAR_DIV_POS256)  && \
+                                  (((__DIV__) %    RCC_XBAR_DIV_POS4) == 0UL)) || \
+                                 (((__DIV__) >= RCC_XBAR_DIV_POS1024) && ((__DIV__) <= RCC_XBAR_DIV_POS65536) && \
+                                  (((__DIV__) % RCC_XBAR_DIV_POS1024) == 0UL)))
+#if defined(RCC_D3DCR_D3PERCKSEL)
 #define IS_RCC_D3_SOURCE(SOURCE) (((SOURCE) == RCC_D3SOURCE_MSI) || ((SOURCE) == RCC_D3SOURCE_LSI) || \
                                   ((SOURCE) == RCC_D3SOURCE_LSE))
-
+#endif /* RCC_D3DCR_D3PERCKSEL */
 /**
   * @}
   */
@@ -75,57 +90,6 @@ extern "C" {
 #define A35_SOURCE_PLL1           0x0U
 #define A35_SOURCE_EXT            0x1U
 #endif /* CORE_CA35 */
-
-#if defined(CORE_CA35)
-// To be moved to CMSIS Device
-#define CA35SS_BASE  0x48800000
-
-typedef struct
-{
-  /* PLL1 registers - not in RCC */
-	  __IO uint32_t CA35SS_SSC_CHGCLKREQ_RW;
-	  __IO uint32_t CA35SS_SSC_CHGCLKREQ_WS1;
-	  __IO uint32_t CA35SS_SSC_CHGCLKREQ_WC1;
-	  uint32_t RESERVED1[29];
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ1_RW;
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ1_WS1;
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ1_WC1;
-	  uint32_t RESERVED2[1];
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ2_RW;
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ2_WS1;
-	  __IO uint32_t CA35SS_SSC_PLL_FREQ2_WC1;
-	  uint32_t RESERVED3[1];
-	  __IO uint32_t CA35SS_SSC_PLL_ENABLE_RW;
-	  __IO uint32_t CA35SS_SSC_PLL_ENABLE_WS1;
-	  __IO uint32_t CA35SS_SSC_PLL_ENABLE_WC1;
-} PLL1_Typedef;
-
-#define PLL1_Control          ((PLL1_Typedef*)CA35SS_BASE)
-#define CA35SS_ARMCHGCLKREQ_Pos    0
-#define CA35SS_ARMCHGCLKREQ_Msk   (0x1 << CA35SS_ARMCHGCLKREQ_Pos)
-#define CA35SS_ARMCHGCLKREQ        CA35SS_ARMCHGCLKREQ_Msk
-#define CA35SS_ARMCHGCLKACK_Pos    1
-#define CA35SS_ARMCHGCLKACK_Msk   (0x1 << CA35SS_ARMCHGCLKACK_Pos)
-#define CA35SS_ARMCHGCLKACK        CA35SS_ARMCHGCLKACK_Msk
-#define CA35SS_PLLEN_Pos           0
-#define CA35SS_PLLEN_Msk          (0x1 << CA35SS_PLLEN_Pos)
-#define CA35SS_PLLEN               CA35SS_PLLEN_Msk
-#define CA35SS_PLLRST_Pos          2
-#define CA35SS_PLLRST_Msk         (0x1 << CA35SS_PLLRST_Pos)
-#define CA35SS_PLLRST              CA35SS_PLLRST_Msk
-#define CA35SS_FBDIV_Pos           0
-#define CA35SS_FBDIV_Msk           (0xFFF << CA35SS_FBDIV_Pos)
-#define CA35SS_FBDIV               CA35SS_FBDIV_Msk
-#define CA35SS_REFDIV_Pos          16
-#define CA35SS_REFDIV_Msk         (0x3F << CA35SS_REFDIV_Pos)
-#define CA35SS_REFDIV              CA35SS_REFDIV_Msk
-#define CA35SS_POSTDIV1_Pos        0
-#define CA35SS_POSTDIV1_Msk        (0x7 << CA35SS_POSTDIV1_Pos)
-#define CA35SS_POSTDIV1            CA35SS_POSTDIV1_Msk
-#define CA35SS_POSTDIV2_Pos        3
-#define CA35SS_POSTDIV2_Msk       (0x7 << CA35SS_POSTDIV2_Pos)
-#define CA35SS_POSTDIV2            CA35SS_POSTDIV2_Msk
-#endif
 
 /** @defgroup RCC_PLL_State  RCC PLL State
   * @{
@@ -163,13 +127,17 @@ typedef struct
 /**
   * @}
   */
-
+#if defined(RCC_D3DCR_D3PERCKSEL)
 /** @defgroup RCC_D3_Clock_Source  RCC D3 Clock Source
   * @{
   */
 #define RCC_D3SOURCE_MSI       0x00000000U
 #define RCC_D3SOURCE_LSI       RCC_D3DCR_D3PERCKSEL_0
 #define RCC_D3SOURCE_LSE       RCC_D3DCR_D3PERCKSEL_1
+/**
+  * @}
+  */
+#endif /* RCC_D3DCR_D3PERCKSEL */
 /**
   * @}
   */
@@ -205,6 +173,22 @@ typedef struct
 
 #define RCC_PeriphCLKInitTypeDef        RCC_FlexgenTypeDef
 
+
+/**
+  * @brief Clock observer structure definition.
+  */
+typedef struct
+{
+  uint32_t      Enable;         /*!< To enable or disable the observer */
+  uint32_t      RCC_MCOx;       /*!< To select the MCO instance */
+  uint32_t      RCC_MCOSource;  /*!< To select the MCO source */
+  uint32_t      RCC_MCODiv;     /*!< To select the MCO division factor */
+  uint32_t      ObsDiv;         /*!< To select the observer division factor */
+  uint32_t      ObsInv;         /*!< To select the observer inversion */
+  uint32_t      ObsType;        /*!< To select oscillator or flexgen observation */
+  uint32_t      ClockType;      /*!< To select the internal or external clock */
+} RCC_ObserverTypeDef;
+
 /**
   * @}
   */
@@ -214,9 +198,88 @@ typedef struct
   * @{
   */
 
+/** @defgroup RCCEx_ConfigureClockObserver  RCCEx Configure Clock Observer
+  * @{
+  */
+#define RCC_FLEXGEN0                    0U
+#define RCC_FLEXGEN1                    1U
+#define RCC_FLEXGEN2                    2U
+#define RCC_FLEXGEN3                    3U
+#define RCC_FLEXGEN4                    4U
+#define RCC_FLEXGEN5                    5U
+#define RCC_FLEXGEN6                    6U
+#define RCC_HSICK                       0U
+#define RCC_HSECK                       1U
+#define RCC_MSICK                       2U
+#if defined(RCC_PLL3CFGR1_PLLEN)
+#define RCC_PLL4REF                     5U
+#define RCC_PLL5REF                     6U
+#define RCC_PLL6REF                     7U
+#define RCC_PLL7REF                     8U
+#define RCC_PLL8REF                     9U
+#define RCC_PLL1REF                     10U
+#define RCC_PLL2REF                     11U
+#define RCC_PLL3REF                     12U
+#else
+#define RCC_PLL4REF                     6U
+#define RCC_PLL5REF                     7U
+#define RCC_PLL6REF                     8U
+#define RCC_PLL7REF                     9U
+#define RCC_PLL8REF                     10U
+#define RCC_PLL1REF                     11U
+#define RCC_PLL2REF                     12U
+#endif /* RCC_PLL3CFGR1_PLLEN */
+#define RCC_PLL4OUT                     64U
+#define RCC_PLL5OUT                     65U
+#define RCC_PLL6OUT                     66U
+#define RCC_PLL7OUT                     67U
+#define RCC_PLL8OUT                     68U
+#define RCC_HSIKER                      128U
+#define RCC_HSEKER                      129U
+#define RCC_MSIKER                      130U
+#define RCC_SPDIF                       131U
+#define RCC_I2S                         132U
+#define RCC_LSICK                       133U
+#define RCC_LSECK                       134U
+#define RCC_XBARFSM                     135U
+#define RCC_ICN_P_RCC                   136U
+
+#define RCC_PLL1DIV42                   0U
+#define RCC_PLL2DIV4                    1U
+#if defined(RCC_PLL3CFGR1_PLLEN)
+#define RCC_PLL3DIV2                    2U
+#endif /* RCC_PLL3CFGR1_PLLEN */
+#define RCC_USB2PHY1                    3U
+#define RCC_USB2PHY2                    4U
+#define RCC_USB3PCIEPHY                 5U
+#define RCC_LVDSPHY                     6U
+#define RCC_DSIPHY                      7U
+
+#define RCC_FLEXGEN_OBS         0x00000000U
+#define RCC_OSC_OBS             0x00000001U
+#define RCC_INTERNAL_OBS        0x00000001U
+#define RCC_EXTERNAL_OBS        0x00000002U
+#define RCC_CLOCKOBS_OFF        0x00000000U
+#define RCC_CLOCKOBS_ON         0x00000001U
+#define RCC_CLOCKOBS_NOT_INV    0x00000000U
+#define RCC_CLOCKOBS_INV        0x00000001U
+
+#define RCC_OBS_DIV1           0x00000000U
+#define RCC_OBS_DIV2           0x00000001U
+#define RCC_OBS_DIV4           0x00000002U
+#define RCC_OBS_DIV8           0x00000003U
+#define RCC_OBS_DIV16          0x00000004U
+#define RCC_OBS_DIV32          0x00000005U
+#define RCC_OBS_DIV64          0x00000006U
+#define RCC_OBS_DIV128         0x00000007U
+/**
+  * @}
+  */
+
 /** @defgroup RCCEx_Periph_Clock_Selection  RCCEx Periph Clock Selection
   * @{
   */
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 #define RCC_PERIPHCLK_LPTIM1_2          7U
 #define RCC_PERIPHCLK_UART2_4           8U
 #define RCC_PERIPHCLK_UART3_5           9U
@@ -293,17 +356,229 @@ typedef struct
 #define RCC_PERIPHCLK_TIM16             78U
 #define RCC_PERIPHCLK_TIM17             79U
 #define RCC_PERIPHCLK_TIM20             80U
+#else
+#define RCC_PERIPHCLK_LPTIM1_2          7U
+#define RCC_PERIPHCLK_UART2_4           8U
+#define RCC_PERIPHCLK_UART3_5           9U
+#define RCC_PERIPHCLK_SPI2              10U
+#define RCC_PERIPHCLK_SPI3              11U
+#define RCC_PERIPHCLK_SPDIFRX           12U
+#define RCC_PERIPHCLK_I2C1_2            13U
+#define RCC_PERIPHCLK_I3C1_2            14U
+#define RCC_RESERVED0                   15U
+#define RCC_PERIPHCLK_SPI1              16U
+#define RCC_PERIPHCLK_SPI4_5            17U
+#define RCC_PERIPHCLK_USART1            18U
+#define RCC_PERIPHCLK_USART6            19U
+#define RCC_PERIPHCLK_UART7             20U
+#define RCC_PERIPHCLK_MDF1              21U
+#define RCC_PERIPHCLK_SAI1              22U
+#define RCC_PERIPHCLK_SAI2              23U
+#define RCC_PERIPHCLK_SAI3              24U
+#define RCC_PERIPHCLK_SAI4              25U
+#define RCC_PERIPHCLK_FDCAN             26U
+#define RCC_PERIPHCLK_LTDC              27U
+#define RCC_RESERVED1                   28U
+#define RCC_PERIPHCLK_DCMIPP            29U
+#define RCC_PERIPHCLK_CSITXESC          30U
+#define RCC_PERIPHCLK_CSIPHY            31U
+#define RCC_RESERVED2                   32U
+#define RCC_PERIPHCLK_STGEN             33U
+#define RCC_RESERVED3                   34U
+#define RCC_RESERVED4                   35U
+#define RCC_PERIPHCLK_I3C3              36U
+#define RCC_PERIPHCLK_SPI6              37U
+#define RCC_PERIPHCLK_I2C3              38U
+#define RCC_PERIPHCLK_LPUART1           39U
+#define RCC_PERIPHCLK_LPTIM3            40U
+#define RCC_PERIPHCLK_LPTIM4            41U
+#define RCC_PERIPHCLK_LPTIM5            42U
+#define RCC_PERIPHCLK_TSDBG             43U
+#define RCC_PERIPHCLK_TPIU              44U
+#define RCC_PERIPHCLK_ATB               45U
+#define RCC_PERIPHCLK_ADC1              46U
+#define RCC_PERIPHCLK_ADC2              47U
+#define RCC_PERIPHCLK_OSPI1             48U
+#define RCC_RESERVED5                   49U
+#define RCC_PERIPHCLK_FMC               50U
+#define RCC_PERIPHCLK_SDMMC1            51U
+#define RCC_PERIPHCLK_SDMMC2            52U
+#define RCC_PERIPHCLK_SDMMC3            53U
+#define RCC_PERIPHCLK_ETH1              54U
+#define RCC_PERIPHCLK_ETH2              55U
+#define RCC_PERIPHCLK_ETH1PTP_ETH2PTP   56U
+#define RCC_PERIPHCLK_USB2PHY1          57U
+#define RCC_PERIPHCLK_USB2PHY2          58U
+#define RCC_RESERVED6                   59U
+#define RCC_RESERVED7                   60U
+#define RCC_PERIPHCLK_MCO1              61U
+#define RCC_PERIPHCLK_MCO2              62U
+#define RCC_PERIPHCLK_CPU1_EXT2F        63U
+#define RCC_PERIPHCLK_TIM1              64U
+#define RCC_PERIPHCLK_TIM2              65U
+#define RCC_PERIPHCLK_TIM3              66U
+#define RCC_PERIPHCLK_TIM4              67U
+#define RCC_PERIPHCLK_TIM5              68U
+#define RCC_PERIPHCLK_TIM6              69U
+#define RCC_PERIPHCLK_TIM7              70U
+#define RCC_PERIPHCLK_TIM8              71U
+#define RCC_PERIPHCLK_TIM10             72U
+#define RCC_PERIPHCLK_TIM11             73U
+#define RCC_PERIPHCLK_TIM12             74U
+#define RCC_PERIPHCLK_TIM13             75U
+#define RCC_PERIPHCLK_TIM14             76U
+#define RCC_PERIPHCLK_TIM15             77U
+#define RCC_PERIPHCLK_TIM16             78U
+#define RCC_PERIPHCLK_TIM17             79U
+#endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 /**
   * @}
   */
 
+/** @defgroup RCCEx_FrequencyCalculator_ReferenceClockSelection  RCCEx FCALC Reference Clock Selection
+  * @{
+  */
+#define RCC_FCALC_PLL4REFCLOCK       0U
+#define RCC_FCALC_PLL5REFCLOCK       1U
+#define RCC_FCALC_PLL6REFCLOCK       2U
+#define RCC_FCALC_PLL7REFCLOCK       3U
+#define RCC_FCALC_PLL8REFCLOCK       4U
+/**
+  * @}
+  */
+
+/** @defgroup RCCEx_FrequencyCalculator_ObservationClockSelection  RCCEx FCALC Observation Clock Selection
+  * @{
+  */
+#define RCC_FCALC_INTOBSCLK_HSI_CK          0x000U
+#define RCC_FCALC_INTOBSCLK_HSE_CK          0x001U
+#define RCC_FCALC_INTOBSCLK_MSI_CK          0x002U
+
+#if defined(RCC_PLL3CFGR1_PLLEN)
+#define RCC_FCALC_INTOBSCLK_PLL4REF_CK      0x005U
+#define RCC_FCALC_INTOBSCLK_PLL5REF_CK      0x006U
+#define RCC_FCALC_INTOBSCLK_PLL6REF_CK      0x007U
+#define RCC_FCALC_INTOBSCLK_PLL7REF_CK      0x008U
+#define RCC_FCALC_INTOBSCLK_PLL8REF_CK      0x009U
+#define RCC_FCALC_INTOBSCLK_PLL1REF_CK      0x00AU
+#define RCC_FCALC_INTOBSCLK_PLL2REF_CK      0x00BU
+#define RCC_FCALC_INTOBSCLK_PLL3REF_CK      0x00CU
+#else
+#define RCC_FCALC_INTOBSCLK_PLL4REF_CK      0x006U
+#define RCC_FCALC_INTOBSCLK_PLL5REF_CK      0x007U
+#define RCC_FCALC_INTOBSCLK_PLL6REF_CK      0x008U
+#define RCC_FCALC_INTOBSCLK_PLL7REF_CK      0x009U
+#define RCC_FCALC_INTOBSCLK_PLL8REF_CK      0x00AU
+#define RCC_FCALC_INTOBSCLK_PLL1REF_CK      0x00BU
+#define RCC_FCALC_INTOBSCLK_PLL2REF_CK      0x00CU
+#endif /* RCC_PLL3CFGR1_PLLEN */
+
+#define RCC_FCALC_INTOBSCLK_PLL4OUT_CK      0x040U
+#define RCC_FCALC_INTOBSCLK_PLL5OUT_CK      0x041U
+#define RCC_FCALC_INTOBSCLK_PLL6OUT_CK      0x042U
+#define RCC_FCALC_INTOBSCLK_PLL7OUT_CK      0x043U
+#define RCC_FCALC_INTOBSCLK_PLL8OUT_CK      0x044U
+
+#define RCC_FCALC_INTOBSCLK_HSI_KER_CK      0x080U
+#define RCC_FCALC_INTOBSCLK_HSE_KER_CK      0x081U
+#define RCC_FCALC_INTOBSCLK_MSI_KER_CK      0x082U
+#define RCC_FCALC_INTOBSCLK_SPDIF_SYMB_CK   0x083U
+#define RCC_FCALC_INTOBSCLK_I2S_CK          0x084U
+#define RCC_FCALC_INTOBSCLK_LSI_CK          0x085U
+#define RCC_FCALC_INTOBSCLK_LSE_CK          0x086U
+#define RCC_FCALC_INTOBSCLK_CK_XBAR_FSM     0x087U
+#define RCC_FCALC_INTOBSCLK_CK_ICN_P_RCC    0x088U
+
+#define RCC_FCALC_INTOBSCLK_FINDDIV0        0x0C0U
+#define RCC_FCALC_INTOBSCLK_FINDDIV1        0x0C1U
+#define RCC_FCALC_INTOBSCLK_FINDDIV2        0x0C2U
+#define RCC_FCALC_INTOBSCLK_FINDDIV3        0x0C3U
+#define RCC_FCALC_INTOBSCLK_FINDDIV4        0x0C4U
+#define RCC_FCALC_INTOBSCLK_FINDDIV5        0x0C5U
+#define RCC_FCALC_INTOBSCLK_FINDDIV6        0x0C6U
+#define RCC_FCALC_INTOBSCLK_FINDDIV7        0x0C7U
+#define RCC_FCALC_INTOBSCLK_FINDDIV8        0x0C8U
+#define RCC_FCALC_INTOBSCLK_FINDDIV9        0x0C9U
+#define RCC_FCALC_INTOBSCLK_FINDDIV10       0x0CAU
+#define RCC_FCALC_INTOBSCLK_FINDDIV11       0x0CBU
+#define RCC_FCALC_INTOBSCLK_FINDDIV12       0x0CCU
+#define RCC_FCALC_INTOBSCLK_FINDDIV13       0x0CDU
+#define RCC_FCALC_INTOBSCLK_FINDDIV14       0x0CEU
+#define RCC_FCALC_INTOBSCLK_FINDDIV15       0x0CFU
+#define RCC_FCALC_INTOBSCLK_FINDDIV16       0x0D0U
+#define RCC_FCALC_INTOBSCLK_FINDDIV17       0x0D1U
+#define RCC_FCALC_INTOBSCLK_FINDDIV18       0x0D2U
+#define RCC_FCALC_INTOBSCLK_FINDDIV19       0x0D3U
+#define RCC_FCALC_INTOBSCLK_FINDDIV20       0x0D4U
+#define RCC_FCALC_INTOBSCLK_FINDDIV21       0x0D5U
+#define RCC_FCALC_INTOBSCLK_FINDDIV22       0x0D6U
+#define RCC_FCALC_INTOBSCLK_FINDDIV23       0x0D7U
+#define RCC_FCALC_INTOBSCLK_FINDDIV24       0x0D8U
+#define RCC_FCALC_INTOBSCLK_FINDDIV25       0x0D9U
+#define RCC_FCALC_INTOBSCLK_FINDDIV26       0x0DAU
+#define RCC_FCALC_INTOBSCLK_FINDDIV27       0x0DBU
+#define RCC_FCALC_INTOBSCLK_FINDDIV28       0x0DCU
+#define RCC_FCALC_INTOBSCLK_FINDDIV29       0x0DDU
+#define RCC_FCALC_INTOBSCLK_FINDDIV30       0x0DEU
+#define RCC_FCALC_INTOBSCLK_FINDDIV31       0x0DFU
+#define RCC_FCALC_INTOBSCLK_FINDDIV32       0x0E0U
+#define RCC_FCALC_INTOBSCLK_FINDDIV33       0x0E1U
+#define RCC_FCALC_INTOBSCLK_FINDDIV34       0x0E2U
+#define RCC_FCALC_INTOBSCLK_FINDDIV35       0x0E3U
+#define RCC_FCALC_INTOBSCLK_FINDDIV36       0x0E4U
+#define RCC_FCALC_INTOBSCLK_FINDDIV37       0x0E5U
+#define RCC_FCALC_INTOBSCLK_FINDDIV38       0x0E6U
+#define RCC_FCALC_INTOBSCLK_FINDDIV39       0x0E7U
+#define RCC_FCALC_INTOBSCLK_FINDDIV40       0x0E8U
+#define RCC_FCALC_INTOBSCLK_FINDDIV41       0x0E9U
+#define RCC_FCALC_INTOBSCLK_FINDDIV42       0x0EAU
+#define RCC_FCALC_INTOBSCLK_FINDDIV43       0x0EBU
+#define RCC_FCALC_INTOBSCLK_FINDDIV44       0x0ECU
+#define RCC_FCALC_INTOBSCLK_FINDDIV45       0x0EDU
+#define RCC_FCALC_INTOBSCLK_FINDDIV46       0x0EEU
+#define RCC_FCALC_INTOBSCLK_FINDDIV47       0x0EFU
+#define RCC_FCALC_INTOBSCLK_FINDDIV48       0x0F0U
+#define RCC_FCALC_INTOBSCLK_FINDDIV49       0x0F1U
+#define RCC_FCALC_INTOBSCLK_FINDDIV50       0x0F2U
+#define RCC_FCALC_INTOBSCLK_FINDDIV51       0x0F3U
+#define RCC_FCALC_INTOBSCLK_FINDDIV52       0x0F4U
+#define RCC_FCALC_INTOBSCLK_FINDDIV53       0x0F5U
+#define RCC_FCALC_INTOBSCLK_FINDDIV54       0x0F6U
+#define RCC_FCALC_INTOBSCLK_FINDDIV55       0x0F7U
+#define RCC_FCALC_INTOBSCLK_FINDDIV56       0x0F8U
+#define RCC_FCALC_INTOBSCLK_FINDDIV57       0x0F9U
+#define RCC_FCALC_INTOBSCLK_FINDDIV58       0x0FAU
+#define RCC_FCALC_INTOBSCLK_FINDDIV59       0x0FBU
+#define RCC_FCALC_INTOBSCLK_FINDDIV60       0x0FCU
+#define RCC_FCALC_INTOBSCLK_FINDDIV61       0x0FDU
+#define RCC_FCALC_INTOBSCLK_FINDDIV62       0x0FEU
+#define RCC_FCALC_INTOBSCLK_FINDDIV63       0x0FFU
+
+#define RCC_FCALC_EXTOBSCLK_PLL1DIV42       0x100U
+#define RCC_FCALC_EXTOBSCLK_PLL2DIV4        0x101U
+#if defined(RCC_PLL3CFGR1_PLLEN)
+#define RCC_FCALC_EXTOBSCLK_PLL3DIV2        0x102U
+#endif /* RCC_PLL3CFGR1_PLLEN */
+#define RCC_FCALC_EXTOBSCLK_USB2PHY1PLL     0x103U
+#define RCC_FCALC_EXTOBSCLK_USB2PHY2PLL     0x104U
+#define RCC_FCALC_EXTOBSCLK_USB3PCIEPHYPLL  0x105U
+#define RCC_FCALC_EXTOBSCLK_LVDSPHYPLL      0x106U
+#define RCC_FCALC_EXTOBSCLK_DSIPHYPLL       0x107U
+/**
+  * @}
+  */
+/**
+  * @}
+  */
 /* Exported macros -----------------------------------------------------------*/
 /** @defgroup RCCEx_Exported_Macros RCCEx Exported Macros
   * @{
   */
-
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
-/** @addtogroup RCCEx_Exported_Functions
+/** @addtogroup RCCEx_Exported_Functions RCCEx Exported Functions
   * @{
   */
 
@@ -311,8 +586,8 @@ typedef struct
   * @{
   */
 
-HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit);
-void              HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit);
+HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(const RCC_PeriphCLKInitTypeDef  *pPeriphClkInit);
+void              HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *pPeriphClkInit);
 uint32_t          HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk);
 uint32_t          HAL_RCCEx_GetTimerCLKFreq(uint32_t TimerId);
 
@@ -328,7 +603,9 @@ uint32_t HAL_RCCEx_GetD3ClockSource(void);
 HAL_StatusTypeDef HAL_RCCEx_CA35SS_PLL1Config(const RCC_PLLInitTypeDef *pll_config);
 #endif /* CORE_CA35 */
 HAL_StatusTypeDef HAL_RCCEx_PLL2Config(RCC_PLLInitTypeDef *pll_config);
+#if defined(RCC_PLL3CFGR1_PLLEN)
 HAL_StatusTypeDef HAL_RCCEx_PLL3Config(RCC_PLLInitTypeDef *pll_config);
+#endif /* RCC_PLL3CFGR1_PLLEN */
 HAL_StatusTypeDef HAL_RCCEx_PLL4Config(RCC_PLLInitTypeDef *pll_config);
 HAL_StatusTypeDef HAL_RCCEx_PLL5Config(RCC_PLLInitTypeDef *pll_config);
 HAL_StatusTypeDef HAL_RCCEx_PLL6Config(RCC_PLLInitTypeDef *pll_config);
@@ -339,7 +616,9 @@ HAL_StatusTypeDef HAL_RCCEx_PLL8Config(RCC_PLLInitTypeDef *pll_config);
 void              HAL_RCCEx_CA35SS_GetPLL1Config(RCC_PLLInitTypeDef *pll_config);
 #endif /* CORE_CA35 */
 void              HAL_RCCEx_GetPLL2Config(RCC_PLLInitTypeDef  *pll_config);
+#if defined(RCC_PLL3CFGR1_PLLEN)
 void              HAL_RCCEx_GetPLL3Config(RCC_PLLInitTypeDef  *pll_config);
+#endif /* RCC_PLL3CFGR1_PLLEN */
 void              HAL_RCCEx_GetPLL4Config(RCC_PLLInitTypeDef  *pll_config);
 void              HAL_RCCEx_GetPLL5Config(RCC_PLLInitTypeDef  *pll_config);
 void              HAL_RCCEx_GetPLL6Config(RCC_PLLInitTypeDef  *pll_config);
@@ -350,14 +629,16 @@ void              HAL_RCCEx_GetPLL8Config(RCC_PLLInitTypeDef  *pll_config);
 uint32_t          HAL_RCCEx_CA35SS_GetPLL1ClockFreq(void);
 #endif /* CORE_CA35 */
 uint32_t          HAL_RCCEx_GetPLL2ClockFreq(void);
+#if defined(RCC_PLL3CFGR1_PLLEN)
 uint32_t          HAL_RCCEx_GetPLL3ClockFreq(void);
+#endif /* RCC_PLL3CFGR1_PLLEN */
 uint32_t          HAL_RCCEx_GetPLL4ClockFreq(void);
 uint32_t          HAL_RCCEx_GetPLL5ClockFreq(void);
 uint32_t          HAL_RCCEx_GetPLL6ClockFreq(void);
 uint32_t          HAL_RCCEx_GetPLL7ClockFreq(void);
 uint32_t          HAL_RCCEx_GetPLL8ClockFreq(void);
 
-int HAL_RCCEx_MeasureClockFreq(uint32_t clk_id, uint32_t ref_id, uint32_t *freq);
+int32_t HAL_RCCEx_MeasureClockFreq(uint32_t clk_id, uint32_t ref_id, uint32_t *freq);
 
 #if defined(CORE_CA35)
 void HAL_RCCEx_EnableBootCore(uint32_t RCC_BootCx);
@@ -379,6 +660,7 @@ void              HAL_RCCEx_EnableHSECSS(void);
 void              HAL_RCCEx_DisableHSECSS(void);
 void              HAL_RCCEx_LSECSS_IRQHandler(void);
 void              HAL_RCCEx_LSECSS_Callback(void);
+void              HAL_RCCEx_ConfigureClockObserver(uint32_t PeriphClk, RCC_ObserverTypeDef *OBSConf);
 
 /**
   * @}

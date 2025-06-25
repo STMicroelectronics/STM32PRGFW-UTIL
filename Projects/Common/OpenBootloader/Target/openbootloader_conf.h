@@ -34,6 +34,8 @@
 #define DEVICE_ID_LSB                     0x01U  /* LSB byte of device ID */
 #elif defined (STM32MP257Cxx)
 #define DEVICE_ID_LSB                     0x05U  /* LSB byte of device ID */
+#elif defined (STM32MP215Fxx)
+#define DEVICE_ID_LSB                     0x03U  /* LSB byte of device ID */
 #endif
 
 /* -------------------------- Definitions for Memories ---------------------- */
@@ -55,6 +57,11 @@
 #else
 #define BOOT_SEL_ITF_ADDRESS              (0x20000044 + 0x20)                   /* Boot selected interface Address */
 #endif /* CONFIG_STM32MP25X_REVA */
+#define OPENBL_RAM_SIZE                   (160U * 1024U)                        /* Start downloading after this project memory space used */
+#elif defined (STM32MP215Fxx)
+#define RAM_START_ADDRESS                 0x20006000                           /* Start of RAM for OpenBL application use */
+#define RAM_SIZE                          (232U * 1024U)                       /* Size of RAM */
+#define BOOT_SEL_ITF_ADDRESS              (0x20000044 + 0x20)                   /* Boot selected interface Address */
 #define OPENBL_RAM_SIZE                   (160U * 1024U)                        /* Start downloading after this project memory space used */
 #endif
 

@@ -82,9 +82,9 @@ uint8_t *USB_DFU_If_Read(uint32_t alt, uint8_t *pDest, uint32_t Len, uint32_t Bl
 
   if (Len > partition_size)
   {
-	  ((USBD_DFU_HandleTypeDef *)hUsbDeviceHS.pClassDataCmsit[0])->wlength =
-			  partition_size;
-	  Len = partition_size;
+    ((USBD_DFU_HandleTypeDef *)hUsbDeviceHS.pClassDataCmsit[0])->wlength =
+      partition_size;
+    Len = partition_size;
   }
 
   return OPENBL_USB_ReadMemory(alt, pDest, Len, BlockNumber);
@@ -110,43 +110,46 @@ uint16_t USB_DFU_If_DeInit(void)
 
 static inline uint32_t USBD_DFU_GetPartSize(uint8_t alt, uint32_t blocknumber)
 {
-	uint32_t part_size = USBD_DFU_XFER_SIZE;
+  uint32_t part_size = USBD_DFU_XFER_SIZE;
 
-  switch(alt)
+  switch (alt)
   {
-				  case 0:
-					  part_size =  FL_DESC_PARTSIZE;
-					  break;
-				  case 1:
-					  part_size = FSBL_EXT_PARTSIZE;
-					  break;
-				  case 2:
-					  part_size =  FSBL_APP_DESC_PARTSIZE;
-					  break;
-				  case 3:
-					  part_size = VIRTUAL_DESC_SIZE;
-					  break;
-				  case 4:
-					  part_size = OTP_DESC_PARTSIZE;
-					  break;
-				  case 5:
-					  part_size = ((pmic_nvm_str[14] - 0x30) * 10) + (pmic_nvm_str[15] - 0x30);
-					  break;
+    case 0:
+      part_size =  FL_DESC_PARTSIZE;
+      break;
+    case 1:
+      part_size = FSBL_EXT_PARTSIZE;
+      break;
+    case 2:
+      part_size =  FSBL_APP_DESC_PARTSIZE;
+      break;
+    case 3:
+      part_size = VIRTUAL_DESC_SIZE;
+      break;
+    case 4:
+      part_size = OTP_DESC_PARTSIZE;
+      break;
+    case 5:
+      part_size = ((pmic_nvm_str[14] - 0x30) * 10) + (pmic_nvm_str[15] - 0x30);
+      break;
 
-				  default:
-					  break;
+    default:
+      break;
   }
 
   if ((((blocknumber + 1) * USBD_DFU_XFER_SIZE) < part_size) || (part_size == USBD_DFU_XFER_SIZE))
+  {
     return USBD_DFU_XFER_SIZE;
+  }
   else if (part_size > (blocknumber * USBD_DFU_XFER_SIZE))
   {
-	return (part_size - (blocknumber * USBD_DFU_XFER_SIZE));
+    return (part_size - (blocknumber * USBD_DFU_XFER_SIZE));
   }
   else
   {
-	return part_size;
+    return part_size;
   }
 
   return 0;
 }
+

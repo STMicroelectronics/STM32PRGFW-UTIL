@@ -21,7 +21,7 @@
 #define PLATFORM_H
 
 /* Includes ------------------------------------------------------------------*/
-#if defined (STM32MP257Cxx)
+#if defined (STM32MP257Cxx) || defined (STM32MP215Fxx)
 #include "stm32mp2xx_hal.h"
 #include "stm32mp2xx_ll_usart.h"
 #include "stm32mp2xx_hal_conf.h"
