@@ -20,6 +20,7 @@
 #include "main.h"
 #if defined (__CONSOLE__)
 #include "mainmenu_interface_cli.h"
+#include "console_util.h"
 #else
 #include "usb_device.h"
 #endif /* __CONSOLE__ */

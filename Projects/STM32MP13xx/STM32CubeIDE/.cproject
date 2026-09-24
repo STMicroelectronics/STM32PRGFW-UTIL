@@ -48,8 +48,8 @@
 									<listOptionValue builtIn="false" value="../../"/>
 									<listOptionValue builtIn="false" value="../../Core/Inc"/>
 									<listOptionValue builtIn="false" value="../../../Common/Core/Inc"/>
-									<listOptionValue builtIn="false" value="../../../Common/Openbootloader/Target"/>
-									<listOptionValue builtIn="false" value="../../../Common/Openbootloader/App"/>
+									<listOptionValue builtIn="false" value="../../../Common/OpenBootloader/Target"/>
+									<listOptionValue builtIn="false" value="../../../Common/OpenBootloader/App"/>
 									<listOptionValue builtIn="false" value="../../../Common/USB_Device/Target"/>
 									<listOptionValue builtIn="false" value="../../../Common/USB_Device/App"/>
 									<listOptionValue builtIn="false" value="../../../../Drivers/CMSIS/Core_A/Include"/>
@@ -157,8 +157,8 @@
 									<listOptionValue builtIn="false" value="../../"/>
 									<listOptionValue builtIn="false" value="../../Core/Inc"/>
 									<listOptionValue builtIn="false" value="../../../Common/Core/Inc"/>
-									<listOptionValue builtIn="false" value="../../../Common/Openbootloader/Target"/>
-									<listOptionValue builtIn="false" value="../../../Common/Openbootloader/App"/>
+									<listOptionValue builtIn="false" value="../../../Common/OpenBootloader/Target"/>
+									<listOptionValue builtIn="false" value="../../../Common/OpenBootloader/App"/>
 									<listOptionValue builtIn="false" value="../../../Common/USB_Device/Target"/>
 									<listOptionValue builtIn="false" value="../../../Common/USB_Device/App"/>
 									<listOptionValue builtIn="false" value="../../../../Drivers/CMSIS/Core_A/Include"/>

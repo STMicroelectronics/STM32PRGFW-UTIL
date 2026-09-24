@@ -28,6 +28,10 @@ This firmware contains a minimal set of drivers based on STM32CubeMP1xx and STM3
 
 ## **Update History**
 
+**V1.2.1 / 24-September-2026**
+
+-  Linux environment build fixes. 
+
 **V1.2.0 / 9-June-2025**
 
 -  Support for MP21xx, Support for STPMIC1L and STPMIC2L added. 
